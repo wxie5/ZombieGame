@@ -1,4 +1,6 @@
 using UnityEngine;
+using Prototype.Combat;
+using Prototype.Tool;
 
 namespace Prototype.Movement
 {
@@ -14,19 +16,26 @@ namespace Prototype.Movement
         //Components
         private CharacterController cc;
         private Animator animator;
+        private SimpleCombat targetLocker;
 
         //Movement Variables
         private Vector3 gVelocity;
         private Vector2 inputAxis;
         private float currentSpeed;
+        private bool canFreeRotMove = true;
 
         //Smooth Variables
         private float playerRotSmoothRef;
+        private float animationDampTime = 0.2f;
+        private float animationDampSpeed = 5f;
 
         private void Start()
         {
             cc = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
+            targetLocker = GetComponent<SimpleCombat>();
+
+            targetLocker.onLockStateChange += OnLockStateChangeHandler;
         }
 
         private void Update()
@@ -82,6 +91,11 @@ namespace Prototype.Movement
 
         private void RotatePlayerWithAxis()
         {
+            if(!canFreeRotMove)
+            {
+                return;
+            }
+          
             if (inputAxis.magnitude != 0)
             {
                 float targetRot = Mathf.Atan2(inputAxis.x, inputAxis.y) * Mathf.Rad2Deg;
@@ -97,13 +111,63 @@ namespace Prototype.Movement
 
         private void PlayerMovement()
         {
-            Vector3 movementVector = new Vector3(inputAxis.x, 0f, inputAxis.y);
+            Vector3 movementVector = Vector3.zero;
+            movementVector = new Vector3(inputAxis.x, 0f, inputAxis.y);
             cc.Move(movementVector * currentSpeed * Time.deltaTime);
         }
 
         private void SetAnimationParam()
         {
-            animator.SetFloat("Speed", currentSpeed);
+            if (canFreeRotMove)
+            {
+                animator.SetFloat("Speed", currentSpeed, animationDampTime, Time.deltaTime * animationDampSpeed);
+            }
+            else
+            {
+                
+                if(Mathf.Abs(inputAxis.x) > Mathf.Abs(inputAxis.y))
+                {
+                    float snappedHori = MathTool.NormalizedFloat(inputAxis.x);
+                    print(snappedHori);
+                    if(targetLocker.OnTargetFront)
+                    {
+                        animator.SetFloat("Speed", -snappedHori);
+                    }
+                    else
+                    {
+                        animator.SetFloat("Speed", snappedHori);
+                    }
+                }
+                else
+                {
+                    float snappedVerti = MathTool.NormalizedFloat(inputAxis.y);
+                    print(snappedVerti);
+                    if (targetLocker.OnTargetRight)
+                    {
+                        animator.SetFloat("Speed", -snappedVerti);
+                    }
+                    else
+                    {
+                        animator.SetFloat("Speed", snappedVerti);
+                    }
+                }
+                
+            }
+        }
+    
+        private void OnLockStateChangeHandler(bool isLockingTarget)
+        {
+            canFreeRotMove = !isLockingTarget;
+            animator.SetBool("IsLockTarget", isLockingTarget);
+
+            if (isLockingTarget)
+            {
+                speed = 2f;
+            }
+            else
+            {
+                speed = 5f;
+            }
         }
     }
 
