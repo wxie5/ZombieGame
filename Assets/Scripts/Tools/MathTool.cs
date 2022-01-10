@@ -2,12 +2,31 @@ using UnityEngine;
 
 namespace Prototype.Tool
 {
+    /// <summary>
+    /// some math tools that is helpful for this prototype project
+    /// </summary>
     public class MathTool : MonoBehaviour
     {
+        /// <summary>
+        /// get a float, return either -1, 0, or 1
+        /// </summary>
+        /// <param name="inputFloat"></param>
+        /// <returns></returns>
         public static float NormalizedFloat(float inputFloat)
         {
             if (inputFloat == 0f) { return 0f; }
             return inputFloat > 0f ? 1f : -1f;
+        }
+
+        /// <summary>
+        /// Add a deltaTime to the timer, and ensure there is no overflow
+        /// </summary>
+        /// <param name="timer"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static float TimerAddition(float timer, float t)
+        {
+            return Mathf.Min(timer + Time.deltaTime, t);
         }
     }
 }
