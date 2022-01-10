@@ -1,24 +1,48 @@
 using UnityEngine;
 using System;
+using Prototype.Tool;
 
 namespace Prototype.Combat
 {
     public class SimpleCombat : MonoBehaviour
     {
-        [SerializeField] private float attackRange = 10f;
+        [Header("Combat Properties")]
+        [SerializeField] private float weaponAttackRange = 20f;
+        [SerializeField] private float weaponDamage = 10f;
+        [SerializeField] private float shotRate = 0.2f;
+        [SerializeField] private Transform shotTrans;
+
+        [Header("Target Lock Properties")]
+        [SerializeField] private float lockRange = 10f;
+        [SerializeField] private float autoLoseTargetDelay = 1f;
+
+        [Header("Layer Mask: Select All That Apply")]
         [SerializeField] private LayerMask lockableLayer;
-        [SerializeField] private float autoLoseTargetTime = 1f;
+        [SerializeField] private LayerMask bulletHitableLayer;
 
-        public Action<bool> onLockStateChange;
+        [Header("VFX")]
+        [SerializeField] private GameObject shotParticlePrefab;
+        [SerializeField] private GameObject bulletTrailPrefab;
+        [SerializeField] private GameObject bloodParticlePrefab;
 
+        //Components
         private Transform target;
+        private ParticleSystem shotParticle;
         private Collider[] enemies;
 
+        //events
+        public Action<bool> onLockStateChange;
+        public Action onShot;
+
         private bool isLockingTarget = false;
+
+        //for check where we are compare to target
         private bool onTargetRight;
         private bool onTargetFront;
 
-        private float autoLoseTargetTimer = 0f;
+        //timer
+        private float autoLoseTargetDelayTimer = 0f;
+        private float shotRateTimer = 0f;
 
         public bool OnTargetRight
         {
@@ -34,6 +58,9 @@ namespace Prototype.Combat
         {
             //since OverlapSphere is expensive, we do not call it in Update
             InvokeRepeating("UpdateTarget", 0f, 0.1f);
+
+            GameObject shotParticleGO = Instantiate(shotParticlePrefab, shotTrans.position, shotTrans.rotation, shotTrans);
+            shotParticle = shotParticleGO.GetComponent<ParticleSystem>();
         }
 
         private void Update()
@@ -41,15 +68,21 @@ namespace Prototype.Combat
             Attack();
             AutoUnlockTarget();
             RotateToTarget();
+            TimerAddition();
         }
 
         private void UpdateTarget()
         {
-            enemies = Physics.OverlapSphere(transform.position, attackRange, lockableLayer);
+            enemies = Physics.OverlapSphere(transform.position, lockRange, lockableLayer);
             float shortestDis = Mathf.Infinity;
             int currentNearestIdx = -1;
             for (int i = 0; i < enemies.Length; i++)
             {
+                if (enemies[i].GetComponent<SimpleAI>().IsDead) { continue; }
+
+                //I choose to use sqrtMag instead of Vector3.Distance
+                //because we don't need to know the exact distance between them
+                //take square root is a costly process
                 float sqrMag = (enemies[i].transform.position - transform.position).sqrMagnitude;
                 if (sqrMag < shortestDis)
                 {
@@ -62,6 +95,11 @@ namespace Prototype.Combat
             {
                 target = enemies[currentNearestIdx].transform;
             }
+            else
+            {
+                //if no target, set to null
+                target = null;
+            }
         }
 
         private void Attack()
@@ -72,28 +110,80 @@ namespace Prototype.Combat
             // the best solution is to keep track of the data of target, as soon as it is dead, we change target state
             if (target == null) { return; }
 
-            if (Input.GetKeyDown(KeyCode.J) && enemies.Length > 0)
+            if (Input.GetKeyDown(KeyCode.J) && shotRateTimer >= shotRate)
             {
                 //print("Shoot!");
                 if (!isLockingTarget)
                 {
                     ChangeLockState();
                 }
-                autoLoseTargetTimer = 0f;
+
+                Vector3 hitPos = ShotEnemy();
+
+                GenerateBulletTrail(hitPos);
+
+                GenerateShotParticle();
+
+                //reset timer
+                autoLoseTargetDelayTimer = 0f;
+                shotRateTimer = 0f;
+
+                onShot.Invoke();
             }
+
         }
 
+        private Vector3 ShotEnemy()
+        {
+            Vector3 shotDir = (target.position - transform.position).normalized;
+            Ray shotRay = new Ray(shotTrans.position, shotDir);
+            Vector3 hitPos;
+            RaycastHit hit;
+            if (Physics.Raycast(shotRay, out hit, weaponAttackRange, bulletHitableLayer))
+            {
+                hitPos = hit.point;
+
+                //Attack Enmey Logic Here
+                //Because bullet does not has speed, we immediately damage the enemy
+                if (hit.collider.tag == "Enemy")
+                {
+                    hit.collider.GetComponent<SimpleAI>().TakeDamage(weaponDamage);
+
+                    //play some blood effect based on the normal direction of hit point
+                    GameObject bloodGO = Instantiate(bloodParticlePrefab, hit.point, Quaternion.Euler(hit.normal));
+                    Destroy(bloodGO, 3f);
+                }
+            }
+            else
+            {
+                //if nothing is hitable, we just shot as far as we can
+                hitPos = shotTrans.position + shotDir * weaponAttackRange;
+            }
+
+            return hitPos;
+        }
+
+        //a simple glowing bullet trail by using trail renderer
+        private void GenerateBulletTrail(Vector3 hitPos)
+        {
+            TrailRenderer bulletTrail = Instantiate(bulletTrailPrefab, shotTrans.position, shotTrans.rotation).GetComponent<TrailRenderer>();
+            bulletTrail.AddPosition(shotTrans.position);
+            bulletTrail.transform.position = hitPos;
+        }
+
+        //unlock target if player does not keep attacking
         private void AutoUnlockTarget()
         {
             if (!isLockingTarget) { return; }
 
-            if(autoLoseTargetTimer > autoLoseTargetTime)
+            if(autoLoseTargetDelayTimer >= autoLoseTargetDelay)
             {
                 ChangeLockState();
             }
-            autoLoseTargetTimer += Time.deltaTime;
+            autoLoseTargetDelayTimer = MathTool.TimerAddition(autoLoseTargetDelayTimer, autoLoseTargetDelay);
         }
 
+        //event: lock state change
         private void ChangeLockState()
         {
             isLockingTarget = !isLockingTarget;
@@ -109,15 +199,32 @@ namespace Prototype.Combat
                 Quaternion lookRot = Quaternion.LookRotation(dir);
                 transform.rotation = lookRot;
 
+                //use dot product to get the player's direction compare to target
+                //useful for set the animation
                 onTargetRight = Vector3.Dot(dir, Vector3.left) > 0f ? true : false;
                 onTargetFront = Vector3.Dot(dir, Vector3.back) > 0f ? true : false;
             }
         }
 
+        private void TimerAddition()
+        {
+            autoLoseTargetDelayTimer = MathTool.TimerAddition(autoLoseTargetDelayTimer, autoLoseTargetDelay);
+            shotRateTimer = MathTool.TimerAddition(shotRateTimer, shotRate);
+        }
+
+        //play the shot fire particle
+        private void GenerateShotParticle()
+        {
+            if(shotParticle == null) { return; }
+
+            shotParticle.Play();
+        }
+
+        //for debug only, show player's lock range in the scene (edit mode, not play mode)
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, attackRange);
+            Gizmos.DrawWireSphere(transform.position, lockRange);
         }
     }
 }

@@ -4,6 +4,9 @@ using Prototype.Tool;
 
 namespace Prototype.Movement
 {
+    /// <summary>
+    /// currently this class also act as the animator controller script
+    /// </summary>
     public class SimpleMove : MonoBehaviour
     {
         [Header("Set In Inspector")]
@@ -16,7 +19,7 @@ namespace Prototype.Movement
         //Components
         private CharacterController cc;
         private Animator animator;
-        private SimpleCombat targetLocker;
+        private SimpleCombat combatController;
 
         //Movement Variables
         private Vector3 gVelocity;
@@ -33,9 +36,10 @@ namespace Prototype.Movement
         {
             cc = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
-            targetLocker = GetComponent<SimpleCombat>();
+            combatController = GetComponent<SimpleCombat>();
 
-            targetLocker.onLockStateChange += OnLockStateChangeHandler;
+            combatController.onLockStateChange += OnLockStateChangeHandler;
+            combatController.onShot += OnShotHandler;
         }
 
         private void Update()
@@ -124,12 +128,12 @@ namespace Prototype.Movement
             }
             else
             {
-                
+                //find the dominant axis (vertical or horizontal)
+                //then calculate the movement animation
                 if(Mathf.Abs(inputAxis.x) > Mathf.Abs(inputAxis.y))
                 {
                     float snappedHori = MathTool.NormalizedFloat(inputAxis.x);
-                    print(snappedHori);
-                    if(targetLocker.OnTargetFront)
+                    if(combatController.OnTargetFront)
                     {
                         animator.SetFloat("Speed", -snappedHori);
                     }
@@ -141,8 +145,7 @@ namespace Prototype.Movement
                 else
                 {
                     float snappedVerti = MathTool.NormalizedFloat(inputAxis.y);
-                    print(snappedVerti);
-                    if (targetLocker.OnTargetRight)
+                    if (combatController.OnTargetRight)
                     {
                         animator.SetFloat("Speed", -snappedVerti);
                     }
@@ -155,6 +158,7 @@ namespace Prototype.Movement
             }
         }
     
+        //handle event when player lock/unlock the target
         private void OnLockStateChangeHandler(bool isLockingTarget)
         {
             canFreeRotMove = !isLockingTarget;
@@ -168,6 +172,13 @@ namespace Prototype.Movement
             {
                 speed = 5f;
             }
+        }
+
+        //handle event when shot
+        private void OnShotHandler()
+        {
+            animator.ResetTrigger("Shot");
+            animator.SetTrigger("Shot");
         }
     }
 

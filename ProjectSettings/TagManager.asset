@@ -5,14 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Dead
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Lockable
+  - Enemy
   - Water
   - UI
-  - 
+  - Environment
   - 
   - 
   - 
