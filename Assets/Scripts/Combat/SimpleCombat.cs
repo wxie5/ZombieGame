@@ -11,6 +11,7 @@ namespace Prototype.Combat
         [SerializeField] private float weaponDamage = 10f;
         [SerializeField] private float shotRate = 0.2f;
         [SerializeField] private Transform shotTrans;
+        [SerializeField] private Vector2 weaponOffset = new Vector2(20f, 10f);
 
         [Header("Target Lock Properties")]
         [SerializeField] private float lockRange = 10f;
@@ -108,9 +109,10 @@ namespace Prototype.Combat
             // (for example, target enemy is dead, but we haven't update it into enemies array)
             // later it may cause more problem when the scripts become more complicated
             // the best solution is to keep track of the data of target, as soon as it is dead, we change target state
-            if (target == null) { return; }
+            
+            //if (target == null) { return; }
 
-            if (Input.GetKeyDown(KeyCode.J) && shotRateTimer >= shotRate)
+            if (Input.GetKey(KeyCode.J) && shotRateTimer >= shotRate)
             {
                 //print("Shoot!");
                 if (!isLockingTarget)
@@ -118,10 +120,8 @@ namespace Prototype.Combat
                     ChangeLockState();
                 }
 
-                Vector3 hitPos = ShotEnemy();
-
+                Vector3 hitPos = Shot();
                 GenerateBulletTrail(hitPos);
-
                 GenerateShotParticle();
 
                 //reset timer
@@ -133,9 +133,24 @@ namespace Prototype.Combat
 
         }
 
-        private Vector3 ShotEnemy()
+        private Vector3 Shot()
         {
-            Vector3 shotDir = (target.position - transform.position).normalized;
+            Vector3 shotDir;
+
+            if (target == null)
+            {
+                shotDir = shotTrans.forward;
+            }
+            else
+            {
+                shotDir = (target.position - transform.position).normalized;
+            }
+
+            //offset the shot direction
+            float xOffset = UnityEngine.Random.Range(-weaponOffset.x, weaponOffset.x);
+            float yOffset = UnityEngine.Random.Range(-weaponOffset.y, weaponOffset.y);
+            shotDir = Quaternion.Euler(xOffset, yOffset, 0f) * shotDir;
+            
             Ray shotRay = new Ray(shotTrans.position, shotDir);
             Vector3 hitPos;
             RaycastHit hit;
@@ -152,6 +167,10 @@ namespace Prototype.Combat
                     //play some blood effect based on the normal direction of hit point
                     GameObject bloodGO = Instantiate(bloodParticlePrefab, hit.point, Quaternion.Euler(hit.normal));
                     Destroy(bloodGO, 3f);
+                }
+                else if(hit.collider.tag == "Environment")
+                {
+                    //TODO: maybe add some hit wall effects
                 }
             }
             else
