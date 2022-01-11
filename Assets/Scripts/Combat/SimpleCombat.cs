@@ -75,7 +75,7 @@ namespace Prototype.Combat
         private void UpdateTarget()
         {
             enemies = Physics.OverlapSphere(transform.position, lockRange, lockableLayer);
-            float shortestDis = Mathf.Infinity;
+            float curMinSqrMag = Mathf.Infinity;
             int currentNearestIdx = -1;
             for (int i = 0; i < enemies.Length; i++)
             {
@@ -85,9 +85,9 @@ namespace Prototype.Combat
                 //because we don't need to know the exact distance between them
                 //take square root is a costly process
                 float sqrMag = (enemies[i].transform.position - transform.position).sqrMagnitude;
-                if (sqrMag < shortestDis)
+                if (sqrMag < curMinSqrMag)
                 {
-                    shortestDis = sqrMag;
+                    curMinSqrMag = sqrMag;
                     currentNearestIdx = i;
                 }
             }
@@ -216,7 +216,7 @@ namespace Prototype.Combat
                 Vector3 dir = target.position - transform.position;
                 dir = new Vector3(dir.x, 0f, dir.z).normalized;
                 Quaternion lookRot = Quaternion.LookRotation(dir);
-                transform.rotation = lookRot;
+                transform.rotation = Quaternion.Lerp(transform.rotation, lookRot, Time.deltaTime * 30f);
 
                 //use dot product to get the player's direction compare to target
                 //useful for set the animation
