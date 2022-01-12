@@ -1,14 +1,19 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Prototype.Tool;
 
 public class SimpleAI : MonoBehaviour
 {
     //for simplicity, I direcly reduce maxHealth for this prototype
     //in the real project, we need to set an additional "currentHealth" variable
     [SerializeField] private float maxHealth;
+    [SerializeField] private float attackRate = 3f;
+    [SerializeField] private float attackRange = 2f;
 
-    //Player Transform
-    private Transform playerTrans;
+    //Player Transforms
+    private Transform[] playersTrans;
+
+    private Transform target;
 
     //Components
     private NavMeshAgent agent;
@@ -18,6 +23,9 @@ public class SimpleAI : MonoBehaviour
     private bool hasTarget = false;
     private bool isDead = false;
 
+    //Timer
+    private float attackRateTimer = 0f;
+
     public bool IsDead
     {
         get { return isDead; }
@@ -25,7 +33,15 @@ public class SimpleAI : MonoBehaviour
 
     private void Start()
     {
-        playerTrans = GameObject.FindWithTag("Player").transform;
+        GameObject[] playersGO = GameObject.FindGameObjectsWithTag("Player");
+        playersTrans = new Transform[playersGO.Length];
+        for(int i = 0; i < playersTrans.Length; i++)
+        {
+            playersTrans[i] = playersGO[i].transform;
+        }
+
+        //currently only called once, later I will change it
+        GetNearestPlayer();
 
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -40,20 +56,64 @@ public class SimpleAI : MonoBehaviour
         if (isDead) { return; }
 
         //if no target, do nothing
-        if (playerTrans == null) { return; }
+        if (target == null) { return; }
 
-        //set target, start chasing
+        //set target, start chasing (for test purpose, we must have target)
         if (!hasTarget)
         {
             hasTarget = true;
             animator.SetBool("HasTarget", hasTarget);
         }
+
+        if(DistanceToPlayer() < attackRange && attackRateTimer >= attackRate)
+        {
+            //attack
+            animator.SetTrigger("Attack");
+
+            print("Attack");
+
+            attackRateTimer = 0f;
+        }
+
+        attackRateTimer = MathTool.TimerAddition(attackRateTimer, attackRate);
+        agent.SetDestination(target.position);
+    }
+
+    private float DistanceToPlayer()
+    {
+        if(target == null)
+        {
+            return 0f;
+        }
         else
         {
-            agent.SetDestination(playerTrans.position);
+            return Vector3.Distance(transform.position, target.position);
         }
     }
 
+    private void GetNearestPlayer()
+    {
+        int nearestIdx = -1;
+        float curMinSqrMag = Mathf.Infinity;
+        for(int i = 0; i < playersTrans.Length; i++)
+        {
+            float sqrMag = (playersTrans[i].position - transform.position).sqrMagnitude;
+            if(sqrMag < curMinSqrMag)
+            {
+                curMinSqrMag = sqrMag;
+                nearestIdx = i;
+            }
+        }
+
+        if(nearestIdx != -1)
+        {
+            target = playersTrans[nearestIdx];
+        }
+        else
+        {
+            target = null;
+        }
+    }
     
     private void OnAnimatorMove()
     {
