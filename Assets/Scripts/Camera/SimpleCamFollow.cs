@@ -1,14 +1,11 @@
 using UnityEngine;
 
-namespace Prototype.Camera
+public class SimpleCamFollow : MonoBehaviour
 {
-    public class SimpleCamFollow : MonoBehaviour
-    {
-        [SerializeField] private Transform playerTrans;
+    public Transform playerTrans;
 
-        private void LateUpdate()
-        {
-            transform.position = playerTrans.position;
-        }
+    private void LateUpdate()
+    {
+        transform.position = playerTrans.position;
     }
 }

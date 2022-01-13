@@ -1,12 +1,12 @@
 using UnityEngine;
-using Prototype.Combat;
 using Prototype.Tool;
+using Prototype.Combat;
 
-namespace Prototype.Movement
+/// <summary>
+/// currently this class also act as the animator controller script
+/// /// </summary>
+namespace Prototype.move
 {
-    /// <summary>
-    /// currently this class also act as the animator controller script
-    /// </summary>
     public class SimpleMove : MonoBehaviour
     {
         [Header("Set In Inspector")]
@@ -95,11 +95,11 @@ namespace Prototype.Movement
 
         private void RotatePlayerWithAxis()
         {
-            if(!canFreeRotMove)
+            if (!canFreeRotMove)
             {
                 return;
             }
-          
+
             if (inputAxis.magnitude != 0)
             {
                 float targetRot = Mathf.Atan2(inputAxis.x, inputAxis.y) * Mathf.Rad2Deg;
@@ -130,10 +130,10 @@ namespace Prototype.Movement
             {
                 //find the dominant axis (vertical or horizontal)
                 //then calculate the movement animation
-                if(Mathf.Abs(inputAxis.x) > Mathf.Abs(inputAxis.y))
+                if (Mathf.Abs(inputAxis.x) > Mathf.Abs(inputAxis.y))
                 {
                     float snappedHori = MathTool.NormalizedFloat(inputAxis.x);
-                    if(combatController.OnTargetFront)
+                    if (combatController.OnTargetFront)
                     {
                         animator.SetFloat("Speed", -snappedHori);
                     }
@@ -154,10 +154,10 @@ namespace Prototype.Movement
                         animator.SetFloat("Speed", snappedVerti);
                     }
                 }
-                
+
             }
         }
-    
+
         //handle event when player lock/unlock the target
         private void OnLockStateChangeHandler(bool isLockingTarget)
         {
