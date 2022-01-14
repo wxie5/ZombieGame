@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(GameStarting());
         yield return StartCoroutine(ZombieSpawning());
         yield return StartCoroutine(GamePlaying());
+        yield return StartCoroutine(BeforeEnding());
         yield return StartCoroutine(GameEnding());
     }
 
@@ -97,6 +98,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
+    {
+        int counter = 5;
+        m_game_message.text = string.Empty;
+        while (counter > 0)
+        {
+            m_game_message.text = "The game will end in: " + "\n\n\n" + counter + " s!";
+            counter -= 1;
+            yield return new WaitForSeconds(1f);
+        }
+    }
 
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {

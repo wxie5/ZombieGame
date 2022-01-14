@@ -3687,63 +3687,43 @@ MonoBehaviour:
   - {fileID: 107435279}
   m_RandomSpawn: 1
   m_Zombies:
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
+  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
