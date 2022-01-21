@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using Prototype.Tool;
+using UnityEngine.UI;
 
 namespace Prototype.Combat
 {
@@ -25,6 +26,12 @@ namespace Prototype.Combat
         [SerializeField] private GameObject shotParticlePrefab;
         [SerializeField] private GameObject bulletTrailPrefab;
         [SerializeField] private GameObject bloodParticlePrefab;
+
+        [Header("Player Status")]
+        public Image mask; //mask for HealthBar UI
+        public float m_Max_HP = 100;
+        private float m_current_HP;
+        [HideInInspector] public bool is_dead = false;
 
         //Components
         private Transform target;
@@ -62,14 +69,20 @@ namespace Prototype.Combat
 
             GameObject shotParticleGO = Instantiate(shotParticlePrefab, shotTrans.position, shotTrans.rotation, shotTrans);
             shotParticle = shotParticleGO.GetComponent<ParticleSystem>();
+            m_current_HP = m_Max_HP;
         }
 
+        [Obsolete]
         private void Update()
         {
             Attack();
             AutoUnlockTarget();
             RotateToTarget();
             TimerAddition();
+            if(m_current_HP <= 0)
+            {
+                is_dead = true;
+            }
         }
 
         private void UpdateTarget()
@@ -244,6 +257,12 @@ namespace Prototype.Combat
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, lockRange);
+        }
+
+        public void TakeDamage(float dmg)
+        {
+            m_current_HP -= dmg;
+            mask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, m_current_HP);
         }
     }
 }

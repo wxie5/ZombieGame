@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Prototype.Tool;
+using Prototype.Combat;
 
 public class SimpleAI : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class SimpleAI : MonoBehaviour
     [SerializeField] private float maxHealth;
     [SerializeField] private float attackRate = 3f;
     [SerializeField] private float attackRange = 2f;
+
+    public float m_attack_damage = 20;
 
     //Player Transforms
     private Transform[] playersTrans;
@@ -70,7 +73,11 @@ public class SimpleAI : MonoBehaviour
             //attack
             animator.SetTrigger("Attack");
 
-            print("Attack");
+            //print("Attack");
+            if(DistanceToPlayer() < attackRange)
+            {
+                target.GetComponent<SimpleCombat>().TakeDamage(m_attack_damage);
+            }
 
             attackRateTimer = 0f;
         }

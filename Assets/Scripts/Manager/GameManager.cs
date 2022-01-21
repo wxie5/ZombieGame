@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
     {
-        while (!AllZombieDead())
+        while (!AllZombieDead() && !m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
         {
             yield return null;
         }
@@ -100,20 +100,29 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
     {
-        int counter = 5;
-        m_game_message.text = string.Empty;
-        while (counter > 0)
+        if (!m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
         {
-            m_game_message.text = "The game will end in: " + "\n\n\n" + counter + " s!";
-            counter -= 1;
-            yield return new WaitForSeconds(1f);
+            int counter = 5;
+            m_game_message.text = string.Empty;
+            while (counter > 0)
+            {
+                m_game_message.text = "The game will end in: " + "\n\n\n" + counter + " s!";
+                counter -= 1;
+                yield return new WaitForSeconds(1f);
+            }
         }
     }
 
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
-        
-        m_game_message.text = "YOU WIN!";
+        if (m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        {
+            m_game_message.text = "YOU Dead!";
+        }
+        else
+        {
+            m_game_message.text = "YOU WIN!";
+        }
         m_PlayerInstance.GetComponent<SimpleMove>().enabled = false;
         m_PlayerInstance.GetComponent<SimpleCombat>().enabled = false;
         yield return m_EndWait;
