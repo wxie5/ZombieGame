@@ -20,7 +20,6 @@ public class SimpleAI : MonoBehaviour
     private Animator animator;
 
     //Enemy Properties
-    private bool hasTarget = false;
     private bool isDead = false;
 
     //Timer
@@ -58,21 +57,24 @@ public class SimpleAI : MonoBehaviour
         //if no target, do nothing
         if (target == null) { return; }
 
-        //set target, start chasing (for test purpose, we must have target)
-        if (!hasTarget)
-        {
-            hasTarget = true;
-            animator.SetBool("HasTarget", hasTarget);
-        }
+        animator.SetBool("HasTarget", true);
 
-        if(DistanceToPlayer() < attackRange && attackRateTimer >= attackRate)
+        if (DistanceToPlayer() < attackRange)
         {
             //attack
-            animator.SetTrigger("Attack");
+            if (attackRateTimer >= attackRate)
+            {
+                animator.SetTrigger("Attack");
 
-            print("Attack");
+                print("Attack");
 
-            attackRateTimer = 0f;
+                attackRateTimer = 0f;
+            }
+            animator.SetBool("IsChasing", false);
+        }
+        else
+        {
+            animator.SetBool("IsChasing", true);
         }
 
         attackRateTimer = MathTool.TimerAddition(attackRateTimer, attackRate);
@@ -127,7 +129,7 @@ public class SimpleAI : MonoBehaviour
         transform.position = rootPos;
         agent.nextPosition = transform.position;
         //offset / time to get the true speed of animator, and apply to navmeshAgent
-        agent.speed = (animator.deltaPosition / Time.deltaTime).magnitude;
+        //agent.speed = (animator.deltaPosition / Time.deltaTime).magnitude;
     }
 
     /// <summary>
