@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Prototype.Tool;
 using Prototype.Combat;
+using System;
 
 public class SimpleAI : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class SimpleAI : MonoBehaviour
 
     //Timer
     private float attackRateTimer = 0f;
+
+    //events
+    public Action onDead;
 
     public bool IsDead
     {
@@ -160,13 +164,16 @@ public class SimpleAI : MonoBehaviour
             //because both GetHit and Death are connected to "Anystate"
             animator.SetTrigger("Die");
             animator.SetBool("IsDead", isDead);
+
+            //trigger event
+            onDead.Invoke();
         }
         else
         {
             maxHealth -= dmg;
 
             //choose a random hit animation
-            int randomIdx = Random.Range(0, 3);
+            int randomIdx = UnityEngine.Random.Range(0, 3);
             animator.SetFloat("HitIdx", randomIdx);
 
             //play hit animation
