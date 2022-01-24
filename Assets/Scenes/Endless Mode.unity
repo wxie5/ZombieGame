@@ -1849,10 +1849,10 @@ RectTransform:
   m_Father: {fileID: 929317452}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 223.77603, y: -105.51752}
-  m_SizeDelta: {x: 385.5521, y: 161.035}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -120, y: -50.69861}
+  m_SizeDelta: {x: 233.6505, y: 51.3972}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1141279019
 MonoBehaviour:
@@ -3756,10 +3756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_zombiePrefab:
   - {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
-  - {fileID: 812687602183483004, guid: 8229449e8723bdf43b387a86a99ffa85, type: 3}
-  - {fileID: 7628436662063081761, guid: 39b8957b707f254439afa6e58a2131e2, type: 3}
-  - {fileID: 3674168545457175494, guid: f3900048e25c39d448a66069be5183a7, type: 3}
-  - {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
+  - {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
   m_SpawnPoint:
   - {fileID: 1656804043}
   - {fileID: 566223856}

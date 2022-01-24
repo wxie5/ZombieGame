@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Prototype.move;
-using Prototype.Combat;
+
+// Manage the game process and UI in Endless Mode
 
 public class EndlessModeManager : MonoBehaviour
 {
@@ -27,10 +27,12 @@ public class EndlessModeManager : MonoBehaviour
     [HideInInspector] public int m_score = 0;
 
     private int m_numberOfZombies = 5;
-
     private int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
-
     public float m_ZombieSpawnInterval = 0.5f;
+
+    //components
+    private PlayerBehaviour playerbehaviour;
+    private PlayerStats playerStats;
     
 
 
@@ -41,15 +43,16 @@ public class EndlessModeManager : MonoBehaviour
         m_EndWait = new WaitForSeconds(m_EndDelay);
 
         SpawnPlayer();  //Set the player's starting position
-        m_PlayerInstance.GetComponent<SimpleMove>().enabled = false;
-        m_PlayerInstance.GetComponent<SimpleCombat>().enabled = false;
+        playerbehaviour = m_PlayerInstance.GetComponent<PlayerBehaviour>();
+        playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
+        playerbehaviour.enabled = false;
         StartCoroutine(GameLoop());
     }
     private void FixedUpdate()
     {
         m_scoreMessage.text = "Current Score: " + m_score;
         UpdateScore();
-        if (m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        if (playerStats.IsDead)
         {
             StartCoroutine(GameEnding());
         }
@@ -71,7 +74,7 @@ public class EndlessModeManager : MonoBehaviour
     }
     private IEnumerator GameLoop()
     {
-        while (!m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        while (!m_PlayerInstance.GetComponent<PlayerStats>().IsDead)
         {
             yield return StartCoroutine(GameStarting());
             yield return StartCoroutine(ZombieSpawning());
@@ -96,8 +99,7 @@ public class EndlessModeManager : MonoBehaviour
     private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
         m_game_message.text = string.Empty;
-        m_PlayerInstance.GetComponent<SimpleMove>().enabled = true;
-        m_PlayerInstance.GetComponent<SimpleCombat>().enabled = true;
+        playerbehaviour.enabled = true;
         Debug.Log("1");
         while (m_currentSpawningzombieNumber< m_Zombies.Length)
         {
@@ -108,7 +110,7 @@ public class EndlessModeManager : MonoBehaviour
     }
     private IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
     {
-        while (!AllZombieDead() && !m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        while (!AllZombieDead() && !playerStats.IsDead)
         {
             yield return null;
         }
@@ -116,7 +118,7 @@ public class EndlessModeManager : MonoBehaviour
 
     private IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
     {
-        if (!m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        if (!playerStats.IsDead)
         {
             int counter = 5;
             m_game_message.text = string.Empty;
@@ -137,8 +139,7 @@ public class EndlessModeManager : MonoBehaviour
     {
         m_scoreMessage.text = string.Empty;
         m_game_message.text = "YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score;
-        m_PlayerInstance.GetComponent<SimpleMove>().enabled = false;
-        m_PlayerInstance.GetComponent<SimpleCombat>().enabled = false;
+        playerbehaviour.enabled = false;
         yield return m_EndWait;
     }
 
@@ -150,7 +151,7 @@ public class EndlessModeManager : MonoBehaviour
         }
         for (int i = 0; i < m_Zombies.Length; i++)
         {
-            if (!m_Zombies[i].GetComponent<SimpleAI>().IsDead)
+            if (!m_Zombies[i].GetComponent<EnemyStats>().IsDead)
             {
                 return false;
             }
@@ -162,10 +163,10 @@ public class EndlessModeManager : MonoBehaviour
     {
         for (int i = 0; i < m_Zombies.Length; i++)
         {
-            if (!m_deadZombies[i] && m_Zombies[i].GetComponent<SimpleAI>().IsDead)
+            if (!m_deadZombies[i] && m_Zombies[i].GetComponent<EnemyStats>().IsDead)
             {
                 m_deadZombies[i] = true;
-                m_score += m_Zombies[i].GetComponent<SimpleAI>().m_score;
+                m_score += m_Zombies[i].GetComponent<EnemyStats>().Score;
             }
         }
     }

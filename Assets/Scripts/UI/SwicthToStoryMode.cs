@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
-public class SwitchToEndlessScene : MonoBehaviour
+public class SwicthToStoryMode : MonoBehaviour
 {
     [SerializeField] private AudioClip zombie_roar;
     void Start()
@@ -19,8 +18,8 @@ public class SwitchToEndlessScene : MonoBehaviour
 
     IEnumerator load()
     {
-        AudioSource.PlayClipAtPoint(zombie_roar, new Vector3 (0,0,0));
+        AudioSource.PlayClipAtPoint(zombie_roar, new Vector3(0, 0, 0));
         yield return new WaitForSeconds(4f);
-        SceneManager.LoadScene("Endless Mode");
+        SceneManager.LoadScene("Story Mode");
     }
 }

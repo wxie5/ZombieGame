@@ -115,6 +115,10 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth = MathTool.NonNegativeSub(currentHealth, amount);
+        if(currentHealth == 0)
+        {
+            isDead = true;
+        }
     }
 
     public void Recover(float amount)

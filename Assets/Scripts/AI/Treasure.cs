@@ -1,25 +1,36 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SimpleAI))]
+[RequireComponent(typeof(EnemyStats))]
 public class Treasure : MonoBehaviour
 {
     [SerializeField] private GameObject[] treaturePrefabs;
     [SerializeField] private Transform treasureParentTrans;
 
-    private SimpleAI simpleAI;
+    private EnemyStats enemyStats;
+    private bool has_dead;
 
     private void Start()
     {
-        simpleAI = GetComponent<SimpleAI>();
-        simpleAI.onDead += InstantiateTreature;
+        has_dead = false;
+        enemyStats = GetComponent<EnemyStats>();
     }
 
-    public void InstantiateTreature()
+    private void Update()
+    {
+        if(!has_dead)
+        {
+            if (enemyStats.IsDead)
+            {
+                InstantiateTreasure();
+                has_dead = true;
+            }
+        }
+    }
+    public void InstantiateTreasure()
     {
         int randomInstID = Random.Range(0, treaturePrefabs.Length);
         Vector3 instantiatePosition = transform.position;
         instantiatePosition.y += 0.5f;
         Instantiate(treaturePrefabs[randomInstID], instantiatePosition, transform.rotation, treasureParentTrans);
-        simpleAI.onDead -= InstantiateTreature;
     }
 }

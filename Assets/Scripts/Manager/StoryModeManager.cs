@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Prototype.move;
-using Prototype.Combat;
 
 public class StoryModeManager : MonoBehaviour
 {
@@ -25,8 +23,10 @@ public class StoryModeManager : MonoBehaviour
     private int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
 
     public float m_ZombieSpawnInterval = 0.5f;
-    
 
+    //components
+    private PlayerBehaviour playerbehaviour;
+    private PlayerStats playerStats;
 
     void Start()
     {
@@ -35,6 +35,9 @@ public class StoryModeManager : MonoBehaviour
         m_EndWait = new WaitForSeconds(m_EndDelay);
 
         SpawnPlayer();  //Set the player's starting position
+        playerbehaviour = m_PlayerInstance.GetComponent<PlayerBehaviour>();
+        playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
+
         StartCoroutine(GameLoop());
     }
 
@@ -72,8 +75,7 @@ public class StoryModeManager : MonoBehaviour
 
     private IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
-        m_PlayerInstance.GetComponent<SimpleMove>().enabled = false;
-        m_PlayerInstance.GetComponent<SimpleCombat>().enabled = false;
+        playerbehaviour.enabled = false;
         m_game_message.text = "Game Start!" + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!";
 
         yield return m_StartWait;
@@ -82,8 +84,7 @@ public class StoryModeManager : MonoBehaviour
     private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
         m_game_message.text = string.Empty;
-        m_PlayerInstance.GetComponent<SimpleMove>().enabled = true;
-        m_PlayerInstance.GetComponent<SimpleCombat>().enabled = true;
+        playerbehaviour.enabled = true;
         while (m_currentSpawningzombieNumber<m_Zombies.Length)
         {
             SpawnZombies();
@@ -92,7 +93,7 @@ public class StoryModeManager : MonoBehaviour
     }
     private IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
     {
-        while (!AllZombieDead() && !m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        while (!AllZombieDead() && !playerStats.IsDead)
         {
             yield return null;
         }
@@ -100,7 +101,7 @@ public class StoryModeManager : MonoBehaviour
 
     private IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
     {
-        if (!m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        if (!playerStats.IsDead)
         {
             int counter = 5;
             m_game_message.text = string.Empty;
@@ -115,7 +116,7 @@ public class StoryModeManager : MonoBehaviour
 
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
-        if (m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        if (playerStats.IsDead)
         {
             m_game_message.text = "YOU Dead!";
         }
@@ -123,8 +124,7 @@ public class StoryModeManager : MonoBehaviour
         {
             m_game_message.text = "YOU WIN!";
         }
-        m_PlayerInstance.GetComponent<SimpleMove>().enabled = false;
-        m_PlayerInstance.GetComponent<SimpleCombat>().enabled = false;
+        playerbehaviour.enabled = false;
         yield return m_EndWait;
     }
 
@@ -136,7 +136,7 @@ public class StoryModeManager : MonoBehaviour
         }
         for(int i = 0; i < m_Zombies.Length; i++)
         {
-            if (!m_Zombies[i].m_Instance.GetComponent<SimpleAI>().IsDead)
+            if (!m_Zombies[i].m_Instance.GetComponent<EnemyStats>().IsDead)
             {
                 return false;
             }

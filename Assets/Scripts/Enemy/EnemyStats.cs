@@ -34,6 +34,10 @@ public class EnemyStats : MonoBehaviour
     {
         get { return attackRate; }
     }
+    public int Score
+    {
+        get { return score; }
+    }
     #endregion;
 
     //Initialization (called by manager)
@@ -72,4 +76,5 @@ public class EnemyStats : MonoBehaviour
         int randomIdx = Random.Range(0, chaseSpeeds.Length);
         return chaseSpeeds[randomIdx];
     }
+
 }

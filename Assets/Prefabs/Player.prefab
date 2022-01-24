@@ -2464,9 +2464,9 @@ GameObject:
   - component: {fileID: 7981481663472377383}
   - component: {fileID: 7981481663472377382}
   - component: {fileID: 7981481663472377381}
-  - component: {fileID: 8573912973613532425}
-  - component: {fileID: 1621957143305073778}
-  - component: {fileID: 2946787294350915371}
+  - component: {fileID: 2185816344692045585}
+  - component: {fileID: 6610907676015907719}
+  - component: {fileID: 1511758529570404423}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2559,7 +2559,35 @@ MonoBehaviour:
   retargeter: {fileID: 2357672760057965379}
   handEffector: {fileID: 2357672759658849999}
   hand: 1
---- !u!114 &8573912973613532425
+--- !u!114 &2185816344692045585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7981481663472377377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89922b7e5bc93c8489b32e3965b9e6b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNum: 0
+  playerRotSmoothTime: 0.1
+  posGravity: 9.81
+  shotTrans: {fileID: 7599032378898168952}
+  gunSlotTrans: {fileID: 8509101986472689628}
+  lockRange: 10
+  autoLoseTargetDelay: 0.5
+  lockableLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  bulletHitableLayer:
+    serializedVersion: 2
+    m_Bits: 73
+  shotParticlePrefab: {fileID: 1320275964731592, guid: 0624c6f5a57851d48ba74b4f86ec13d7, type: 3}
+  bulletTrailPrefab: {fileID: 4857912865274055344, guid: 20d1e0499f2b6a44d89af4ff5c83e06a, type: 3}
+  bloodParticlePrefab: {fileID: 1362418652685942, guid: b369efb4abe69e044890b664115fab9e, type: 3}
+--- !u!114 &6610907676015907719
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2578,35 +2606,7 @@ MonoBehaviour:
   gunSO:
   - {fileID: 11400000, guid: 2dd73a03cc3894b4ebeb205c80dd02d4, type: 2}
   - {fileID: 11400000, guid: 659241ddf8050624b91c4e0012dfbcd8, type: 2}
---- !u!114 &1621957143305073778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7981481663472377377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89922b7e5bc93c8489b32e3965b9e6b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerNum: 0
-  playerRotSmoothTime: 0.1
-  posGravity: 9.81
-  shotTrans: {fileID: 7599032378898168952}
-  gunSlotTrans: {fileID: 0}
-  lockRange: 10
-  autoLoseTargetDelay: 0.5
-  lockableLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  bulletHitableLayer:
-    serializedVersion: 2
-    m_Bits: 72
-  shotParticlePrefab: {fileID: 1320275964731592, guid: 0624c6f5a57851d48ba74b4f86ec13d7, type: 3}
-  bulletTrailPrefab: {fileID: 4857912865274055344, guid: 20d1e0499f2b6a44d89af4ff5c83e06a, type: 3}
-  bloodParticlePrefab: {fileID: 1362418652685942, guid: b369efb4abe69e044890b664115fab9e, type: 3}
---- !u!114 &2946787294350915371
+--- !u!114 &1511758529570404423
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -1065,10 +1065,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1621957143305073778, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
-      propertyPath: gunSlotTrans
-      value: 
-      objectReference: {fileID: 955621064}
     - target: {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1991,11 +1987,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 411a5ee19077b1d46b9960f64c7ffde8, type: 3}
---- !u!4 &955621064 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8509101986472689628, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
-  m_PrefabInstance: {fileID: 720576799}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1023665645
 PrefabInstance:
   m_ObjectHideFlags: 0

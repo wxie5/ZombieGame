@@ -1168,9 +1168,9 @@ GameObject:
   - component: {fileID: 1087131060226475151}
   - component: {fileID: 1087131060226475150}
   - component: {fileID: -7760456277697458371}
-  - component: {fileID: 6692461454652672483}
-  - component: {fileID: 1896183193384891753}
-  - component: {fileID: 4128655217312933584}
+  - component: {fileID: 381978311}
+  - component: {fileID: 381978310}
+  - component: {fileID: 381978309}
   m_Layer: 3
   m_Name: TestZombie1
   m_TagString: Enemy
@@ -1265,7 +1265,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
---- !u!114 &6692461454652672483
+--- !u!114 &381978311
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1283,10 +1283,8 @@ MonoBehaviour:
   attackRate: 3
   attackRange: 2
   chaseSpeeds:
-  - 2.122306
-  - 2.913071
-  - 3.285013
---- !u!114 &1896183193384891753
+  - 3
+--- !u!114 &381978310
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1298,7 +1296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db23c79c35d4e0c478d8773b798a268a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4128655217312933584
+--- !u!114 &381978309
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
