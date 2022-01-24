@@ -92,7 +92,7 @@ namespace Prototype.Combat
             int currentNearestIdx = -1;
             for (int i = 0; i < enemies.Length; i++)
             {
-                if (enemies[i].GetComponent<SimpleAI>().IsDead) { continue; }
+                if (!enemies[i].GetComponent<EnemyManager>().IsAttackable()) { continue; }
 
                 //I choose to use sqrtMag instead of Vector3.Distance
                 //because we don't need to know the exact distance between them

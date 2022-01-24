@@ -7,12 +7,24 @@ public class EnemyManager : MonoBehaviour
     private EnemyStats stats;
     private EnemyBehaviour behaviour;
 
-    public Action<int> onAttackHit;
+    public Action<PlayerID, float> onAttackHit;
 
     private void Start()
     {
         stats = GetComponent<EnemyStats>();
         behaviour = GetComponent<EnemyBehaviour>();
+
+        stats.Initialize();
+        behaviour.Initialize(stats.GetRandomChaseSpeed());
+    }
+
+    private void Update()
+    {
+        if (stats.IsDead) { return; }
+        
+        behaviour.IdleOrChase();
+        behaviour.Attack(stats.AttackRange, stats.AttackRate);
+        
     }
 
     /// <summary>
@@ -23,8 +35,27 @@ public class EnemyManager : MonoBehaviour
         /*
          * if (target in attack range)
          * {
-         *      onAttackHit.Invoke();
+         *      onAttackHit.Invoke(behaviour.TargetID, stats.AttackDamage);
          * }
         */
+    }
+
+    public void GetHit(float weaponDamage)
+    {
+        stats.ReduceHealth(weaponDamage);
+
+        if(stats.IsDead)
+        {
+            behaviour.Die();
+        }
+        else
+        {
+            behaviour.GetHit(stats.GetRandomChaseSpeed());
+        }
+    }
+
+    public bool IsAttackable()
+    {
+        return !stats.IsDead;
     }
 }

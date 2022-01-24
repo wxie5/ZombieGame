@@ -1791,6 +1791,11 @@ MonoBehaviour:
   maxHealth: 100
   attackRate: 3
   attackRange: 2
+  chaseSpeeds:
+  - 2.122306
+  - 2.913071
+  - 3.285013
+  m_score: 10
   m_attack_damage: 20
 --- !u!54 &1553710105642723478
 Rigidbody:

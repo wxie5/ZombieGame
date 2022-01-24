@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using Prototype.Tool;
+using Utils.MathTool;
 
 public class PlayerMove : MonoBehaviour
 {
     [Header("Set In Inspector")]
-    [SerializeField] private Player playerNum = Player.PlayerA;
+    [SerializeField] private PlayerID playerNum = PlayerID.PlayerA;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float playerRotSmoothTime = 0.02f;
     [Range(9.81f, 20f)]
@@ -15,8 +14,6 @@ public class PlayerMove : MonoBehaviour
     //Components
     private CharacterController cc;
     private Animator animator;
-    private PlayerCombat combatController;
-    private PlayerStats playerStats;
 
     //Movement Variables
     private Vector3 gVelocity;
@@ -29,33 +26,29 @@ public class PlayerMove : MonoBehaviour
     private float animationDampTime = 0.2f;
     private float animationDampSpeed = 5f;
 
-    private void Start()
+    public void Initialize(Action<bool> lockStateChange, Action shot)
     {
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        combatController = GetComponent<PlayerCombat>();
-        playerStats = GetComponent<PlayerStats>();
 
-        combatController.onLockStateChange += OnLockStateChangeHandler;
-        combatController.onShot += OnShotHandler;
+        lockStateChange += OnLockStateChangeHandler;
+        shot += OnShotHandler;
     }
 
-    private void Update()
+    public void PlayerMoveSystem(Vector2 axis, float moveSpeed, float targetMoveSpeed, bool onTargetFront, bool onTargetRight)
     {
-        //receive input base on player number
-        GetNormalizedInputAxis();
-
+        inputAxis = axis;
         //rotate player
         RotatePlayerWithAxis();
 
         //calculate the magnitude of inputAxis
-        CalculateCurrentSpeed();
+        CalculateCurrentSpeed(moveSpeed);
 
         //move player based on the inputAxis
-        PlayerMovement();
+        PlayerPositionMovement();
 
         //set animation parameter;
-        SetAnimationParam();
+        SetMovementAnim(onTargetFront, onTargetRight);
 
         //gravity simulation
         ApplyGravity();
@@ -74,23 +67,6 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void GetNormalizedInputAxis()
-    {
-        float hori, verti;
-        if (playerNum == Player.PlayerA)
-        {
-            hori = Input.GetAxisRaw("Horizontal1");
-            verti = Input.GetAxisRaw("Vertical1");
-        }
-        else
-        {
-            hori = Input.GetAxisRaw("Horizontal2");
-            verti = Input.GetAxisRaw("Vertical2");
-        }
-
-        inputAxis = new Vector2(hori, verti).normalized;
-    }
-
     private void RotatePlayerWithAxis()
     {
         if (!canFreeRotMove)
@@ -105,20 +81,20 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void CalculateCurrentSpeed()
+    private void CalculateCurrentSpeed(float moveSpeed)
     {
         Vector3 movementVector = new Vector3(inputAxis.x, 0f, inputAxis.y);
-        currentSpeed = inputAxis.magnitude * speed * playerStats.MoveSpeed();
+        currentSpeed = inputAxis.magnitude * speed * moveSpeed;
     }
 
-    private void PlayerMovement()
+    private void PlayerPositionMovement()
     {
         Vector3 movementVector = Vector3.zero;
         movementVector = new Vector3(inputAxis.x, 0f, inputAxis.y);
         cc.Move(movementVector * currentSpeed * Time.deltaTime);
     }
 
-    private void SetAnimationParam()
+    private void SetMovementAnim(bool onTargetFront, bool onTargetRight)
     {
         if (canFreeRotMove)
         {
@@ -131,7 +107,7 @@ public class PlayerMove : MonoBehaviour
             if (Mathf.Abs(inputAxis.x) > Mathf.Abs(inputAxis.y))
             {
                 float snappedHori = MathTool.NormalizedFloat(inputAxis.x);
-                if (combatController.OnTargetFront)
+                if (onTargetFront)
                 {
                     animator.SetFloat("Speed", -snappedHori);
                 }
@@ -143,7 +119,7 @@ public class PlayerMove : MonoBehaviour
             else
             {
                 float snappedVerti = MathTool.NormalizedFloat(inputAxis.y);
-                if (combatController.OnTargetRight)
+                if (onTargetRight)
                 {
                     animator.SetFloat("Speed", -snappedVerti);
                 }
@@ -178,11 +154,5 @@ public class PlayerMove : MonoBehaviour
         animator.ResetTrigger("Shot");
         animator.SetTrigger("Shot");
     }
-}
-
-public enum Player
-{
-    PlayerA,
-    PlayerB
 }
 

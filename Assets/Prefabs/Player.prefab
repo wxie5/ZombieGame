@@ -2431,11 +2431,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7986356046409018367}
   - component: {fileID: 8040162870233061057}
-  - component: {fileID: 7981481663472377380}
   - component: {fileID: 7981481663472377383}
   - component: {fileID: 7981481663472377382}
   - component: {fileID: 7981481663472377381}
-  - component: {fileID: 336398463}
+  - component: {fileID: 8573912973613532425}
+  - component: {fileID: 1621957143305073778}
+  - component: {fileID: 2946787294350915371}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2481,22 +2482,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7981481663472377380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7981481663472377377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08bfc00e0612fb9478458ac6ef639c4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerNum: 0
-  speed: 5
-  playerRotSmoothTime: 0.1
-  posGravity: 9.81
 --- !u!143 &7981481663472377383
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2544,7 +2529,7 @@ MonoBehaviour:
   retargeter: {fileID: 2357672760057965379}
   handEffector: {fileID: 2357672759658849999}
   hand: 1
---- !u!114 &336398463
+--- !u!114 &8573912973613532425
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2553,12 +2538,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 7981481663472377377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f49b4e4bf9ea36646a806c7f659abdf8, type: 3}
+  m_Script: {fileID: 11500000, guid: b686286ace9da334c964c69ae65981e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
+  maxMoveSpeed: 5
+  targetingSpeedRatio: 0.4
+  id: 0
+--- !u!114 &1621957143305073778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7981481663472377377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89922b7e5bc93c8489b32e3965b9e6b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNum: 0
+  speed: 5
+  playerRotSmoothTime: 0.1
+  posGravity: 9.81
   weaponAttackRange: 20
   weaponDamage: 10
-  shotRate: 0.12
+  shotRate: 0.2
   shotTrans: {fileID: 7599032378898168952}
   weaponOffset: {x: 10, y: 10}
   lockRange: 10
@@ -2572,10 +2577,18 @@ MonoBehaviour:
   shotParticlePrefab: {fileID: 1320275964731592, guid: 0624c6f5a57851d48ba74b4f86ec13d7, type: 3}
   bulletTrailPrefab: {fileID: 4857912865274055344, guid: 20d1e0499f2b6a44d89af4ff5c83e06a, type: 3}
   bloodParticlePrefab: {fileID: 1362418652685942, guid: b369efb4abe69e044890b664115fab9e, type: 3}
-  mask: {fileID: 1155707059}
-  health_bar: {fileID: 0}
-  m_Max_HP: 100
-  is_dead: 0
+--- !u!114 &2946787294350915371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7981481663472377377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dee15ee1ffe89c1468574cf4f987d7bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7981499750272343303
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,15 +1,17 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 using Utils.MathTool;
 
-public class PlayerCombat : MonoBehaviour
+public class PlayerBehaviour : MonoBehaviour
 {
+    [Header("Movement")]
+    [SerializeField] private PlayerID playerNum = PlayerID.PlayerA;
+    [SerializeField] private float playerRotSmoothTime = 0.02f;
+    [Range(9.81f, 20f)]
+    [SerializeField] private float posGravity = 9.81f;
+
     [Header("Combat Properties")]
-    [SerializeField] private float weaponAttackRange = 20f;
-    [SerializeField] private float weaponDamage = 10f;
-    [SerializeField] private float shotRate = 0.2f;
     [SerializeField] private Transform shotTrans;
-    [SerializeField] private Vector2 weaponOffset = new Vector2(20f, 10f);
 
     [Header("Target Lock Properties")]
     [SerializeField] private float lockRange = 10f;
@@ -25,14 +27,23 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private GameObject bloodParticlePrefab;
 
     //Components
+    private CharacterController cc;
+    private Animator animator;
     private Transform target;
     private ParticleSystem shotParticle;
     private Collider[] enemies;
-    private PlayerStats playerStats;
 
-    //events
-    public Action<bool> onLockStateChange;
-    public Action onShot;
+    //Movement Variables
+    private Vector3 gVelocity;
+    private Vector2 inputAxis;
+    private float currentSpeed;
+    private bool canFreeRotMove = true;
+    private float speed;
+
+    //Smooth Variables
+    private float playerRotSmoothRef;
+    private float animationDampTime = 0.2f;
+    private float animationDampSpeed = 5f;
 
     private bool isLockingTarget = false;
 
@@ -44,23 +55,115 @@ public class PlayerCombat : MonoBehaviour
     private float autoLoseTargetDelayTimer = 0f;
     private float shotRateTimer = 0f;
 
-    public bool OnTargetRight
-    {
-        get { return onTargetRight; }
-    }
-
-    public bool OnTargetFront
-    {
-        get { return onTargetFront; }
-    }
+    //keep track of stats
+    private PlayerStats stats;
 
     public void Initialize()
     {
-        //since OverlapSphere is expensive, we do not call it in Update
-        InvokeRepeating("UpdateTarget", 0f, 0.1f);
-
+        cc = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
         GameObject shotParticleGO = Instantiate(shotParticlePrefab, shotTrans.position, shotTrans.rotation, shotTrans);
         shotParticle = shotParticleGO.GetComponent<ParticleSystem>();
+        stats = GetComponent<PlayerStats>();
+
+        //since OverlapSphere is expensive, we do not call it in Update
+        InvokeRepeating("UpdateTarget", 0f, 0.1f);
+    }
+
+    public void PlayerMoveSystem(Vector2 axis)
+    {
+        inputAxis = axis;
+        //rotate player
+        RotatePlayerWithAxis();
+
+        //calculate the magnitude of inputAxis
+        CalculateCurrentSpeed();
+
+        //move player based on the inputAxis
+        PlayerPositionMovement();
+
+        //set animation parameter;
+        SetMovementAnim();
+
+        //gravity simulation
+        ApplyGravity();
+    }
+
+    private void ApplyGravity()
+    {
+        if (cc.isGrounded && gVelocity.y < 0f)
+        {
+            gVelocity.y = -1f;
+        }
+        else
+        {
+            gVelocity.y -= posGravity * Time.deltaTime;
+            cc.Move(gVelocity * Time.deltaTime);
+        }
+    }
+
+    private void RotatePlayerWithAxis()
+    {
+        if (!canFreeRotMove)
+        {
+            return;
+        }
+
+        if (inputAxis.magnitude != 0)
+        {
+            float targetRot = Mathf.Atan2(inputAxis.x, inputAxis.y) * Mathf.Rad2Deg;
+            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRot, ref playerRotSmoothRef, playerRotSmoothTime);
+        }
+    }
+
+    private void CalculateCurrentSpeed()
+    {
+        currentSpeed = speed * inputAxis.magnitude;
+    }
+
+    private void PlayerPositionMovement()
+    {
+        Vector3 movementVector = Vector3.zero;
+        movementVector = new Vector3(inputAxis.x, 0f, inputAxis.y);
+        cc.Move(movementVector * currentSpeed * Time.deltaTime);
+    }
+
+    private void SetMovementAnim()
+    {
+        if (canFreeRotMove)
+        {
+            animator.SetFloat("Speed", currentSpeed, animationDampTime, Time.deltaTime * animationDampSpeed);
+        }
+        else
+        {
+            //find the dominant axis (vertical or horizontal)
+            //then calculate the movement animation
+            if (Mathf.Abs(inputAxis.x) > Mathf.Abs(inputAxis.y))
+            {
+                float snappedHori = MathTool.NormalizedFloat(inputAxis.x);
+                if (onTargetFront)
+                {
+                    animator.SetFloat("Speed", -snappedHori);
+                }
+                else
+                {
+                    animator.SetFloat("Speed", snappedHori);
+                }
+            }
+            else
+            {
+                float snappedVerti = MathTool.NormalizedFloat(inputAxis.y);
+                if (onTargetRight)
+                {
+                    animator.SetFloat("Speed", -snappedVerti);
+                }
+                else
+                {
+                    animator.SetFloat("Speed", snappedVerti);
+                }
+            }
+
+        }
     }
 
     private void UpdateTarget()
@@ -107,7 +210,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void Attack()
     {
-        if (shotRateTimer >= shotRate)
+        if (shotRateTimer >= stats.CurrentShotRate)
         {
             //print("Shoot!");
             if (!isLockingTarget)
@@ -123,7 +226,8 @@ public class PlayerCombat : MonoBehaviour
             autoLoseTargetDelayTimer = 0f;
             shotRateTimer = 0f;
 
-            onShot.Invoke();
+            animator.ResetTrigger("Shot");
+            animator.SetTrigger("Shot");
         }
     }
 
@@ -141,14 +245,14 @@ public class PlayerCombat : MonoBehaviour
         }
 
         //offset the shot direction
-        float xOffset = UnityEngine.Random.Range(-weaponOffset.x, weaponOffset.x);
-        float yOffset = UnityEngine.Random.Range(-weaponOffset.y, weaponOffset.y);
+        float xOffset = UnityEngine.Random.Range(-stats.CurrentShotOffset.x, stats.CurrentShotOffset.x);
+        float yOffset = UnityEngine.Random.Range(-stats.CurrentShotOffset.y, stats.CurrentShotOffset.y);
         shotDir = Quaternion.Euler(xOffset, yOffset, 0f) * shotDir;
 
         Ray shotRay = new Ray(shotTrans.position, shotDir);
         Vector3 hitPos;
         RaycastHit hit;
-        if (Physics.Raycast(shotRay, out hit, weaponAttackRange, bulletHitableLayer))
+        if (Physics.Raycast(shotRay, out hit, stats.CurrentShotRange, bulletHitableLayer))
         {
             hitPos = hit.point;
 
@@ -156,7 +260,7 @@ public class PlayerCombat : MonoBehaviour
             //Because bullet does not has speed, we immediately damage the enemy
             if (hit.collider.tag == "Enemy")
             {
-                hit.collider.GetComponent<EnemyManager>().GetHit(weaponDamage);
+                hit.collider.GetComponent<EnemyManager>().GetHit(stats.CurrentDamage);
 
                 //play some blood effect based on the normal direction of hit point
                 GameObject bloodGO = Instantiate(bloodParticlePrefab, hit.point, Quaternion.Euler(hit.normal));
@@ -170,7 +274,7 @@ public class PlayerCombat : MonoBehaviour
         else
         {
             //if nothing is hitable, we just shot as far as we can
-            hitPos = shotTrans.position + shotDir * weaponAttackRange;
+            hitPos = shotTrans.position + shotDir * stats.CurrentShotRange;
         }
 
         return hitPos;
@@ -193,14 +297,25 @@ public class PlayerCombat : MonoBehaviour
         {
             ChangeLockState();
         }
-        autoLoseTargetDelayTimer = MathTool.TimerAddition(autoLoseTargetDelayTimer, autoLoseTargetDelay);
+        //autoLoseTargetDelayTimer = MathTool.TimerAddition(autoLoseTargetDelayTimer, autoLoseTargetDelay);
     }
 
-    //event: lock state change
+    //lock state change
     private void ChangeLockState()
     {
         isLockingTarget = !isLockingTarget;
-        onLockStateChange.Invoke(isLockingTarget);
+
+        canFreeRotMove = !isLockingTarget;
+        animator.SetBool("IsLockTarget", isLockingTarget);
+
+        if (isLockingTarget)
+        {
+            speed = stats.CurrentTargetingMoveSpeed;
+        }
+        else
+        {
+            speed = stats.CurrentMoveSpeed;
+        }
     }
 
     //rotate to the target (smoothly rotate)
@@ -223,8 +338,11 @@ public class PlayerCombat : MonoBehaviour
     //timer addition
     private void TimerAddition()
     {
-        autoLoseTargetDelayTimer = MathTool.TimerAddition(autoLoseTargetDelayTimer, autoLoseTargetDelay);
-        shotRateTimer = MathTool.TimerAddition(shotRateTimer, shotRate);
+        if (isLockingTarget)
+        {
+            autoLoseTargetDelayTimer = MathTool.TimerAddition(autoLoseTargetDelayTimer, autoLoseTargetDelay);
+        }
+        shotRateTimer = MathTool.TimerAddition(shotRateTimer, stats.CurrentShotRate);
     }
 
     //play the shot fire particle
@@ -243,4 +361,3 @@ public class PlayerCombat : MonoBehaviour
     }
 
 }
-

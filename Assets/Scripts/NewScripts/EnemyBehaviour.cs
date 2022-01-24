@@ -6,42 +6,21 @@ using System;
 
 public class EnemyBehaviour : MonoBehaviour
 {
-    //for simplicity, I direcly reduce maxHealth for this prototype
-    //in the real project, we need to set an additional "currentHealth" variable
-    [SerializeField] private float maxHealth;
-    [SerializeField] private float attackRate = 3f;
-    [SerializeField] private float attackRange = 2f;
-
-    [SerializeField] private float[] chaseSpeeds;
-
-    public int m_score = 10;
-    public float m_attack_damage = 20;
-
     //Player Transforms
     private Transform[] playersTrans;
     private Transform target;
+    private PlayerID targetID;
 
     //Components
     private NavMeshAgent agent;
     private Animator animator;
 
-    //Enemy Properties
-    private bool hasTarget = false;
-    private bool isDead = false;
-
     //Timer
     private float attackRateTimer = 0f;
 
-    //events
-    public Action onDead;
-
-    public bool IsDead
+    public void Initialize(float agentMoveSpeed)
     {
-        get { return isDead; }
-    }
-
-    private void Start()
-    {
+        //get all the players' transform in the scene
         GameObject[] playersGO = GameObject.FindGameObjectsWithTag("Player");
         playersTrans = new Transform[playersGO.Length];
         for (int i = 0; i < playersTrans.Length; i++)
@@ -53,27 +32,15 @@ public class EnemyBehaviour : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        //currently only called once, later I will change it
+        //set the target
         GetNearestPlayer();
-        ChangeChaseSpeed();
+
+        agent.speed = agentMoveSpeed;
     }
 
-    private void Update()
+    public void Attack(float attackRange, float attackRate)
     {
-        //if dead, do nothing
-        if (isDead) { return; }
-
-        //if no target, do nothing
-        if (target == null) { return; }
-
-        //set target, start chasing (for test purpose, we must have target)
-        if (!hasTarget)
-        {
-            hasTarget = true;
-        }
-
-        //has target, chasing
-        animator.SetFloat("ChaseSpeed", agent.velocity.magnitude);
+        if(target == null) { return; }
 
         if (DistanceToPlayer() < attackRange && attackRateTimer >= attackRate)
         {
@@ -87,7 +54,19 @@ public class EnemyBehaviour : MonoBehaviour
         }
 
         attackRateTimer = MathTool.TimerAddition(attackRateTimer, attackRate);
-        agent.SetDestination(target.position);
+    }
+
+    public void IdleOrChase()
+    {
+        if(target == null)
+        {
+            agent.isStopped = true;
+        }
+        else
+        {
+            agent.SetDestination(target.position);
+        }
+        animator.SetFloat("ChaseSpeed", agent.velocity.magnitude);
     }
 
     private float DistanceToPlayer()
@@ -119,49 +98,19 @@ public class EnemyBehaviour : MonoBehaviour
         if (nearestIdx != -1)
         {
             target = playersTrans[nearestIdx];
+            targetID = target.GetComponent<PlayerStats>().ID;
         }
         else
         {
             target = null;
+            targetID = PlayerID.None;
         }
     }
 
-    /// <summary>
-    /// Let the current enemy take some damage
-    /// this method is currently messy, I will make it looks better later
-    /// </summary>
-    /// <param name="dmg"></param>
-    public void TakeDamage(float dmg)
-    {
-        if ((maxHealth - dmg) <= 0f)
-        {
-            Die();
-        }
-        else
-        {
-            maxHealth -= dmg;
-
-            //choose a random hit animation
-            int randomIdx = UnityEngine.Random.Range(0, 3);
-            animator.SetFloat("HitIdx", randomIdx);
-
-            //play hit animation
-            animator.ResetTrigger("GetHit");
-            animator.SetTrigger("GetHit");
-
-            //reset velocity, change chase speed
-            agent.velocity = Vector3.zero;
-            ChangeChaseSpeed();
-        }
-    }
-
-    private void Die()
+    public void Die()
     {
         //disable nav mesh agent
         agent.enabled = false;
-
-        maxHealth = 0f;
-        isDead = true;
 
         //set the tag and layer to let player ignore dead enemy
         //also, set rigidbody to kinematic, otherwise it will have some strange rotation (because root motion)
@@ -172,15 +121,24 @@ public class EnemyBehaviour : MonoBehaviour
         //trigger death animation, apply root motion for realistic locomotion
         animator.applyRootMotion = true;
         animator.SetTrigger("Die");
-        animator.SetBool("IsDead", isDead);
+        animator.SetBool("IsDead", true);
 
         //trigger on dead event
-        onDead.Invoke();
+        //onDead.Invoke();
     }
 
-    private void ChangeChaseSpeed()
+    public void GetHit(float newMoveSpeed)
     {
-        int randomIdx = UnityEngine.Random.Range(0, chaseSpeeds.Length);
-        agent.speed = chaseSpeeds[randomIdx];
+        //choose a random hit animation
+        int randomIdx = UnityEngine.Random.Range(0, 3);
+        animator.SetFloat("HitIdx", randomIdx);
+
+        //play hit animation
+        animator.ResetTrigger("GetHit");
+        animator.SetTrigger("GetHit");
+
+        //reset velocity, change chase speed
+        agent.velocity = Vector3.zero;
+        agent.speed = newMoveSpeed;
     }
 }

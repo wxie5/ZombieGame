@@ -1,106 +1,140 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils.MathTool;
 
 public class PlayerStats : MonoBehaviour
 {
-    //Some buff multipliers that the player comes with, the initial value is 1, which will be increased by the effect of props. The value in the game is the multiplier * actual value.
-    [SerializeField] private Image mask; //mask for HealthBar UI
-    [SerializeField] private float m_MaxHP = 100;
-    private float m_CurrentHP;
-    private float m_ShotRate = 1; //The shoot rate multipliers, which is faster and faster from 1->0.
-    private float m_BasicDamage = 1;
-    private float m_MoveSpeed = 1;
-    private int m_BulletNumber = 1;
-    private float m_Offset = 1; //The offset when shooting, which is more and more accurate from 1->0.
-    private bool m_IsDead = false;
+    //Some buff multipliers that the player comes with, the initial value is 1
+    //which will be increased by the effect of props. The value in the game is the multiplier * actual value.
+    [SerializeField] private float maxHealth = 100;
+    [SerializeField] private float maxMoveSpeed = 5f;
+    [Range(0.2f, 0.5f)]
+    [SerializeField] private float targetingSpeedRatio = 0.4f;
+    [SerializeField] private PlayerID id;
 
-    // Start is called before the first frame update
-    void Start()
+    //basic stats
+    private float currentHealth;
+    private float currentShotRange;
+    private float currentShotRate;
+    private float currentDamage;
+    private float currentMoveSpeed;
+    private int currentBulletNumber = 1;
+    private Vector2 currentShotOffset;
+    private bool isDead = false;
+
+    //TODO: private Weapon currentWeapon;
+
+    //multipliers
+    private float shotRateMulti = 1; //The shoot rate multipliers, which is faster and faster from 1->0.
+    private float damageRateMulti = 1;
+    private float moveSpeedMulti = 1;
+    private float shotOffsetMulti = 1; //The offset when shooting, which is more and more accurate from 1->0.
+
+    #region Attribute Fields
+    public PlayerID ID
     {
-        m_CurrentHP = m_MaxHP;
+        get { return id; }
+    }
+
+    public float CurrentHealth
+    {
+        get { return currentHealth; }
+    }
+
+    public float CurrentShotRate
+    {
+        get { return currentShotRate; }
+    }
+
+    public float CurrentDamage
+    {
+        get { return currentDamage; }
+    }
+
+    public float CurrentShotRange
+    {
+        get { return currentShotRange; }
+    }
+
+    public float CurrentMoveSpeed
+    {
+        get { return currentMoveSpeed; }
+    }
+
+    public float CurrentTargetingMoveSpeed
+    {
+        get { return currentMoveSpeed * targetingSpeedRatio; }
+    }
+
+    public int BulletNumber
+    {
+        get { return currentBulletNumber; }
+    }
+
+    public Vector2 CurrentShotOffset
+    {
+        get { return currentShotOffset; }
+    }
+
+    public bool IsDead
+    {
+        get { return isDead; }
+    }
+    #endregion
+
+    public void Initialize()
+    {
+        currentHealth = maxHealth;
+        currentMoveSpeed = moveSpeedMulti * maxMoveSpeed;
+        currentShotRate = shotRateMulti * 0.2f;
+        currentDamage = damageRateMulti * 10f;
+        currentShotRange = 20f;
+
+        currentShotOffset = shotOffsetMulti * new Vector2(10f, 10f);
     }
 
     public void TakeDamage(float amount)
     {
-        m_CurrentHP -= amount;
+        currentHealth = MathTool.NonNegativeSub(currentHealth, amount);
     }
 
     public void Recover(float amount)
     {
-        m_CurrentHP += amount;
-        if(m_CurrentHP >= m_MaxHP)
-        {
-            m_CurrentHP = m_MaxHP;
-        }
+        currentHealth = MathTool.NonOverflowAdd(currentHealth, amount, maxHealth);
     }
 
 
     //Here are some functions that interact with the props class that can affect the multipliers value.
     public void ChangeShotRate(float amount)
     {
-        m_ShotRate *= (1 + amount);
+        shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, -amount);
+
+        //currentShotRate = shotRateMulti * currentWeapon.shotRate;
     }
 
-    public void ChangeBasicDamage(float amount)
+    public void ChangeDamage(float amount)
     {
-        m_BasicDamage *= (1 + amount);
+        damageRateMulti = MathTool.NonNegativeSub(damageRateMulti, -amount);
+
+        //currentDamage = damageRateMulti * currentWeapon.damage;
     }
 
     public void ChangeMoveSpeed(float amount)
     {
-        m_MoveSpeed *= (1 - amount);
+        moveSpeedMulti = MathTool.NonNegativeSub(moveSpeedMulti, -amount);
+
+        //currentMoveSpeed = moveSpeedMulti * maxMoveSpeed;
     }
 
     public void ChangeBulletNumber(int amount)
     {
-        m_BulletNumber += amount;
+        currentBulletNumber = MathTool.NonNegativeSub(currentBulletNumber, -amount);
     }
 
     public void ChangeOffset(float amount)
     {
-        m_Offset *= (1 - amount);
-    }
+        shotOffsetMulti += MathTool.NonNegativeSub(shotOffsetMulti, -amount);
 
-
-    //Here are some methods for returning member variable values to other classes.
-    public float MaxHP()
-    {
-        return m_MaxHP;
-    }    
-    public float CurrentHP()
-    {
-        return m_CurrentHP;
-    }
-
-    public float ShotRate()
-    {
-        return m_ShotRate;
-    }
-    
-    public float BasicDamage()
-    {
-        return m_BasicDamage;
-    }
-
-    public float MoveSpeed()
-    {
-        return m_MoveSpeed;
-    }
-
-    public int BulletNumber()
-    {
-        return m_BulletNumber;
-    }
-
-    public float Offset()
-    {
-        return m_Offset;
-    }    
-
-    public bool IsDead()
-    {
-        return m_IsDead;
+        //currentShotOffset = shotOffsetMulti * currentWeapon.offset;
     }
 }

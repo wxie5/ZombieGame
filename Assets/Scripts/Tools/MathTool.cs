@@ -29,11 +29,29 @@ namespace Utils.MathTool
             return Mathf.Min(timer + Time.deltaTime, t);
         }
 
+        /// <summary>
+        /// return the subtracted value, never go below 0
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
         public static float NonNegativeSub(float current, float amount)
         {
             return Mathf.Max(0f, current - amount);
         }
 
+        public static int NonNegativeSub(int current, int amount)
+        {
+            return Mathf.Max(0, current - amount);
+        }
+
+        /// <summary>
+        /// return the added value, never go above floor
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="amount"></param>
+        /// <param name="floorValue"></param>
+        /// <returns></returns>
         public static float NonOverflowAdd(float current, float amount, float floorValue)
         {
             return Mathf.Min(current + amount, floorValue);
