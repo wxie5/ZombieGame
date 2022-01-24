@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using Utils.MathTool;
 
 public class PlayerStats : MonoBehaviour
@@ -12,6 +11,9 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float targetingSpeedRatio = 0.4f;
     [SerializeField] private PlayerID id;
 
+    [Header("Set Gun's ScriptableObject")]
+    [SerializeField] private Gun[] gunSO;
+
     //basic stats
     private float currentHealth;
     private float currentShotRange;
@@ -22,13 +24,16 @@ public class PlayerStats : MonoBehaviour
     private Vector2 currentShotOffset;
     private bool isDead = false;
 
-    //TODO: private Weapon currentWeapon;
+    //Weapons
+    private Gun currentGun;
+    private GunType permanentGunType;
+    private GunType pickUpGunType;
 
     //multipliers
-    private float shotRateMulti = 1; //The shoot rate multipliers, which is faster and faster from 1->0.
-    private float damageRateMulti = 1;
-    private float moveSpeedMulti = 1;
-    private float shotOffsetMulti = 1; //The offset when shooting, which is more and more accurate from 1->0.
+    private float shotRateMulti = 1f; //The shoot rate multipliers, which is faster and faster from 1->0.
+    private float damageRateMulti = 1f;
+    private float moveSpeedMulti = 1f;
+    private float shotOffsetMulti = 1f; //The offset when shooting, which is more and more accurate from 1->0.
 
     #region Attribute Fields
     public PlayerID ID
@@ -80,17 +85,31 @@ public class PlayerStats : MonoBehaviour
     {
         get { return isDead; }
     }
+
+    public Gun CurrentGun
+    {
+        get { return currentGun; }
+    }
     #endregion
 
     public void Initialize()
     {
         currentHealth = maxHealth;
         currentMoveSpeed = moveSpeedMulti * maxMoveSpeed;
-        currentShotRate = shotRateMulti * 0.2f;
-        currentDamage = damageRateMulti * 10f;
-        currentShotRange = 20f;
 
-        currentShotOffset = shotOffsetMulti * new Vector2(10f, 10f);
+        //for test only
+        permanentGunType = GunType.Handgun;
+        pickUpGunType = GunType.AssaultRifle;
+
+        foreach (Gun g in gunSO)
+        {
+            if (g.gunType == permanentGunType)
+            {
+                currentGun = g;
+            }
+        }
+
+        UpdatePlayerCombatStats();
     }
 
     public void TakeDamage(float amount)
@@ -109,21 +128,21 @@ public class PlayerStats : MonoBehaviour
     {
         shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, -amount);
 
-        //currentShotRate = shotRateMulti * currentWeapon.shotRate;
+        currentShotRate = shotRateMulti * currentGun.shotRate;
     }
 
     public void ChangeDamage(float amount)
     {
         damageRateMulti = MathTool.NonNegativeSub(damageRateMulti, -amount);
 
-        //currentDamage = damageRateMulti * currentWeapon.damage;
+        currentDamage = damageRateMulti * currentGun.damage;
     }
 
     public void ChangeMoveSpeed(float amount)
     {
         moveSpeedMulti = MathTool.NonNegativeSub(moveSpeedMulti, -amount);
 
-        //currentMoveSpeed = moveSpeedMulti * maxMoveSpeed;
+        currentMoveSpeed = moveSpeedMulti * maxMoveSpeed;
     }
 
     public void ChangeBulletNumber(int amount)
@@ -135,6 +154,44 @@ public class PlayerStats : MonoBehaviour
     {
         shotOffsetMulti += MathTool.NonNegativeSub(shotOffsetMulti, -amount);
 
-        //currentShotOffset = shotOffsetMulti * currentWeapon.offset;
+        currentShotOffset = shotOffsetMulti * currentGun.offset;
+    }
+
+    public void SwitchGunUpdateState()
+    {
+        GunType targetGunType = default(GunType);
+        if(currentGun.gunType == permanentGunType)
+        {
+            targetGunType = pickUpGunType;
+        }
+        else
+        {
+            targetGunType = permanentGunType;
+        }
+
+        foreach(Gun g in gunSO)
+        {
+            if(g.gunType == targetGunType)
+            {
+                currentGun = g;
+            }
+        }
+
+        UpdatePlayerCombatStats();
+    }
+
+    public void PickGunUpdateState(GunType newGunType)
+    {
+        //TODO: change pickUpGunType to the new picked up gun
+
+        UpdatePlayerCombatStats();
+    }
+
+    private void UpdatePlayerCombatStats()
+    {
+        currentShotRate = currentGun.shotRate * shotRateMulti;
+        currentShotRange = currentGun.shotRange;
+        currentDamage = currentGun.damage * damageRateMulti;
+        currentShotOffset = currentGun.offset * shotOffsetMulti;
     }
 }

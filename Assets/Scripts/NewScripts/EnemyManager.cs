@@ -15,7 +15,7 @@ public class EnemyManager : MonoBehaviour
         behaviour = GetComponent<EnemyBehaviour>();
 
         stats.Initialize();
-        behaviour.Initialize(stats.GetRandomChaseSpeed());
+        behaviour.Initialize();
     }
 
     private void Update()
@@ -23,7 +23,7 @@ public class EnemyManager : MonoBehaviour
         if (stats.IsDead) { return; }
         
         behaviour.IdleOrChase();
-        behaviour.Attack(stats.AttackRange, stats.AttackRate);
+        behaviour.Attack();
         
     }
 
@@ -50,7 +50,7 @@ public class EnemyManager : MonoBehaviour
         }
         else
         {
-            behaviour.GetHit(stats.GetRandomChaseSpeed());
+            behaviour.GetHit();
         }
     }
 

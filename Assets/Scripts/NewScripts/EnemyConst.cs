@@ -1,9 +1,9 @@
 public static class EnemyConst
 {
-    public const float MAX_HEALTH = 100f;
-    public const float ATTACK_DAMAGE = 10f;
-    public const int SCORE = 5;
-    public const float ATTACK_RATE = 3f;
-    public const float ATTACK_RANGE = 2f;
-    public const float CHASE_SPEED = 2.1f;
+    public static float MAX_HEALTH = 100f;
+    public static float ATTACK_DAMAGE = 10f;
+    public static int SCORE = 5;
+    public static float ATTACK_RATE = 3f;
+    public static float ATTACK_RANGE = 2f;
+    public static float CHASE_SPEED = 2.5f;
 }

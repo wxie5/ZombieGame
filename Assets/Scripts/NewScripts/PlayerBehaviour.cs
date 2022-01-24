@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Utils.MathTool;
 
@@ -12,6 +11,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     [Header("Combat Properties")]
     [SerializeField] private Transform shotTrans;
+    [SerializeField] private Transform gunSlotTrans;
 
     [Header("Target Lock Properties")]
     [SerializeField] private float lockRange = 10f;
@@ -36,9 +36,9 @@ public class PlayerBehaviour : MonoBehaviour
     //Movement Variables
     private Vector3 gVelocity;
     private Vector2 inputAxis;
-    private float currentSpeed;
+    private float targetSpeed;
     private bool canFreeRotMove = true;
-    private float speed;
+    private float currentSpeed;
 
     //Smooth Variables
     private float playerRotSmoothRef;
@@ -55,7 +55,7 @@ public class PlayerBehaviour : MonoBehaviour
     private float autoLoseTargetDelayTimer = 0f;
     private float shotRateTimer = 0f;
 
-    //keep track of stats
+    //keep track of stats (only read from stats, stats never read from behaviour)
     private PlayerStats stats;
 
     public void Initialize()
@@ -68,6 +68,12 @@ public class PlayerBehaviour : MonoBehaviour
 
         //since OverlapSphere is expensive, we do not call it in Update
         InvokeRepeating("UpdateTarget", 0f, 0.1f);
+
+        //Initialize Gun
+        InitGun();
+
+        //Initialize Speed
+        currentSpeed = stats.CurrentMoveSpeed;
     }
 
     public void PlayerMoveSystem(Vector2 axis)
@@ -77,7 +83,7 @@ public class PlayerBehaviour : MonoBehaviour
         RotatePlayerWithAxis();
 
         //calculate the magnitude of inputAxis
-        CalculateCurrentSpeed();
+        CalculateTargetSpeed();
 
         //move player based on the inputAxis
         PlayerPositionMovement();
@@ -87,6 +93,25 @@ public class PlayerBehaviour : MonoBehaviour
 
         //gravity simulation
         ApplyGravity();
+    }
+
+    public void PlayerCombatSystem(bool hitShotButton)
+    {
+        if (hitShotButton)
+        {
+            Attack();
+        }
+        AutoUnlockTarget();
+        RotateToTarget();
+        TimerAddition();
+    }
+
+    public void PlayerWeaponSwitchSystem(bool hitSwitchButton)
+    {
+        if (hitSwitchButton)
+        {
+            SwitchGun();
+        }
     }
 
     private void ApplyGravity()
@@ -116,23 +141,23 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    private void CalculateCurrentSpeed()
+    private void CalculateTargetSpeed()
     {
-        currentSpeed = speed * inputAxis.magnitude;
+        targetSpeed = currentSpeed * inputAxis.magnitude;
     }
 
     private void PlayerPositionMovement()
     {
         Vector3 movementVector = Vector3.zero;
         movementVector = new Vector3(inputAxis.x, 0f, inputAxis.y);
-        cc.Move(movementVector * currentSpeed * Time.deltaTime);
+        cc.Move(movementVector * targetSpeed * Time.deltaTime);
     }
 
     private void SetMovementAnim()
     {
         if (canFreeRotMove)
         {
-            animator.SetFloat("Speed", currentSpeed, animationDampTime, Time.deltaTime * animationDampSpeed);
+            animator.SetFloat("Speed", targetSpeed, animationDampTime, Time.deltaTime * animationDampSpeed);
         }
         else
         {
@@ -195,17 +220,6 @@ public class PlayerBehaviour : MonoBehaviour
             //if no target, set to null
             target = null;
         }
-    }
-
-    public void PlayerCombatSystem(bool hitShotButton)
-    {
-        if (hitShotButton)
-        {
-            Attack();
-        }
-        AutoUnlockTarget();
-        RotateToTarget();
-        TimerAddition();
     }
 
     private void Attack()
@@ -310,11 +324,11 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (isLockingTarget)
         {
-            speed = stats.CurrentTargetingMoveSpeed;
+            currentSpeed = stats.CurrentTargetingMoveSpeed;
         }
         else
         {
-            speed = stats.CurrentMoveSpeed;
+            currentSpeed = stats.CurrentMoveSpeed;
         }
     }
 
@@ -351,6 +365,30 @@ public class PlayerBehaviour : MonoBehaviour
         if (shotParticle == null) { return; }
 
         shotParticle.Play();
+    }
+
+    private void SwitchGun()
+    {
+        stats.SwitchGunUpdateState();
+        InitGun();
+    }
+
+    private void InitGun()
+    {
+        //remove old gun, instantiate new gun
+        //may change the implementation later (disable not in used guns, only leave one active)
+        Gun currentGun = stats.CurrentGun;
+        if (gunSlotTrans.childCount > 0)
+        {
+            Destroy(gunSlotTrans.GetChild(0).gameObject);
+        }
+        GameObject newGun = Instantiate(currentGun.gunPrefab, gunSlotTrans.position, Quaternion.identity, gunSlotTrans);
+        newGun.transform.localPosition = currentGun.handPosition;
+        newGun.transform.localRotation = Quaternion.Euler(currentGun.handRotation);
+
+        //change animation
+        float currentWeaponID = (float)currentGun.gunType;
+        animator.SetFloat("WeaponID", currentWeaponID);
     }
 
     //for debug only, show player's lock range in the scene (edit mode, not play mode)

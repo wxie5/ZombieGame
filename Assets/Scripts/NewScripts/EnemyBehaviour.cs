@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Utils.MathTool;
-using System;
-
 
 public class EnemyBehaviour : MonoBehaviour
 {
@@ -18,7 +16,10 @@ public class EnemyBehaviour : MonoBehaviour
     //Timer
     private float attackRateTimer = 0f;
 
-    public void Initialize(float agentMoveSpeed)
+    //keep track of enemy stats (only read from stats, stats never read from behaviour)
+    private EnemyStats stats;
+
+    public void Initialize()
     {
         //get all the players' transform in the scene
         GameObject[] playersGO = GameObject.FindGameObjectsWithTag("Player");
@@ -31,18 +32,20 @@ public class EnemyBehaviour : MonoBehaviour
         //get components
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        stats = GetComponent<EnemyStats>();
 
         //set the target
         GetNearestPlayer();
 
-        agent.speed = agentMoveSpeed;
+        //initialize agent speed
+        agent.speed = stats.GetRandomChaseSpeed();
     }
 
-    public void Attack(float attackRange, float attackRate)
+    public void Attack()
     {
         if(target == null) { return; }
 
-        if (DistanceToPlayer() < attackRange && attackRateTimer >= attackRate)
+        if (DistanceToPlayer() < stats.AttackRange && attackRateTimer >= stats.AttackRate)
         {
             //attack
             animator.SetTrigger("Attack");
@@ -53,7 +56,7 @@ public class EnemyBehaviour : MonoBehaviour
             attackRateTimer = 0f;
         }
 
-        attackRateTimer = MathTool.TimerAddition(attackRateTimer, attackRate);
+        attackRateTimer = MathTool.TimerAddition(attackRateTimer, stats.AttackRate);
     }
 
     public void IdleOrChase()
@@ -127,7 +130,7 @@ public class EnemyBehaviour : MonoBehaviour
         //onDead.Invoke();
     }
 
-    public void GetHit(float newMoveSpeed)
+    public void GetHit()
     {
         //choose a random hit animation
         int randomIdx = UnityEngine.Random.Range(0, 3);
@@ -139,6 +142,6 @@ public class EnemyBehaviour : MonoBehaviour
 
         //reset velocity, change chase speed
         agent.velocity = Vector3.zero;
-        agent.speed = newMoveSpeed;
+        agent.speed = stats.GetRandomChaseSpeed();
     }
 }

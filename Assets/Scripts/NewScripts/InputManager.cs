@@ -26,4 +26,9 @@ public class InputManager : MonoBehaviour
     {
         return Input.GetKey(KeyCode.J);
     }
+
+    public static bool PlayerA_Switch()
+    {
+        return Input.GetKeyDown(KeyCode.Q);
+    }
 }

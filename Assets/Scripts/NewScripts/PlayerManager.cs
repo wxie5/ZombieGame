@@ -34,6 +34,9 @@ public class PlayerManager : MonoBehaviour
 
         //Combat
         behaviour.PlayerCombatSystem(InputManager.PlayerA_Attack());
+
+        //Weapon Switch
+        behaviour.PlayerWeaponSwitchSystem(InputManager.PlayerA_Switch());
     }
 }
 
