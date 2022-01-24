@@ -3,7 +3,8 @@ using UnityEngine.AI;
 using Utils.MathTool;
 using System;
 
-public class SimpleAI : MonoBehaviour
+
+public class EnemyBehaviour : MonoBehaviour
 {
     //for simplicity, I direcly reduce maxHealth for this prototype
     //in the real project, we need to set an additional "currentHealth" variable
@@ -43,7 +44,7 @@ public class SimpleAI : MonoBehaviour
     {
         GameObject[] playersGO = GameObject.FindGameObjectsWithTag("Player");
         playersTrans = new Transform[playersGO.Length];
-        for(int i = 0; i < playersTrans.Length; i++)
+        for (int i = 0; i < playersTrans.Length; i++)
         {
             playersTrans[i] = playersGO[i].transform;
         }
@@ -74,7 +75,7 @@ public class SimpleAI : MonoBehaviour
         //has target, chasing
         animator.SetFloat("ChaseSpeed", agent.velocity.magnitude);
 
-        if(DistanceToPlayer() < attackRange && attackRateTimer >= attackRate)
+        if (DistanceToPlayer() < attackRange && attackRateTimer >= attackRate)
         {
             //attack
             animator.SetTrigger("Attack");
@@ -91,7 +92,7 @@ public class SimpleAI : MonoBehaviour
 
     private float DistanceToPlayer()
     {
-        if(target == null)
+        if (target == null)
         {
             return 0f;
         }
@@ -105,17 +106,17 @@ public class SimpleAI : MonoBehaviour
     {
         int nearestIdx = -1;
         float curMinSqrMag = Mathf.Infinity;
-        for(int i = 0; i < playersTrans.Length; i++)
+        for (int i = 0; i < playersTrans.Length; i++)
         {
             float sqrMag = (playersTrans[i].position - transform.position).sqrMagnitude;
-            if(sqrMag < curMinSqrMag)
+            if (sqrMag < curMinSqrMag)
             {
                 curMinSqrMag = sqrMag;
                 nearestIdx = i;
             }
         }
 
-        if(nearestIdx != -1)
+        if (nearestIdx != -1)
         {
             target = playersTrans[nearestIdx];
         }
@@ -132,28 +133,9 @@ public class SimpleAI : MonoBehaviour
     /// <param name="dmg"></param>
     public void TakeDamage(float dmg)
     {
-        if((maxHealth - dmg) <= 0f)
+        if ((maxHealth - dmg) <= 0f)
         {
-            agent.enabled = false;
-
-            maxHealth = 0f;
-            isDead = true;
-
-            //set the tag and layer to let player ignore dead enemy
-            //also, set rigidbody to kinematic, otherwise it will have some strange rotation (because root motion)
-            gameObject.tag = "Dead";
-            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-            GetComponent<Rigidbody>().isKinematic = true;
-
-            //trigger is for triggering death animation
-            //bool is for ensuring we never go from death animation to GetHit
-            //because both GetHit and Death are connected to "Anystate"
-            animator.applyRootMotion = true;
-            animator.SetTrigger("Die");
-            animator.SetBool("IsDead", isDead);
-
-            //trigger event
-            onDead.Invoke();
+            Die();
         }
         else
         {
@@ -171,6 +153,29 @@ public class SimpleAI : MonoBehaviour
             agent.velocity = Vector3.zero;
             ChangeChaseSpeed();
         }
+    }
+
+    private void Die()
+    {
+        //disable nav mesh agent
+        agent.enabled = false;
+
+        maxHealth = 0f;
+        isDead = true;
+
+        //set the tag and layer to let player ignore dead enemy
+        //also, set rigidbody to kinematic, otherwise it will have some strange rotation (because root motion)
+        gameObject.tag = "Dead";
+        gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        GetComponent<Rigidbody>().isKinematic = true;
+
+        //trigger death animation, apply root motion for realistic locomotion
+        animator.applyRootMotion = true;
+        animator.SetTrigger("Die");
+        animator.SetBool("IsDead", isDead);
+
+        //trigger on dead event
+        onDead.Invoke();
     }
 
     private void ChangeChaseSpeed()

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Prototype.Tool
+namespace Utils.MathTool
 {
     /// <summary>
     /// some math tools that is helpful for this prototype project
@@ -27,6 +27,16 @@ namespace Prototype.Tool
         public static float TimerAddition(float timer, float t)
         {
             return Mathf.Min(timer + Time.deltaTime, t);
+        }
+
+        public static float NonNegativeSub(float current, float amount)
+        {
+            return Mathf.Max(0f, current - amount);
+        }
+
+        public static float NonOverflowAdd(float current, float amount, float floorValue)
+        {
+            return Mathf.Min(current + amount, floorValue);
         }
     }
 }

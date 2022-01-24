@@ -1,5 +1,5 @@
 using UnityEngine;
-using Prototype.Tool;
+using Utils.MathTool;
 using Prototype.Combat;
 
 /// <summary>

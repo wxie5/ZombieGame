@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-using Prototype.Tool;
+using Utils.MathTool;
 using UnityEngine.UI;
 
 namespace Prototype.Combat
