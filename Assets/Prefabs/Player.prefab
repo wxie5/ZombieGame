@@ -90,6 +90,36 @@ Transform:
   m_Father: {fileID: 7986356046409018367}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6888326286924287826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3725008020551345613}
+  m_Layer: 7
+  m_Name: GunSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3725008020551345613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6888326286924287826}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7983201938224493021}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7980408555050727975
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,7 +570,7 @@ Transform:
   - {fileID: 7986011094599550363}
   - {fileID: 7983704110626764953}
   - {fileID: 2357672759658849999}
-  - {fileID: 2353323831507831721}
+  - {fileID: 3725008020551345613}
   m_Father: {fileID: 7986013591857308849}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2202,7 +2232,30 @@ MonoBehaviour:
   retargeter: {fileID: 2357672760057965379}
   handEffector: {fileID: 2357672759658849999}
   hand: 1
+<<<<<<< Updated upstream
 --- !u!114 &336398463
+=======
+--- !u!114 &8573912973613532425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7981481663472377377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b686286ace9da334c964c69ae65981e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  maxMoveSpeed: 5
+  targetingSpeedRatio: 0.4
+  id: 0
+  gunSO:
+  - {fileID: 11400000, guid: 2dd73a03cc3894b4ebeb205c80dd02d4, type: 2}
+  - {fileID: 11400000, guid: 659241ddf8050624b91c4e0012dfbcd8, type: 2}
+--- !u!114 &1621957143305073778
+>>>>>>> Stashed changes
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2214,11 +2267,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49b4e4bf9ea36646a806c7f659abdf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   weaponAttackRange: 20
   weaponDamage: 10
   shotRate: 0.12
+=======
+  playerNum: 0
+  playerRotSmoothTime: 0.1
+  posGravity: 9.81
+>>>>>>> Stashed changes
   shotTrans: {fileID: 7599032378898168952}
-  weaponOffset: {x: 10, y: 10}
+  gunSlotTrans: {fileID: 3725008020551345613}
   lockRange: 10
   autoLoseTargetDelay: 0.5
   lockableLayer:
@@ -2416,6 +2475,7 @@ Transform:
   m_Father: {fileID: 7983422811524124811}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< Updated upstream
 --- !u!1001 &2357672760787703371
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2478,3 +2538,5 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4659094642351586, guid: 9281ea4fb86d62a4882324b916876584, type: 3}
   m_PrefabInstance: {fileID: 2357672760787703371}
   m_PrefabAsset: {fileID: 0}
+=======
+>>>>>>> Stashed changes
