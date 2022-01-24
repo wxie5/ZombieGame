@@ -12,6 +12,7 @@ public class SimpleAI : MonoBehaviour
     [SerializeField] private float attackRate = 3f;
     [SerializeField] private float attackRange = 2f;
 
+    public int m_score = 10;
     public float m_attack_damage = 20;
 
     //Player Transforms

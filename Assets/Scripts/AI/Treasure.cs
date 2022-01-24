@@ -17,7 +17,9 @@ public class Treasure : MonoBehaviour
     public void InstantiateTreature()
     {
         int randomInstID = Random.Range(0, treaturePrefabs.Length);
-        Instantiate(treaturePrefabs[randomInstID], transform.position, transform.rotation, treasureParentTrans);
+        Vector3 instantiatePosition = transform.position;
+        instantiatePosition.y += 0.5f;
+        Instantiate(treaturePrefabs[randomInstID], instantiatePosition, transform.rotation, treasureParentTrans);
         simpleAI.onDead -= InstantiateTreature;
     }
 }

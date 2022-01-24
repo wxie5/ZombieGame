@@ -1577,7 +1577,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1594,6 +1594,7 @@ RectTransform:
   m_Children:
   - {fileID: 1413243577}
   - {fileID: 636913465}
+  - {fileID: 1141279018}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1816,6 +1817,85 @@ Transform:
   m_Father: {fileID: 51491872}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!1 &1141279017
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1141279018}
+  - component: {fileID: 1141279020}
+  - component: {fileID: 1141279019}
+  m_Layer: 5
+  m_Name: Score
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1141279018
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141279017}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 929317452}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 223.77603, y: -105.51752}
+  m_SizeDelta: {x: 385.5521, y: 161.035}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1141279019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141279017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.3773585, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 997a43b767814dd0a7642ec9b78cba41, type: 3}
+    m_FontSize: 30
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &1141279020
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141279017}
+  m_CullTransparentMesh: 1
 --- !u!4 &1141650987 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4670264080646756, guid: 6b4d26e24efa892498cc8703f5fd44d6, type: 3}
@@ -3671,7 +3751,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2139448383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15c914884b793ab4eb9b707bdda08e5f, type: 3}
+  m_Script: {fileID: 11500000, guid: 335ff364fe006f742a02f947acb15466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_zombiePrefab:
@@ -3685,55 +3765,15 @@ MonoBehaviour:
   - {fileID: 566223856}
   - {fileID: 1130693117}
   - {fileID: 107435279}
-  m_RandomSpawn: 1
-  m_Zombies:
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
-  - m_ZombieType: {fileID: 1553710105642723466, guid: 076430395ac8df14a85e5977de619f2f, type: 3}
-    m_SpawnPoint: {fileID: 1656804043}
-    m_ZombieNumber: 0
-    m_Instance: {fileID: 0}
   m_game_message: {fileID: 636913466}
+  m_scoreMessage: {fileID: 1141279019}
   m_PlayerPerfab: {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
   m_PlayerSpawnPoint: {fileID: 1467766661}
   m_CamaraCenter: {fileID: 1419246183}
   m_PlayerInstance: {fileID: 0}
-  m_StartDelay: 1
+  m_StartDelay: 3
   m_EndDelay: 1
+  m_score: 0
   m_ZombieSpawnInterval: 0.5
 --- !u!4 &2139448385
 Transform:

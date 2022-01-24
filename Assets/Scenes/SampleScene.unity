@@ -6047,6 +6047,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8896123734714700819, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896123734714700819, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896123734714700819, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896123734714700819, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9872144
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896123734714700819, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.15939783
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896123734714700819, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 18.344
+      objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309363, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: playerTrans
       value: 

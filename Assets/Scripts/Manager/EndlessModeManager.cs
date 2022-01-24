@@ -5,13 +5,14 @@ using UnityEngine.UI;
 using Prototype.move;
 using Prototype.Combat;
 
-public class GameManager : MonoBehaviour
+public class EndlessModeManager : MonoBehaviour
 {
     public GameObject[] m_zombiePrefab;
     public Transform[] m_SpawnPoint;
-    public bool m_RandomSpawn;
-    public ZombieManager[] m_Zombies;
+    private GameObject[] m_Zombies;
+    private bool[] m_deadZombies;
     public Text m_game_message;
+    public Text m_scoreMessage;
     public GameObject m_PlayerPerfab;
     public Transform m_PlayerSpawnPoint;
     public GameObject m_CamaraCenter;
@@ -21,6 +22,11 @@ public class GameManager : MonoBehaviour
     public float m_EndDelay = 1f;
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
+
+    private int m_numberOfWaves = 0;
+    [HideInInspector] public int m_score = 0;
+
+    private int m_numberOfZombies = 5;
 
     private int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
 
@@ -35,24 +41,27 @@ public class GameManager : MonoBehaviour
         m_EndWait = new WaitForSeconds(m_EndDelay);
 
         SpawnPlayer();  //Set the player's starting position
+        m_PlayerInstance.GetComponent<SimpleMove>().enabled = false;
+        m_PlayerInstance.GetComponent<SimpleCombat>().enabled = false;
         StartCoroutine(GameLoop());
     }
-
+    private void FixedUpdate()
+    {
+        m_scoreMessage.text = "Current Score: " + m_score;
+        UpdateScore();
+        if (m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        {
+            StartCoroutine(GameEnding());
+        }
+    }
     private void SpawnZombies() // Summon zombies one by one
     {
-        if (m_RandomSpawn) //If set random spawn, random types of zombies will be randomly summoned from each spawn point.
-        {
-            int zombie_number;
-            int spawn_point_number;
-            zombie_number = Random.Range(0, m_zombiePrefab.Length);
-            spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
-            m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint[spawn_point_number]) as GameObject;
-        }
-        else //Otherwise, the specified zombie will be spawned at the specified location
-        {
-            m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_Zombies[m_currentSpawningzombieNumber].m_ZombieType, m_Zombies[m_currentSpawningzombieNumber].m_SpawnPoint) as GameObject;
-        }
-        m_currentSpawningzombieNumber++;
+        int zombie_number;
+        int spawn_point_number;
+        zombie_number = Random.Range(0, m_zombiePrefab.Length);
+        spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
+        Debug.Log(m_currentSpawningzombieNumber);
+        m_Zombies[m_currentSpawningzombieNumber] = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint[spawn_point_number]) as GameObject;
     } 
 
     private void SpawnPlayer()
@@ -62,19 +71,24 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator GameLoop()
     {
-        yield return StartCoroutine(GameStarting());
-        yield return StartCoroutine(ZombieSpawning());
-        yield return StartCoroutine(GamePlaying());
-        yield return StartCoroutine(BeforeEnding());
-        yield return StartCoroutine(GameEnding());
+        while (!m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
+        {
+            yield return StartCoroutine(GameStarting());
+            yield return StartCoroutine(ZombieSpawning());
+            yield return StartCoroutine(GamePlaying());
+            yield return StartCoroutine(BeforeEnding());
+        }
     }
 
 
     private IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
-        m_PlayerInstance.GetComponent<SimpleMove>().enabled = false;
-        m_PlayerInstance.GetComponent<SimpleCombat>().enabled = false;
-        m_game_message.text = "Game Start!" + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!";
+        m_numberOfZombies += Random.Range(1, 3);
+        m_Zombies = new GameObject[m_numberOfZombies];
+        m_deadZombies = new bool[m_numberOfZombies];
+        m_numberOfWaves++;
+        m_currentSpawningzombieNumber = 0;
+        m_game_message.text = "Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!";
 
         yield return m_StartWait;
     }
@@ -84,9 +98,11 @@ public class GameManager : MonoBehaviour
         m_game_message.text = string.Empty;
         m_PlayerInstance.GetComponent<SimpleMove>().enabled = true;
         m_PlayerInstance.GetComponent<SimpleCombat>().enabled = true;
-        while (m_currentSpawningzombieNumber<m_Zombies.Length)
+        Debug.Log("1");
+        while (m_currentSpawningzombieNumber< m_Zombies.Length)
         {
             SpawnZombies();
+            m_currentSpawningzombieNumber++;
             yield return new WaitForSeconds(m_ZombieSpawnInterval);
         }
     }
@@ -106,41 +122,51 @@ public class GameManager : MonoBehaviour
             m_game_message.text = string.Empty;
             while (counter > 0)
             {
-                m_game_message.text = "The game will end in: " + "\n\n\n" + counter + " s!";
+                m_game_message.text = "The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!";
                 counter -= 1;
                 yield return new WaitForSeconds(1f);
             }
+        }
+        for(int i = 0; i<m_numberOfZombies; i++)
+        {
+            m_Zombies[i].SetActive(false);
         }
     }
 
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
-        if (m_PlayerInstance.GetComponent<SimpleCombat>().is_dead)
-        {
-            m_game_message.text = "YOU Dead!";
-        }
-        else
-        {
-            m_game_message.text = "YOU WIN!";
-        }
+        m_scoreMessage.text = string.Empty;
+        m_game_message.text = "YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score;
         m_PlayerInstance.GetComponent<SimpleMove>().enabled = false;
         m_PlayerInstance.GetComponent<SimpleCombat>().enabled = false;
         yield return m_EndWait;
     }
 
-    private bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins.
+    private bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.
     {
-        if(m_currentSpawningzombieNumber < m_Zombies.Length)
+        if(m_currentSpawningzombieNumber < m_numberOfZombies)
         {
             return false;
         }
-        for(int i = 0; i < m_Zombies.Length; i++)
+        for (int i = 0; i < m_Zombies.Length; i++)
         {
-            if (!m_Zombies[i].m_Instance.GetComponent<SimpleAI>().IsDead)
+            if (!m_Zombies[i].GetComponent<SimpleAI>().IsDead)
             {
                 return false;
             }
         }
         return true;
+    }
+
+    private void UpdateScore()
+    {
+        for (int i = 0; i < m_Zombies.Length; i++)
+        {
+            if (!m_deadZombies[i] && m_Zombies[i].GetComponent<SimpleAI>().IsDead)
+            {
+                m_deadZombies[i] = true;
+                m_score += m_Zombies[i].GetComponent<SimpleAI>().m_score;
+            }
+        }
     }
 }
