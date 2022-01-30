@@ -16,6 +16,7 @@ public class Props : MonoBehaviour
 
     [SerializeField] private float props_exists_time = 10;
     private float timer = 0;
+    [SerializeField] private AudioClip getPropsSE;
 
     [SerializeField] private PropsType propsType;
     [SerializeField] private float recoverAmount = 30;
@@ -34,6 +35,7 @@ public class Props : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        AudioSource.PlayClipAtPoint(getPropsSE, gameObject.transform.position);
         if (propsType == PropsType.BloodRecover)
         {
             other.GetComponent<PlayerStats>().Recover(recoverAmount);

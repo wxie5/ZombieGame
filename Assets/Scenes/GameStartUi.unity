@@ -3596,7 +3596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17b26d0877693984c9cb452aaad89f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zombie_roar: {fileID: 8300000, guid: 6258be6143998cf448a2cae19d5bdf52, type: 3}
+  zombie_roar: {fileID: 8300000, guid: 3735613601a439e45aec3bf0f2dfd976, type: 3}
 --- !u!4 &1675462622 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4804918100728736, guid: d42b843afd2b9b04593e36b99fe6ad3b, type: 3}
@@ -4109,7 +4109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250e21d3ada1afc4bbe4b017c29d5866, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zombie_roar: {fileID: 8300000, guid: 6258be6143998cf448a2cae19d5bdf52, type: 3}
+  zombie_roar: {fileID: 8300000, guid: 3735613601a439e45aec3bf0f2dfd976, type: 3}
 --- !u!4 &1698962592 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4367621203943006, guid: 1ddf360948f90b24fb0e203933172cf8, type: 3}
@@ -5019,7 +5019,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 8d5cc981c45dc5945bd6b5ee0e073e37, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 0aeb6e655df840c408c1671fcd0e7f6a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

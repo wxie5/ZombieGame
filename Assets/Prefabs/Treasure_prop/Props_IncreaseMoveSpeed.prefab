@@ -172,6 +172,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79ad27d6d6b4b6a4e93f25e9833474f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  props_exists_time: 10
+  getPropsSE: {fileID: 8300000, guid: 5df9f81736ea87b43ba6bbe485c76c8e, type: 3}
   propsType: 2
   recoverAmount: 30
   damageIncreasePercentage: 0.1

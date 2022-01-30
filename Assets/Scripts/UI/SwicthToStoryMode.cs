@@ -19,7 +19,7 @@ public class SwicthToStoryMode : MonoBehaviour
     IEnumerator load()
     {
         AudioSource.PlayClipAtPoint(zombie_roar, new Vector3(0, 0, 0));
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("Story Mode");
     }
 }

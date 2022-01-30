@@ -11,15 +11,13 @@ public class EndlessModeManager : MonoBehaviour
     public Transform[] m_SpawnPoint;
     private GameObject[] m_Zombies;
     private bool[] m_deadZombies;
-    public Text m_game_message;
-    public Text m_scoreMessage;
-    public GameObject m_PlayerPerfab;
-    public Transform m_PlayerSpawnPoint;
-    public GameObject m_CamaraCenter;
+    [SerializeField] private GameObject m_PlayerPerfab;
+    [SerializeField] private Transform m_PlayerSpawnPoint;
+    [SerializeField] private GameObject m_CamaraCenter;
     [HideInInspector] public GameObject m_PlayerInstance;
 
-    public float m_StartDelay = 1f;
-    public float m_EndDelay = 1f;
+    [SerializeField] private float m_StartDelay = 1f;
+    [SerializeField] private float m_EndDelay = 1f;
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
 
@@ -28,12 +26,12 @@ public class EndlessModeManager : MonoBehaviour
 
     private int m_numberOfZombies = 5;
     private int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
-    public float m_ZombieSpawnInterval = 0.5f;
+    [SerializeField] private float m_ZombieSpawnInterval = 0.5f;
 
     //components
     private PlayerBehaviour playerbehaviour;
     private PlayerStats playerStats;
-    
+    private SinglePlayerUI singlePlayerUI;
 
 
     void Start()
@@ -45,12 +43,12 @@ public class EndlessModeManager : MonoBehaviour
         SpawnPlayer();  //Set the player's starting position
         playerbehaviour = m_PlayerInstance.GetComponent<PlayerBehaviour>();
         playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
+        singlePlayerUI = gameObject.GetComponent<SinglePlayerUI>();
         playerbehaviour.enabled = false;
         StartCoroutine(GameLoop());
     }
     private void FixedUpdate()
     {
-        m_scoreMessage.text = "Current Score: " + m_score;
         UpdateScore();
         if (playerStats.IsDead)
         {
@@ -90,16 +88,15 @@ public class EndlessModeManager : MonoBehaviour
         m_deadZombies = new bool[m_numberOfZombies];
         m_numberOfWaves++;
         m_currentSpawningzombieNumber = 0;
-        m_game_message.text = "Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!";
+        singlePlayerUI.ChangeGmaeMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
 
         yield return m_StartWait;
     }
 
     private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
-        m_game_message.text = string.Empty;
+        singlePlayerUI.ClearGmaeMessage();
         playerbehaviour.enabled = true;
-        Debug.Log("1");
         while (m_currentSpawningzombieNumber< m_Zombies.Length)
         {
             SpawnZombies();
@@ -120,24 +117,23 @@ public class EndlessModeManager : MonoBehaviour
         if (!playerStats.IsDead)
         {
             int counter = 5;
-            m_game_message.text = string.Empty;
+            singlePlayerUI.ClearGmaeMessage();
             while (counter > 0)
             {
-                m_game_message.text = "The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!";
+                singlePlayerUI.ChangeGmaeMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
                 counter -= 1;
                 yield return new WaitForSeconds(1f);
             }
         }
         for(int i = 0; i<m_numberOfZombies; i++)
         {
-            m_Zombies[i].SetActive(false);
+            Destroy(m_Zombies[i]);
         }
     }
 
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
-        m_scoreMessage.text = string.Empty;
-        m_game_message.text = "YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score;
+        singlePlayerUI.ChangeGmaeMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
         playerbehaviour.enabled = false;
         yield return m_EndWait;
     }
@@ -168,5 +164,6 @@ public class EndlessModeManager : MonoBehaviour
                 m_score += m_Zombies[i].GetComponent<EnemyStats>().Score;
             }
         }
+        singlePlayerUI.ChangeScore(m_score);
     }
 }

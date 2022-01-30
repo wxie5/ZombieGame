@@ -14,6 +14,11 @@ public class PlayerStats : MonoBehaviour
     [Header("Set Gun's ScriptableObject")]
     [SerializeField] private Gun[] gunSO;
 
+    [Header("Audio sources")]
+    [SerializeField] private AudioClip getHurt;
+    [SerializeField] private AudioClip getRecover;
+    [SerializeField] private AudioClip dead;
+
     //basic stats
     private float currentHealth;
     private float currentShotRange;
@@ -115,15 +120,18 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth = MathTool.NonNegativeSub(currentHealth, amount);
+        AudioSource.PlayClipAtPoint(getHurt, gameObject.transform.position);
         if(currentHealth == 0)
         {
             isDead = true;
+            AudioSource.PlayClipAtPoint(dead, gameObject.transform.position);
         }
     }
 
     public void Recover(float amount)
     {
         currentHealth = MathTool.NonOverflowAdd(currentHealth, amount, maxHealth);
+        AudioSource.PlayClipAtPoint(getRecover, gameObject.transform.position);
     }
 
 

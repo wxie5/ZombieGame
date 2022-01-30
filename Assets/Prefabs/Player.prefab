@@ -2606,6 +2606,9 @@ MonoBehaviour:
   gunSO:
   - {fileID: 11400000, guid: 2dd73a03cc3894b4ebeb205c80dd02d4, type: 2}
   - {fileID: 11400000, guid: 659241ddf8050624b91c4e0012dfbcd8, type: 2}
+  getHurt: {fileID: 8300000, guid: 257afa614c1ff49449a631568692e83c, type: 3}
+  getRecover: {fileID: 8300000, guid: 3c03efec2088d2f4190bba4534a05848, type: 3}
+  dead: {fileID: 8300000, guid: bf92f00d93a13b549a61559f241bd9e6, type: 3}
 --- !u!114 &1511758529570404423
 MonoBehaviour:
   m_ObjectHideFlags: 0

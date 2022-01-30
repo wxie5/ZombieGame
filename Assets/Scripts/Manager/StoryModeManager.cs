@@ -5,29 +5,28 @@ using UnityEngine.UI;
 
 public class StoryModeManager : MonoBehaviour
 {
-    public GameObject[] m_zombiePrefab;
-    public Transform[] m_SpawnPoint;
-    public bool m_RandomSpawn;
-    public ZombieManager[] m_Zombies;
-    public Text m_game_message;
-    public GameObject m_PlayerPerfab;
-    public Transform m_PlayerSpawnPoint;
-    public GameObject m_CamaraCenter;
+    [SerializeField] private GameObject[] m_zombiePrefab;
+    [SerializeField] private Transform[] m_SpawnPoint;
+    [SerializeField] private bool m_RandomSpawn;
+    [SerializeField] private ZombieManager[] m_Zombies;
+    [SerializeField] private GameObject m_PlayerPerfab;
+    [SerializeField] private Transform m_PlayerSpawnPoint;
+    [SerializeField] private GameObject m_CamaraCenter;
     [HideInInspector] public GameObject m_PlayerInstance;
 
-    public float m_StartDelay = 1f;
-    public float m_EndDelay = 1f;
+    [SerializeField] private float m_StartDelay = 1f;
+    [SerializeField] private float m_EndDelay = 1f;
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
 
     private int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
 
-    public float m_ZombieSpawnInterval = 0.5f;
+    [SerializeField] private float m_ZombieSpawnInterval = 0.5f;
 
     //components
     private PlayerBehaviour playerbehaviour;
     private PlayerStats playerStats;
-
+    private SinglePlayerUI singlePlayerUI;
     void Start()
     {
 
@@ -37,6 +36,7 @@ public class StoryModeManager : MonoBehaviour
         SpawnPlayer();  //Set the player's starting position
         playerbehaviour = m_PlayerInstance.GetComponent<PlayerBehaviour>();
         playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
+        singlePlayerUI = gameObject.GetComponent<SinglePlayerUI>();
 
         StartCoroutine(GameLoop());
     }
@@ -76,14 +76,14 @@ public class StoryModeManager : MonoBehaviour
     private IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
         playerbehaviour.enabled = false;
-        m_game_message.text = "Game Start!" + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!";
+        singlePlayerUI.ChangeGmaeMessage("Game Start!" + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
 
         yield return m_StartWait;
     }
 
     private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
-        m_game_message.text = string.Empty;
+        singlePlayerUI.ClearGmaeMessage();
         playerbehaviour.enabled = true;
         while (m_currentSpawningzombieNumber<m_Zombies.Length)
         {
@@ -104,10 +104,10 @@ public class StoryModeManager : MonoBehaviour
         if (!playerStats.IsDead)
         {
             int counter = 5;
-            m_game_message.text = string.Empty;
+            singlePlayerUI.ClearGmaeMessage();
             while (counter > 0)
             {
-                m_game_message.text = "The game will end in: " + "\n\n\n" + counter + " s!";
+                singlePlayerUI.ChangeGmaeMessage("The game will end in: " + "\n\n\n" + counter + " s!");
                 counter -= 1;
                 yield return new WaitForSeconds(1f);
             }
@@ -118,11 +118,11 @@ public class StoryModeManager : MonoBehaviour
     {
         if (playerStats.IsDead)
         {
-            m_game_message.text = "YOU Dead!";
+            singlePlayerUI.ChangeGmaeMessage("YOU Dead!");
         }
         else
         {
-            m_game_message.text = "YOU WIN!";
+            singlePlayerUI.ChangeGmaeMessage("YOU WIN!");
         }
         playerbehaviour.enabled = false;
         yield return m_EndWait;
