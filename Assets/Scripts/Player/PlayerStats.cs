@@ -130,7 +130,7 @@ public class PlayerStats : MonoBehaviour
     //Here are some functions that interact with the props class that can affect the multipliers value.
     public void ChangeShotRate(float amount)
     {
-        shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, -amount);
+        shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, amount);
 
         currentShotRate = shotRateMulti * currentGun.shotRate;
     }
@@ -156,7 +156,7 @@ public class PlayerStats : MonoBehaviour
 
     public void ChangeOffset(float amount)
     {
-        shotOffsetMulti += MathTool.NonNegativeSub(shotOffsetMulti, -amount);
+        shotOffsetMulti = MathTool.NonNegativeSub(shotOffsetMulti, amount);
 
         currentShotOffset = shotOffsetMulti * currentGun.offset;
     }

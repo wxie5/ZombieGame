@@ -2791,8 +2791,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -120, y: -50.69861}
-  m_SizeDelta: {x: 233.6505, y: 51.3972}
+  m_AnchoredPosition: {x: -138.43768, y: -40.09607}
+  m_SizeDelta: {x: 271.7109, y: 70.4273}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1141279019
 MonoBehaviour:
@@ -5222,7 +5222,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_zombiePrefab:
-  - {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
   - {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
   m_SpawnPoint:
   - {fileID: 1656804043}

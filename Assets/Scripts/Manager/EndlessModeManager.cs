@@ -63,7 +63,6 @@ public class EndlessModeManager : MonoBehaviour
         int spawn_point_number;
         zombie_number = Random.Range(0, m_zombiePrefab.Length);
         spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
-        Debug.Log(m_currentSpawningzombieNumber);
         m_Zombies[m_currentSpawningzombieNumber] = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint[spawn_point_number]) as GameObject;
     } 
 
