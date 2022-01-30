@@ -61,7 +61,7 @@ public class StoryModeManager : MonoBehaviour
     private void SpawnPlayer()
     {
         m_PlayerInstance = Instantiate(m_PlayerPerfab, m_PlayerSpawnPoint) as GameObject;
-        m_CamaraCenter.GetComponent<SimpleCamFollow>().playerTrans = m_PlayerInstance.transform; //Set the camera position
+        m_CamaraCenter.GetComponent<SimpleCamFollow>().PlayerTrans = m_PlayerInstance.transform; //Set the camera position
     }
     private IEnumerator GameLoop()
     {
@@ -76,7 +76,7 @@ public class StoryModeManager : MonoBehaviour
     private IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
         playerbehaviour.enabled = false;
-        singlePlayerUI.ChangeGmaeMessage("Game Start!" + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
+        singlePlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
 
         yield return m_StartWait;
     }
@@ -107,7 +107,7 @@ public class StoryModeManager : MonoBehaviour
             singlePlayerUI.ClearGmaeMessage();
             while (counter > 0)
             {
-                singlePlayerUI.ChangeGmaeMessage("The game will end in: " + "\n\n\n" + counter + " s!");
+                singlePlayerUI.ChangeGameMessage("The game will end in: " + "\n\n\n" + counter + " s!");
                 counter -= 1;
                 yield return new WaitForSeconds(1f);
             }
@@ -118,11 +118,11 @@ public class StoryModeManager : MonoBehaviour
     {
         if (playerStats.IsDead)
         {
-            singlePlayerUI.ChangeGmaeMessage("YOU Dead!");
+            singlePlayerUI.ChangeGameMessage("YOU Dead!");
         }
         else
         {
-            singlePlayerUI.ChangeGmaeMessage("YOU WIN!");
+            singlePlayerUI.ChangeGameMessage("YOU WIN!");
         }
         playerbehaviour.enabled = false;
         yield return m_EndWait;

@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 // Manage the game process and UI in Endless Mode
 
@@ -36,7 +34,6 @@ public class EndlessModeManager : MonoBehaviour
 
     void Start()
     {
-
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
 
@@ -67,7 +64,7 @@ public class EndlessModeManager : MonoBehaviour
     private void SpawnPlayer()
     {
         m_PlayerInstance = Instantiate(m_PlayerPerfab, m_PlayerSpawnPoint) as GameObject;
-        m_CamaraCenter.GetComponent<SimpleCamFollow>().playerTrans = m_PlayerInstance.transform; //Set the camera position
+        m_CamaraCenter.GetComponent<SimpleCamFollow>().PlayerTrans = m_PlayerInstance.transform; //Set the camera position
     }
     private IEnumerator GameLoop()
     {
@@ -88,7 +85,7 @@ public class EndlessModeManager : MonoBehaviour
         m_deadZombies = new bool[m_numberOfZombies];
         m_numberOfWaves++;
         m_currentSpawningzombieNumber = 0;
-        singlePlayerUI.ChangeGmaeMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
+        singlePlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
 
         yield return m_StartWait;
     }
@@ -120,7 +117,7 @@ public class EndlessModeManager : MonoBehaviour
             singlePlayerUI.ClearGmaeMessage();
             while (counter > 0)
             {
-                singlePlayerUI.ChangeGmaeMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
+                singlePlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
                 counter -= 1;
                 yield return new WaitForSeconds(1f);
             }
@@ -133,7 +130,7 @@ public class EndlessModeManager : MonoBehaviour
 
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
-        singlePlayerUI.ChangeGmaeMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
+        singlePlayerUI.ChangeGameMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
         playerbehaviour.enabled = false;
         yield return m_EndWait;
     }

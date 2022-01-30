@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,7 +66,7 @@ public class SinglePlayerUI : MonoBehaviour
         game_message.text = string.Empty;
     }
 
-    public void ChangeGmaeMessage(string gameMessage)
+    public void ChangeGameMessage(string gameMessage)
     {
         game_message.text = gameMessage;
     }

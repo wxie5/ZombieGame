@@ -2,7 +2,12 @@ using UnityEngine;
 
 public class SimpleCamFollow : MonoBehaviour
 {
-    public Transform playerTrans;
+    private Transform playerTrans;
+
+    public Transform PlayerTrans
+    {
+        set { playerTrans = value; }
+    }
 
     private void LateUpdate()
     {
