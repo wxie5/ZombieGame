@@ -7,8 +7,6 @@ public class EnemyManager : MonoBehaviour
     private EnemyStats stats;
     private EnemyBehaviour behaviour;
 
-    public Action<PlayerID, float> onAttackHit;
-
     private void Start()
     {
         stats = GetComponent<EnemyStats>();
@@ -27,35 +25,40 @@ public class EnemyManager : MonoBehaviour
         
     }
 
-    /// <summary>
-    /// Animation Event: Triggered at the frame when zombie's arm swing down
-    /// </summary>
+    #region Animation Events
+    // Animation Event: Triggered at the frame when zombie's arm swing down
     public void OnAnimationAttackPoint()
     {
-        /*
-         * if (target in attack range)
-         * {
-         *      onAttackHit.Invoke(behaviour.TargetID, stats.AttackDamage);
-         * }
-        */
+        behaviour.DealDamage();
     }
+    #endregion
 
     public void GetHit(float weaponDamage)
     {
-        stats.ReduceHealth(weaponDamage);
-
-        if(stats.IsDead)
-        {
-            behaviour.Die();
-        }
-        else
-        {
-            behaviour.GetHit();
-        }
+        behaviour.EnemyGetHit(weaponDamage);
     }
 
     public bool IsAttackable()
     {
         return !stats.IsDead;
+    }
+
+    public void OnAfterTakeDamageAdd(Action<float, float> listener)
+    {
+        behaviour.onAfterTakeDamage += listener;
+    }
+
+    public void OnAfterTakeDamageRemove(Action<float, float> listener)
+    {
+        behaviour.onAfterTakeDamage -= listener;
+    }
+
+    public void OnDeadAdd(Action listener)
+    {
+        behaviour.onDead += listener;
+    }
+    public void OnDeadRemove(Action listener)
+    {
+        behaviour.onDead -= listener;
     }
 }

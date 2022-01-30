@@ -1,5 +1,6 @@
 using UnityEngine;
 using Utils.MathTool;
+using System;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private Transform shotTrans;
     [SerializeField] private Transform gunSlotTrans;
 
+    [Header("Scene Interaction")]
+    [SerializeField] private float pickUpRange = 1.5f;
+
     [Header("Target Lock Properties")]
     [SerializeField] private float lockRange = 10f;
     [SerializeField] private float autoLoseTargetDelay = 1f;
@@ -20,6 +24,7 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("Layer Mask: Select All That Apply")]
     [SerializeField] private LayerMask lockableLayer;
     [SerializeField] private LayerMask bulletHitableLayer;
+    [SerializeField] private LayerMask weaponLayer;
 
     [Header("VFX")]
     [SerializeField] private GameObject shotParticlePrefab;
@@ -58,6 +63,11 @@ public class PlayerBehaviour : MonoBehaviour
     //keep track of stats (only read from stats, stats never read from behaviour)
     private PlayerStats stats;
 
+    //events (observer)
+    public Action<float, float> onAfterTakeDamage; //current health, max health (used by health bar)
+    public Action<int, int> onUpdateAmmoInfo; //current Ammo in use, left ammo in pack
+
+
     public void Initialize()
     {
         cc = GetComponent<CharacterController>();
@@ -95,23 +105,85 @@ public class PlayerBehaviour : MonoBehaviour
         ApplyGravity();
     }
 
-    public void PlayerCombatSystem(bool hitShotButton)
+    public void PlayerShotSystem(bool hitShotButton)
     {
+        TimerAddition();
+
+        if (IsState(1, "Reload")) { return; }
+
         if (hitShotButton)
         {
             Attack();
         }
         AutoUnlockTarget();
         RotateToTarget();
-        TimerAddition();
     }
 
     public void PlayerWeaponSwitchSystem(bool hitSwitchButton)
     {
+        if(IsState(1, "Reload")) { return; }
+
         if (hitSwitchButton)
         {
             SwitchGun();
         }
+    }
+
+    public void PlayerReloadSystem(bool hitReloadButton)
+    {
+        if(hitReloadButton)
+        {
+            Reload();
+        }
+    }
+
+    public void PlayerPickUpSystem(bool hitPickUpBotton)
+    {
+        if(hitPickUpBotton)
+        {
+            PickGun();
+        }
+    }
+
+    public void PlayerGetHit(float damage)
+    {
+        if (stats.IsDead) { return; }
+
+        stats.TakeDamage(damage);
+
+        //notify other scripts that player take damage
+        InvokeOnAfterTakeDamage();
+
+        if (stats.IsDead)
+        {
+            animator.SetTrigger("Die");
+        }
+        else
+        {
+            //some get hit effects
+        }
+    }
+
+    /// <summary>
+    /// check if we are currently in a state
+    /// </summary>
+    /// <param name="layerID"></param>
+    /// <param name="stateName"></param>
+    /// <returns></returns>
+    private bool IsState(int layerID, string stateName)
+    {
+        return animator.GetCurrentAnimatorStateInfo(layerID).IsName(stateName);
+    }
+
+    private void Reload()
+    {
+        if(stats.CurrentRestAmmo <= 0) { return; }
+
+        animator.SetTrigger("Reload");
+
+        stats.UpdateReloadData();
+
+        InvokeOnUpdateAmmoInfo();
     }
 
     private void ApplyGravity()
@@ -224,24 +296,41 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Attack()
     {
-        if (shotRateTimer >= stats.CurrentShotRate)
+        if (shotRateTimer >= stats.CurrentShotRate && stats.CurrentCartridgeCap > 0)
         {
-            //print("Shoot!");
+            // lock on enemy if currently not
             if (!isLockingTarget)
             {
                 ChangeLockState();
             }
 
+            // shot and generate shot VFX
             Vector3 hitPos = Shot();
             GenerateBulletTrail(hitPos);
             GenerateShotParticle();
 
-            //reset timer
+            // reset timer
             autoLoseTargetDelayTimer = 0f;
             shotRateTimer = 0f;
 
+            //animator setting
             animator.ResetTrigger("Shot");
             animator.SetTrigger("Shot");
+
+            //update stats
+            stats.ReduceAmmo(1);
+
+            //call events
+            InvokeOnUpdateAmmoInfo();
+
+            //auto reload
+            if (stats.CurrentCartridgeCap <= 0)
+            {
+                Reload();
+            }
+
+            // print rest ammo
+            Debug.Log("Rest Ammo: " + stats.CurrentCartridgeCap + "/" + stats.CurrentRestAmmo);
         }
     }
 
@@ -367,6 +456,37 @@ public class PlayerBehaviour : MonoBehaviour
         shotParticle.Play();
     }
 
+    public void PickGun()
+    {
+        //check sphere to get the nearest gun gameobject, getcomponent to get guninfo
+        Collider[] colliders = Physics.OverlapSphere(transform.position, pickUpRange, weaponLayer);
+
+        if(colliders.Length == 0) { return; }
+
+        int nearestIdx = -1;
+        float nearestSqrDis = Mathf.Infinity;
+        for(int i = 0; i < colliders.Length; i++)
+        {
+            float newSqrDis = (colliders[i].transform.position - transform.position).sqrMagnitude;
+            if (newSqrDis < nearestSqrDis)
+            {
+                nearestIdx = i;
+                nearestSqrDis = newSqrDis;
+            }
+        }
+
+        Gun pickedGunInfo = colliders[nearestIdx].GetComponent<GunItem>().GunItemInfo;
+
+        //update stats
+        stats.PickGunUpdateState(pickedGunInfo);
+
+        //initialize gun
+        InitGun();
+
+        //destroy gun gameobject on the world
+        Destroy(colliders[nearestIdx].gameObject);
+    }
+
     private void SwitchGun()
     {
         stats.SwitchGunUpdateState();
@@ -387,8 +507,11 @@ public class PlayerBehaviour : MonoBehaviour
         newGun.transform.localRotation = Quaternion.Euler(currentGun.handRotation);
 
         //change animation
-        float currentWeaponID = (float)currentGun.gunType;
+        float currentWeaponID = (float)currentGun.weaponID;
         animator.SetFloat("WeaponID", currentWeaponID);
+
+        //call event
+        InvokeOnUpdateAmmoInfo();
     }
 
     //for debug only, show player's lock range in the scene (edit mode, not play mode)
@@ -396,6 +519,15 @@ public class PlayerBehaviour : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, lockRange);
+    }
+
+    public void InvokeOnUpdateAmmoInfo()
+    {
+        if (onUpdateAmmoInfo != null) { onUpdateAmmoInfo.Invoke(stats.CurrentCartridgeCap, stats.CurrentRestAmmo); }
+    }
+    public void InvokeOnAfterTakeDamage()
+    {
+        if (onAfterTakeDamage != null) { onAfterTakeDamage.Invoke(stats.CurrentHealth, stats.MaxHealth); }
     }
 
 }

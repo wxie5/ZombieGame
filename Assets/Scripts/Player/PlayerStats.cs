@@ -7,17 +7,13 @@ public class PlayerStats : MonoBehaviour
     //which will be increased by the effect of props. The value in the game is the multiplier * actual value.
     [SerializeField] private float maxHealth = 100;
     [SerializeField] private float maxMoveSpeed = 5f;
+    [SerializeField] private int gunSlot = 2;
     [Range(0.2f, 0.5f)]
     [SerializeField] private float targetingSpeedRatio = 0.4f;
     [SerializeField] private PlayerID id;
 
     [Header("Set Gun's ScriptableObject")]
-    [SerializeField] private Gun[] gunSO;
-
-    [Header("Audio sources")]
-    [SerializeField] private AudioClip getHurt;
-    [SerializeField] private AudioClip getRecover;
-    [SerializeField] private AudioClip dead;
+    [SerializeField] private GunItem defaultGun;
 
     //basic stats
     private float currentHealth;
@@ -30,9 +26,11 @@ public class PlayerStats : MonoBehaviour
     private bool isDead = false;
 
     //Weapons
-    private Gun currentGun;
-    private GunType permanentGunType;
-    private GunType pickUpGunType;
+    private Gun[] gunInfos;
+    private int currentGunIndex = 0;
+    private int[] ammoCaps;
+    private int[] cartridgeCaps;
+
 
     //multipliers
     private float shotRateMulti = 1f; //The shoot rate multipliers, which is faster and faster from 1->0.
@@ -49,6 +47,11 @@ public class PlayerStats : MonoBehaviour
     public float CurrentHealth
     {
         get { return currentHealth; }
+    }
+
+    public float MaxHealth
+    {
+        get { return maxHealth; }
     }
 
     public float CurrentShotRate
@@ -93,61 +96,70 @@ public class PlayerStats : MonoBehaviour
 
     public Gun CurrentGun
     {
-        get { return currentGun; }
+        get { return gunInfos[currentGunIndex]; }
+    }
+
+    public int CurrentCartridgeCap
+    {
+        get { return cartridgeCaps[currentGunIndex]; }
+    }
+
+    public int CurrentRestAmmo
+    {
+        get { return ammoCaps[currentGunIndex]; }
     }
     #endregion
 
     public void Initialize()
     {
+        //initialize run time stats
         currentHealth = maxHealth;
         currentMoveSpeed = moveSpeedMulti * maxMoveSpeed;
 
-        //for test only
-        permanentGunType = GunType.Handgun;
-        pickUpGunType = GunType.AssaultRifle;
+        //initiailize gun array
+        cartridgeCaps = new int[gunSlot];
+        ammoCaps = new int[gunSlot];
+        gunInfos = new Gun[gunSlot];
 
-        foreach (Gun g in gunSO)
-        {
-            if (g.gunType == permanentGunType)
-            {
-                currentGun = g;
-            }
-        }
+        //initialize locked gun
+        gunInfos[0] = defaultGun.GunItemInfo;
+        UpdateAmmoInfo();
 
+        //update player combat data based on current gun
         UpdatePlayerCombatStats();
     }
 
     public void TakeDamage(float amount)
     {
         currentHealth = MathTool.NonNegativeSub(currentHealth, amount);
-        AudioSource.PlayClipAtPoint(getHurt, gameObject.transform.position);
-        if(currentHealth == 0)
+        Debug.Log("Health: " + currentHealth + "/" + maxHealth);
+
+        if (currentHealth <= 0)
         {
+            //Die
             isDead = true;
-            AudioSource.PlayClipAtPoint(dead, gameObject.transform.position);
         }
     }
 
     public void Recover(float amount)
     {
         currentHealth = MathTool.NonOverflowAdd(currentHealth, amount, maxHealth);
-        AudioSource.PlayClipAtPoint(getRecover, gameObject.transform.position);
     }
 
 
     //Here are some functions that interact with the props class that can affect the multipliers value.
     public void ChangeShotRate(float amount)
     {
-        shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, amount);
+        shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, -amount);
 
-        currentShotRate = shotRateMulti * currentGun.shotRate;
+        currentShotRate = shotRateMulti * gunInfos[currentGunIndex].shotRate;
     }
 
     public void ChangeDamage(float amount)
     {
         damageRateMulti = MathTool.NonNegativeSub(damageRateMulti, -amount);
 
-        currentDamage = damageRateMulti * currentGun.damage;
+        currentDamage = damageRateMulti * gunInfos[currentGunIndex].damage;
     }
 
     public void ChangeMoveSpeed(float amount)
@@ -164,46 +176,102 @@ public class PlayerStats : MonoBehaviour
 
     public void ChangeOffset(float amount)
     {
-        shotOffsetMulti = MathTool.NonNegativeSub(shotOffsetMulti, amount);
+        shotOffsetMulti += MathTool.NonNegativeSub(shotOffsetMulti, -amount);
 
-        currentShotOffset = shotOffsetMulti * currentGun.offset;
+        currentShotOffset = shotOffsetMulti * gunInfos[currentGunIndex].offset;
     }
 
     public void SwitchGunUpdateState()
     {
-        GunType targetGunType = default(GunType);
-        if(currentGun.gunType == permanentGunType)
+        int newGunIndex = MathTool.NextIndexNoOverflow(currentGunIndex, gunInfos.Length);
+        if(gunInfos[newGunIndex] == null)
         {
-            targetGunType = pickUpGunType;
+            return;
         }
         else
         {
-            targetGunType = permanentGunType;
+            currentGunIndex = newGunIndex;
         }
 
-        foreach(Gun g in gunSO)
-        {
-            if(g.gunType == targetGunType)
-            {
-                currentGun = g;
-            }
-        }
-
+        //Update combat info
         UpdatePlayerCombatStats();
     }
 
-    public void PickGunUpdateState(GunType newGunType)
+    public void UpdateReloadData()
     {
-        //TODO: change pickUpGunType to the new picked up gun
+        int curCartCap = gunInfos[currentGunIndex].cartridgeCapacity;
+        int fillNum = curCartCap - cartridgeCaps[currentGunIndex];
+        if((ammoCaps[currentGunIndex] - fillNum) >= 0)
+        {
+            ammoCaps[currentGunIndex] -= fillNum;
+            cartridgeCaps[currentGunIndex] = curCartCap;
+        }
+        else
+        {
+            cartridgeCaps[currentGunIndex] = ammoCaps[currentGunIndex];
+            ammoCaps[currentGunIndex] = 0;
+        }
+    }
 
+    //pick gun will switch it to current gun
+    public void PickGunUpdateState(Gun info)
+    {
+        int newIdx = -1;
+        for(int i = 0; i < gunInfos.Length; i++)
+        {
+            if(gunInfos[i] == null)
+            {
+                newIdx = i;
+                break;
+            }
+        }
+
+        if(newIdx != -1)
+        {
+            //if find empty slop, switch it to current gun
+            gunInfos[newIdx] = info;
+            currentGunIndex = newIdx;
+        }
+        else
+        {
+            //if no slot is empty, drop the current gun, switch to new one
+            gunInfos[currentGunIndex] = info;
+        }
+
+        UpdateAmmoInfo();
         UpdatePlayerCombatStats();
+    }
+
+    private void UpdateAmmoInfo()
+    {
+        Gun currentGun = gunInfos[currentGunIndex];
+        ammoCaps[currentGunIndex] = currentGun.ammoCapacity;
+        cartridgeCaps[currentGunIndex] = currentGun.cartridgeCapacity;
     }
 
     private void UpdatePlayerCombatStats()
     {
+        Gun currentGun = gunInfos[currentGunIndex];
         currentShotRate = currentGun.shotRate * shotRateMulti;
         currentShotRange = currentGun.shotRange;
         currentDamage = currentGun.damage * damageRateMulti;
         currentShotOffset = currentGun.offset * shotOffsetMulti;
+    }
+
+    /// <summary>
+    /// reduce the current gun's ammo number by amount
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns>whether we run out of ammo</returns>
+    public bool ReduceAmmo(int amount = 1)
+    {
+        cartridgeCaps[currentGunIndex] -= amount;
+
+        if(cartridgeCaps[currentGunIndex] <= 0)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

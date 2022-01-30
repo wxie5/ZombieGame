@@ -1,10 +1,16 @@
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(PlayerStats), typeof(PlayerBehaviour))]
 public class PlayerManager : MonoBehaviour
 {
     private PlayerStats stats;
     private PlayerBehaviour behaviour;
+
+    public PlayerID playerID
+    {
+        get { return stats.ID; }
+    }
 
     private void Start()
     {
@@ -17,26 +23,75 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        //Movement
+        if (stats.IsDead) { return; }
+
+        //Get Input based on player
         float hori, verti;
+        bool attack, switchGun, reload, pick;
         if (stats.ID == PlayerID.PlayerA)
         {
-            hori = InputManager.PlayerA_Horizontal();
-            verti = InputManager.PlayerA_Vertical();
+            hori = InputManager.PlayerA_Horizontal;
+            verti = InputManager.PlayerA_Vertical;
+            attack = InputManager.PlayerA_Attack;
+            switchGun = InputManager.PlayerA_Switch;
+            reload = InputManager.PlayerA_Reload;
+            pick = InputManager.PlayerA_Pick;
         }
         else
         {
-            hori = InputManager.PlayerB_Horizontal();
-            verti = InputManager.PlayerB_Vertical();
+            hori = InputManager.PlayerB_Horizontal;
+            verti = InputManager.PlayerB_Vertical;
+            attack = InputManager.PlayerB_Attack;
+            switchGun = InputManager.PlayerB_Switch;
+            reload = InputManager.PlayerB_Reload;
+            pick = InputManager.PlayerB_Pick;
         }
         Vector3 inputAxis = new Vector2(hori, verti).normalized;
+
+        // Movement
         behaviour.PlayerMoveSystem(inputAxis);
 
         //Combat
-        behaviour.PlayerCombatSystem(InputManager.PlayerA_Attack());
+        behaviour.PlayerShotSystem(attack);
 
         //Weapon Switch
-        behaviour.PlayerWeaponSwitchSystem(InputManager.PlayerA_Switch());
+        behaviour.PlayerWeaponSwitchSystem(switchGun);
+
+        //Reload
+        behaviour.PlayerReloadSystem(reload);
+
+        //Pick Weapon
+        behaviour.PlayerPickUpSystem(pick);
+    }
+
+    public void GetHit(float damage)
+    {
+        behaviour.PlayerGetHit(damage);
+    }
+    
+    public void OnAfterTakeDamageAdd(Action<float, float> listener)
+    {
+        behaviour.onAfterTakeDamage += listener;
+    }
+
+    public void OnAfterTakeDamageRemove(Action<float, float> listener)
+    {
+        behaviour.onAfterTakeDamage -= listener;
+    }
+
+    public void OnUpdateAmmoInfoAdd(Action<int, int> listener, bool addThenInvoke)
+    {
+        behaviour.onUpdateAmmoInfo += listener;
+
+        if(addThenInvoke)
+        {
+            behaviour.InvokeOnUpdateAmmoInfo();
+        }
+    }
+
+    public void OnUpdateAmmoInfoRemove(Action<int, int> listener)
+    {
+        behaviour.onUpdateAmmoInfo -= listener;
     }
 }
 

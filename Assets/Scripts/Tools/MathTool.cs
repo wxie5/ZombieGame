@@ -56,5 +56,16 @@ namespace Utils.MathTool
         {
             return Mathf.Min(current + amount, floorValue);
         }
+
+        /// <summary>
+        /// return the next index for an array without overflow (looping index)
+        /// </summary>
+        /// <param name="currentIdx"></param>
+        /// <param name="arrayLength"></param>
+        /// <returns></returns>
+        public static int NextIndexNoOverflow(int currentIdx, int arrayLength)
+        {
+            return currentIdx + 1 >= arrayLength ? 0 : currentIdx + 1;
+        }
     }
 }

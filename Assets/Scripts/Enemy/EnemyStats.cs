@@ -34,13 +34,24 @@ public class EnemyStats : MonoBehaviour
     {
         get { return attackRate; }
     }
+
+    public float CurrentHealth
+    {
+        get { return currentHealth; }
+    }
+
+    public float MaxHealth
+    {
+        get { return maxHealth; }
+    }
+
     public int Score
     {
         get { return score; }
     }
     #endregion;
 
-    //Initialization (called by manager)
+    //Initialization
     public void Initialize()
     {
         //check if all data is valid
@@ -76,5 +87,4 @@ public class EnemyStats : MonoBehaviour
         int randomIdx = Random.Range(0, chaseSpeeds.Length);
         return chaseSpeeds[randomIdx];
     }
-
 }

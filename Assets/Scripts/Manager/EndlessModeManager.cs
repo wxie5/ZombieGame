@@ -155,6 +155,10 @@ public class EndlessModeManager : MonoBehaviour
     {
         for (int i = 0; i < m_Zombies.Length; i++)
         {
+            if(m_Zombies[i] == null)
+            {
+                continue;
+            }
             if (!m_deadZombies[i] && m_Zombies[i].GetComponent<EnemyStats>().IsDead)
             {
                 m_deadZombies[i] = true;

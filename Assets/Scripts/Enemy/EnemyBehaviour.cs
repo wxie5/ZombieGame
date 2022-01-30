@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Utils.MathTool;
+using System;
 
 public class EnemyBehaviour : MonoBehaviour
 {
     //Player Transforms
     private Transform[] playersTrans;
     private Transform target;
-    private PlayerID targetID;
 
     //Components
     private NavMeshAgent agent;
@@ -18,6 +18,10 @@ public class EnemyBehaviour : MonoBehaviour
 
     //keep track of enemy stats (only read from stats, stats never read from behaviour)
     private EnemyStats stats;
+
+    //events
+    public Action<float, float> onAfterTakeDamage;
+    public Action onDead;
 
     public void Initialize()
     {
@@ -50,13 +54,22 @@ public class EnemyBehaviour : MonoBehaviour
             //attack
             animator.SetTrigger("Attack");
 
-            //print("Attack");
-            //target.GetComponent<SimpleCombat>().TakeDamage(m_attack_damage);
-
             attackRateTimer = 0f;
         }
 
         attackRateTimer = MathTool.TimerAddition(attackRateTimer, stats.AttackRate);
+    }
+
+    // this function is called by animation event, it is only called when zombie didn't miss the attack
+    public void DealDamage()
+    {
+        if (target == null) { return; }
+
+        //recheck distance, if in range, deal damage to target player
+        if(DistanceToPlayer() < stats.AttackRange)
+        {
+            target.GetComponent<PlayerManager>().GetHit(stats.AttackDamage);
+        }
     }
 
     public void IdleOrChase()
@@ -101,12 +114,10 @@ public class EnemyBehaviour : MonoBehaviour
         if (nearestIdx != -1)
         {
             target = playersTrans[nearestIdx];
-            targetID = target.GetComponent<PlayerStats>().ID;
         }
         else
         {
             target = null;
-            targetID = PlayerID.None;
         }
     }
 
@@ -117,8 +128,8 @@ public class EnemyBehaviour : MonoBehaviour
 
         //set the tag and layer to let player ignore dead enemy
         //also, set rigidbody to kinematic, otherwise it will have some strange rotation (because root motion)
-        gameObject.tag = "Dead";
-        gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        gameObject.tag = GameConst.DEAD_TAG;
+        gameObject.layer = GameConst.IGNORE_RAYCAST;
         GetComponent<Rigidbody>().isKinematic = true;
 
         //trigger death animation, apply root motion for realistic locomotion
@@ -127,7 +138,23 @@ public class EnemyBehaviour : MonoBehaviour
         animator.SetBool("IsDead", true);
 
         //trigger on dead event
-        //onDead.Invoke();
+        if (onDead != null) { onDead.Invoke(); }
+    }
+
+    public void EnemyGetHit(float damage)
+    {
+        stats.ReduceHealth(damage);
+
+        if(onAfterTakeDamage != null) { onAfterTakeDamage.Invoke(stats.CurrentHealth, stats.MaxHealth); }
+
+        if (stats.IsDead)
+        {
+            Die();
+        }
+        else
+        {
+            GetHit();
+        }
     }
 
     public void GetHit()

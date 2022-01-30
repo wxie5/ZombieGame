@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c8850165aa2a143b0664c232266554, type: 3}
   m_Name: AssaultRifle
   m_EditorClassIdentifier: 
-  gunType: 0
+  gunType: 1
   shotRate: 0.5
   shotRange: 20
   damage: 40
+  cartridgeCapacity: 8
+  ammoCapacity: 32
+  weaponID: 0
   offset: {x: 5, y: 5}
   gunPrefab: {fileID: 1490873028196816, guid: a3fe0be603767ae42a0d14c81d777c2b, type: 3}
   handPosition: {x: 0.185, y: 0.1, z: -0.15}
