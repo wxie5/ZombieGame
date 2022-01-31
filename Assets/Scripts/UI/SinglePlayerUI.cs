@@ -14,6 +14,7 @@ public class SinglePlayerUI : MonoBehaviour
 
     [SerializeField] private Text scoreMessage;
     [SerializeField] private Text game_message;
+    [SerializeField] private Text bulletMessage;
     void Start()
     {
         
