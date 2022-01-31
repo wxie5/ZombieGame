@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
+
 // This script is wrote by Jiacheng Sun
 public class ExitGame : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class ExitGame : MonoBehaviour
     }
     private void OnClick()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
         Application.Quit();
     }
 }
