@@ -9294,7 +9294,7 @@ MonoBehaviour:
   m_CamaraCenter: {fileID: 1419246183}
   m_PlayerInstance: {fileID: 0}
   m_StartDelay: 3
-  m_EndDelay: 1
+  m_EndDelay: 3
   m_score: 0
   m_ZombieSpawnInterval: 0.5
 --- !u!4 &2139448385

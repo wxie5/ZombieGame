@@ -3853,12 +3853,36 @@ MonoBehaviour:
     m_SpawnPoint: {fileID: 1656804043}
     m_ZombieNumber: 0
     m_Instance: {fileID: 0}
+  - m_ZombieType: {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
+    m_SpawnPoint: {fileID: 1656804043}
+    m_ZombieNumber: 0
+    m_Instance: {fileID: 0}
+  - m_ZombieType: {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
+    m_SpawnPoint: {fileID: 1656804043}
+    m_ZombieNumber: 0
+    m_Instance: {fileID: 0}
+  - m_ZombieType: {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
+    m_SpawnPoint: {fileID: 1656804043}
+    m_ZombieNumber: 0
+    m_Instance: {fileID: 0}
+  - m_ZombieType: {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
+    m_SpawnPoint: {fileID: 1656804043}
+    m_ZombieNumber: 0
+    m_Instance: {fileID: 0}
+  - m_ZombieType: {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
+    m_SpawnPoint: {fileID: 1656804043}
+    m_ZombieNumber: 0
+    m_Instance: {fileID: 0}
+  - m_ZombieType: {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
+    m_SpawnPoint: {fileID: 1656804043}
+    m_ZombieNumber: 0
+    m_Instance: {fileID: 0}
   m_PlayerPerfab: {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
   m_PlayerSpawnPoint: {fileID: 1467766661}
   m_CamaraCenter: {fileID: 1419246183}
   m_PlayerInstance: {fileID: 0}
-  m_StartDelay: 1
-  m_EndDelay: 1
+  m_StartDelay: 3
+  m_EndDelay: 3
   m_ZombieSpawnInterval: 0.5
 --- !u!4 &2139448385
 Transform:
