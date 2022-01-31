@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 1089037356039797942}
   - component: {fileID: 1077626847194119870}
   m_Layer: 0
-  m_Name: Zombie_BioHazardSuit_Male_01
+  m_Name: ZombieMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1208,7 +1208,7 @@ GameObject:
   - component: {fileID: 381978310}
   - component: {fileID: 381978309}
   m_Layer: 3
-  m_Name: TestZombie1
+  m_Name: Zombie
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1347,6 +1347,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5679079451889448934a7c39e2e567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zombieMeshes:
+  - {fileID: 4300078, guid: b20a3c10714a6ac439af479e3273de65, type: 3}
+  - {fileID: 4300082, guid: b20a3c10714a6ac439af479e3273de65, type: 3}
+  - {fileID: 4300002, guid: b20a3c10714a6ac439af479e3273de65, type: 3}
+  - {fileID: 4300008, guid: b20a3c10714a6ac439af479e3273de65, type: 3}
 --- !u!1 &1087170772865486540
 GameObject:
   m_ObjectHideFlags: 0

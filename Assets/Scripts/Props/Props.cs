@@ -27,7 +27,7 @@ public class Props : MonoBehaviour
     [SerializeField] private float ShotRateDecreasePercentage = 0.1f;
     private void FixedUpdate()
     {
-        timer += Time.deltaTime;
+        timer += Time.fixedDeltaTime;
         if(timer > props_exists_time)
         {
             Destroy(gameObject);

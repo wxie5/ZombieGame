@@ -1,5 +1,6 @@
 using UnityEngine;
 using Utils.MathTool;
+using System;
 
 public class EnemyStats : MonoBehaviour
 {
@@ -84,7 +85,7 @@ public class EnemyStats : MonoBehaviour
 
     public float GetRandomChaseSpeed()
     {
-        int randomIdx = Random.Range(0, chaseSpeeds.Length);
+        int randomIdx = UnityEngine.Random.Range(0, chaseSpeeds.Length);
         return chaseSpeeds[randomIdx];
     }
 }

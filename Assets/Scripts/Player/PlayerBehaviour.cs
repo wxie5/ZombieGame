@@ -63,10 +63,6 @@ public class PlayerBehaviour : MonoBehaviour
     //keep track of stats (only read from stats, stats never read from behaviour)
     private PlayerStats stats;
 
-    //events (observer)
-    public Action<float, float> onAfterTakeDamage; //current health, max health (used by health bar)
-    public Action<int, int> onUpdateAmmoInfo; //current Ammo in use, left ammo in pack
-
 
     public void Initialize()
     {
@@ -151,9 +147,6 @@ public class PlayerBehaviour : MonoBehaviour
 
         stats.TakeDamage(damage);
 
-        //notify other scripts that player take damage
-        InvokeOnAfterTakeDamage();
-
         if (stats.IsDead)
         {
             animator.SetTrigger("Die");
@@ -182,8 +175,6 @@ public class PlayerBehaviour : MonoBehaviour
         animator.SetTrigger("Reload");
 
         stats.UpdateReloadData();
-
-        InvokeOnUpdateAmmoInfo();
     }
 
     private void ApplyGravity()
@@ -319,9 +310,6 @@ public class PlayerBehaviour : MonoBehaviour
 
             //update stats
             stats.ReduceAmmo(1);
-
-            //call events
-            InvokeOnUpdateAmmoInfo();
 
             //auto reload
             if (stats.CurrentCartridgeCap <= 0)
@@ -509,9 +497,6 @@ public class PlayerBehaviour : MonoBehaviour
         //change animation
         float currentWeaponID = (float)currentGun.weaponID;
         animator.SetFloat("WeaponID", currentWeaponID);
-
-        //call event
-        InvokeOnUpdateAmmoInfo();
     }
 
     //for debug only, show player's lock range in the scene (edit mode, not play mode)
@@ -519,15 +504,6 @@ public class PlayerBehaviour : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, lockRange);
-    }
-
-    public void InvokeOnUpdateAmmoInfo()
-    {
-        if (onUpdateAmmoInfo != null) { onUpdateAmmoInfo.Invoke(stats.CurrentCartridgeCap, stats.CurrentRestAmmo); }
-    }
-    public void InvokeOnAfterTakeDamage()
-    {
-        if (onAfterTakeDamage != null) { onAfterTakeDamage.Invoke(stats.CurrentHealth, stats.MaxHealth); }
     }
 
 }

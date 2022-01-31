@@ -1,5 +1,6 @@
 using UnityEngine;
 using Utils.MathTool;
+using System;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -37,6 +38,10 @@ public class PlayerStats : MonoBehaviour
     private float damageRateMulti = 1f;
     private float moveSpeedMulti = 1f;
     private float shotOffsetMulti = 1f; //The offset when shooting, which is more and more accurate from 1->0.
+
+    //Stats Events
+    public Action<float, float> onHealthChange;
+    public Action<int, int> onUpdateAmmoInfo; //current Ammo in use, left ammo in pack
 
     #region Attribute Fields
     public PlayerID ID
@@ -132,11 +137,11 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth = MathTool.NonNegativeSub(currentHealth, amount);
-        Debug.Log("Health: " + currentHealth + "/" + maxHealth);
+
+        if (onHealthChange != null) { onHealthChange.Invoke(currentHealth, maxHealth); }
 
         if (currentHealth <= 0)
         {
-            //Die
             isDead = true;
         }
     }
@@ -144,13 +149,15 @@ public class PlayerStats : MonoBehaviour
     public void Recover(float amount)
     {
         currentHealth = MathTool.NonOverflowAdd(currentHealth, amount, maxHealth);
+
+        if (onHealthChange != null) { onHealthChange.Invoke(currentHealth, maxHealth); }
     }
 
 
     //Here are some functions that interact with the props class that can affect the multipliers value.
     public void ChangeShotRate(float amount)
     {
-        shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, -amount);
+        shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, amount);
 
         currentShotRate = shotRateMulti * gunInfos[currentGunIndex].shotRate;
     }
@@ -176,7 +183,7 @@ public class PlayerStats : MonoBehaviour
 
     public void ChangeOffset(float amount)
     {
-        shotOffsetMulti += MathTool.NonNegativeSub(shotOffsetMulti, -amount);
+        shotOffsetMulti = MathTool.NonNegativeSub(shotOffsetMulti, amount);
 
         currentShotOffset = shotOffsetMulti * gunInfos[currentGunIndex].offset;
     }
@@ -211,6 +218,8 @@ public class PlayerStats : MonoBehaviour
             cartridgeCaps[currentGunIndex] = ammoCaps[currentGunIndex];
             ammoCaps[currentGunIndex] = 0;
         }
+
+        if (onUpdateAmmoInfo != null) { onUpdateAmmoInfo.Invoke(cartridgeCaps[currentGunIndex], ammoCaps[currentGunIndex]); }
     }
 
     //pick gun will switch it to current gun
@@ -247,6 +256,8 @@ public class PlayerStats : MonoBehaviour
         Gun currentGun = gunInfos[currentGunIndex];
         ammoCaps[currentGunIndex] = currentGun.ammoCapacity;
         cartridgeCaps[currentGunIndex] = currentGun.cartridgeCapacity;
+
+        if (onUpdateAmmoInfo != null) { onUpdateAmmoInfo.Invoke(cartridgeCaps[currentGunIndex], ammoCaps[currentGunIndex]); }
     }
 
     private void UpdatePlayerCombatStats()
@@ -267,7 +278,9 @@ public class PlayerStats : MonoBehaviour
     {
         cartridgeCaps[currentGunIndex] -= amount;
 
-        if(cartridgeCaps[currentGunIndex] <= 0)
+        if (onUpdateAmmoInfo != null) { onUpdateAmmoInfo.Invoke(cartridgeCaps[currentGunIndex], ammoCaps[currentGunIndex]); }
+
+        if (cartridgeCaps[currentGunIndex] <= 0)
         {
             return false;
         }

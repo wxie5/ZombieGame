@@ -6,7 +6,7 @@ public class PlayerHPBar : HPBar
     {
         playerManager = GetComponentInParent<PlayerManager>();
 
-        playerManager.OnAfterTakeDamageAdd(ModifyHP);
+        playerManager.OnHealthChangeAdd(ModifyHP);
     }
 
     public void ModifyHP(float currentHP, float maxHP)
@@ -16,6 +16,6 @@ public class PlayerHPBar : HPBar
 
     private void OnDestroy()
     {
-        playerManager.OnAfterTakeDamageRemove(SetFill);
+        playerManager.OnHealthChangeRemove(SetFill);
     }
 }

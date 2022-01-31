@@ -69,29 +69,29 @@ public class PlayerManager : MonoBehaviour
         behaviour.PlayerGetHit(damage);
     }
     
-    public void OnAfterTakeDamageAdd(Action<float, float> listener)
+    public void OnHealthChangeAdd(Action<float, float> listener)
     {
-        behaviour.onAfterTakeDamage += listener;
+        stats.onHealthChange += listener;
     }
 
-    public void OnAfterTakeDamageRemove(Action<float, float> listener)
+    public void OnHealthChangeRemove(Action<float, float> listener)
     {
-        behaviour.onAfterTakeDamage -= listener;
+        stats.onHealthChange -= listener;
     }
 
     public void OnUpdateAmmoInfoAdd(Action<int, int> listener, bool addThenInvoke)
     {
-        behaviour.onUpdateAmmoInfo += listener;
+        stats.onUpdateAmmoInfo += listener;
 
         if(addThenInvoke)
         {
-            behaviour.InvokeOnUpdateAmmoInfo();
+            stats.onUpdateAmmoInfo.Invoke(stats.CurrentCartridgeCap, stats.CurrentRestAmmo);
         }
     }
 
     public void OnUpdateAmmoInfoRemove(Action<int, int> listener)
     {
-        behaviour.onUpdateAmmoInfo -= listener;
+        stats.onUpdateAmmoInfo -= listener;
     }
 }
 
