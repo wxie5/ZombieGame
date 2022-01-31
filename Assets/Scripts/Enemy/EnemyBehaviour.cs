@@ -23,6 +23,8 @@ public class EnemyBehaviour : MonoBehaviour
     public Action<float, float> onAfterTakeDamage;
     public Action onDead;
 
+    [SerializeField] private AudioClip zombieRoar;
+
     public void Initialize()
     {
         //get all the players' transform in the scene

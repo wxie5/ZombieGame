@@ -17,7 +17,7 @@ MonoBehaviour:
   shotRange: 20
   damage: 40
   cartridgeCapacity: 8
-  ammoCapacity: 32
+  ammoCapacity: 200
   weaponID: 0
   offset: {x: 5, y: 5}
   gunPrefab: {fileID: 1490873028196816, guid: a3fe0be603767ae42a0d14c81d777c2b, type: 3}

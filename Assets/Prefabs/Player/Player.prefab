@@ -2714,6 +2714,10 @@ MonoBehaviour:
   shotParticlePrefab: {fileID: 1320275964731592, guid: 0624c6f5a57851d48ba74b4f86ec13d7, type: 3}
   bulletTrailPrefab: {fileID: 4857912865274055344, guid: 20d1e0499f2b6a44d89af4ff5c83e06a, type: 3}
   bloodParticlePrefab: {fileID: 1362418652685942, guid: b369efb4abe69e044890b664115fab9e, type: 3}
+  handGunShot: {fileID: 8300000, guid: 97fbab9c1dbaea64e9433ea2b1c86d0c, type: 3}
+  raffieShot: {fileID: 8300000, guid: 566af841965bc544eb86c051e427af15, type: 3}
+  switchWeapon: {fileID: 8300000, guid: f1aaa989bf148ee43a7a18e881f8bdbb, type: 3}
+  reload: {fileID: 8300000, guid: 72d5d3eb98f7e4b4c8ed55eb460e2d48, type: 3}
 --- !u!114 &6610907676015907719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2732,6 +2736,9 @@ MonoBehaviour:
   targetingSpeedRatio: 0.4
   id: 0
   defaultGun: {fileID: 669878225467593486, guid: 697a103497616264898e7d70b26c337d, type: 3}
+  getHurt: {fileID: 8300000, guid: d07dd84f326d8524c8639de2004324e5, type: 3}
+  dead: {fileID: 8300000, guid: 3b4701f3f3a60344db6ff47e1cbc582f, type: 3}
+  recover: {fileID: 8300000, guid: 3c03efec2088d2f4190bba4534a05848, type: 3}
 --- !u!114 &1511758529570404423
 MonoBehaviour:
   m_ObjectHideFlags: 0

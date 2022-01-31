@@ -16,6 +16,10 @@ public class PlayerStats : MonoBehaviour
     [Header("Set Gun's ScriptableObject")]
     [SerializeField] private GunItem defaultGun;
 
+    [Header("Set Sound Effect")]
+    [SerializeField] private AudioClip getHurt;
+    [SerializeField] private AudioClip dead;
+    [SerializeField] private AudioClip recover;
     //basic stats
     private float currentHealth;
     private float currentShotRange;
@@ -139,9 +143,10 @@ public class PlayerStats : MonoBehaviour
         currentHealth = MathTool.NonNegativeSub(currentHealth, amount);
 
         if (onHealthChange != null) { onHealthChange.Invoke(currentHealth, maxHealth); }
-
+        AudioSource.PlayClipAtPoint(getHurt, gameObject.transform.position);
         if (currentHealth <= 0)
         {
+            AudioSource.PlayClipAtPoint(dead, gameObject.transform.position);
             isDead = true;
         }
     }
@@ -149,7 +154,7 @@ public class PlayerStats : MonoBehaviour
     public void Recover(float amount)
     {
         currentHealth = MathTool.NonOverflowAdd(currentHealth, amount, maxHealth);
-
+        AudioSource.PlayClipAtPoint(recover, gameObject.transform.position);
         if (onHealthChange != null) { onHealthChange.Invoke(currentHealth, maxHealth); }
     }
 
@@ -203,7 +208,26 @@ public class PlayerStats : MonoBehaviour
         //Update combat info
         UpdatePlayerCombatStats();
     }
+    public bool IsSingleWeapon()
+    {
+        int counter = 0;
+        foreach (Gun g in gunInfos)
+        {
+            if (g != null)
+            {
+                counter++;
+            }
+        }
 
+        if (counter == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public void UpdateReloadData()
     {
         int curCartCap = gunInfos[currentGunIndex].cartridgeCapacity;

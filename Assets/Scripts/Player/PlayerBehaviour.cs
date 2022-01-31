@@ -31,6 +31,13 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private GameObject bulletTrailPrefab;
     [SerializeField] private GameObject bloodParticlePrefab;
 
+    [Header("Sound Effect")]
+    [SerializeField] private AudioClip handGunShot;
+    [SerializeField] private AudioClip raffieShot;
+    [SerializeField] private AudioClip switchWeapon;
+    [SerializeField] private AudioClip reload;
+
+
     //Components
     private CharacterController cc;
     private Animator animator;
@@ -172,6 +179,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         if(stats.CurrentRestAmmo <= 0) { return; }
 
+        AudioSource.PlayClipAtPoint(reload, gameObject.transform.position);
         animator.SetTrigger("Reload");
 
         stats.UpdateReloadData();
@@ -293,6 +301,15 @@ public class PlayerBehaviour : MonoBehaviour
             if (!isLockingTarget)
             {
                 ChangeLockState();
+            }
+
+            if (stats.CurrentGun.gunType == GunType.Handgun)
+            {
+                AudioSource.PlayClipAtPoint(handGunShot, gameObject.transform.position);
+            }
+            if (stats.CurrentGun.gunType == GunType.AssaultRifle)
+            {
+                AudioSource.PlayClipAtPoint(raffieShot, gameObject.transform.position);
             }
 
             // shot and generate shot VFX
@@ -477,6 +494,10 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void SwitchGun()
     {
+        if(!stats.IsSingleWeapon())
+        {
+            AudioSource.PlayClipAtPoint(switchWeapon, gameObject.transform.position);
+        }
         stats.SwitchGunUpdateState();
         InitGun();
     }

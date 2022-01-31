@@ -1301,6 +1301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db23c79c35d4e0c478d8773b798a268a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zombieRoar: {fileID: 8300000, guid: 6258be6143998cf448a2cae19d5bdf52, type: 3}
 --- !u!114 &381978309
 MonoBehaviour:
   m_ObjectHideFlags: 0
