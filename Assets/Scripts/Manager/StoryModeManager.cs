@@ -41,6 +41,10 @@ public class StoryModeManager : MonoBehaviour
         StartCoroutine(GameLoop());
     }
 
+    private void FixedUpdate()
+    {
+        singlePlayerUI.changeBulletMessage(playerStats.AmmoInfo());
+    }
     private void SpawnZombies() // Summon zombies one by one
     {
         if (m_RandomSpawn) //If set random spawn, random types of zombies will be randomly summoned from each spawn point.
@@ -126,6 +130,7 @@ public class StoryModeManager : MonoBehaviour
         }
         playerbehaviour.enabled = false;
         yield return m_EndWait;
+        SceneManager.LoadScene("GameStartUi");
     }
 
     private bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins.

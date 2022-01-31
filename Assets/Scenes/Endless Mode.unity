@@ -2449,9 +2449,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '
-
-'
+  m_Text: 
 --- !u!222 &636913467
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3766,7 +3764,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 291, y: 24}
+  m_AnchoredPosition: {x: 291, y: 49}
   m_SizeDelta: {x: 230.0097, y: 77.585}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &890884933
@@ -3791,18 +3789,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 5dd49b3eacc540408c98eee0de38e0f1, type: 3}
-    m_FontSize: 30
+    m_FontSize: 50
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 10/100
+  m_Text: 
 --- !u!222 &890884934
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9153,6 +9151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_zombiePrefab:
   - {fileID: 1087131060226475148, guid: c99e57fa4f84824449b127ddc1c7bf9e, type: 3}
+  - {fileID: 1087131060226475148, guid: a7ddf59091c48184a83aa7a2aa727d0a, type: 3}
   m_SpawnPoint:
   - {fileID: 1656804043}
   - {fileID: 566223856}
@@ -9194,7 +9193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreMessage: {fileID: 1141279019}
   game_message: {fileID: 636913466}
-  bulletMessage: {fileID: 0}
+  bullet_message: {fileID: 890884933}
 --- !u!1001 &1699853161511880549
 PrefabInstance:
   m_ObjectHideFlags: 0

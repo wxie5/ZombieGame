@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+using UnityEngine.SceneManagement;
 // Manage the game process and UI in Endless Mode
 
 public class EndlessModeManager : MonoBehaviour
@@ -51,12 +51,20 @@ public class EndlessModeManager : MonoBehaviour
         {
             StartCoroutine(GameEnding());
         }
+        singlePlayerUI.changeBulletMessage(playerStats.AmmoInfo());
     }
     private void SpawnZombies() // Summon zombies one by one
     {
         int zombie_number;
         int spawn_point_number;
-        zombie_number = Random.Range(0, m_zombiePrefab.Length);
+        if(Random.Range(0,100)<15)
+        {
+            zombie_number = 0;
+        }
+        else
+        {
+            zombie_number = 1;
+        }
         spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
         m_Zombies[m_currentSpawningzombieNumber] = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint[spawn_point_number]) as GameObject;
     } 
@@ -133,6 +141,7 @@ public class EndlessModeManager : MonoBehaviour
         singlePlayerUI.ChangeGameMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
         playerbehaviour.enabled = false;
         yield return m_EndWait;
+        SceneManager.LoadScene("GameStartUi");
     }
 
     private bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.

@@ -14,7 +14,7 @@ public class SinglePlayerUI : MonoBehaviour
 
     [SerializeField] private Text scoreMessage;
     [SerializeField] private Text game_message;
-    [SerializeField] private Text bulletMessage;
+    [SerializeField] private Text bullet_message;
     void Start()
     {
         
@@ -72,8 +72,17 @@ public class SinglePlayerUI : MonoBehaviour
         game_message.text = gameMessage;
     }
 
+    public void changeBulletMessage(string bulletMessage)
+    {
+        bullet_message.text = bulletMessage;
+    }
     public void Show_final_score()
     {
 
+    }
+
+    public void updateBulletInfo(int current, int total)
+    {
+        bullet_message.text = "   "+current + "/" + total;
     }
 }

@@ -1329,6 +1329,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treaturePrefabs:
   - {fileID: 8391315083091977575, guid: a151e3be3be08b442a5635fe658dd947, type: 3}
+  - {fileID: 3799200949168421212, guid: 0a3a3e8f48fdce348ac68731c43084d8, type: 3}
+  - {fileID: 3603623071407136588, guid: 9af3f16869cf9f445936f5c3e0b932d7, type: 3}
+  - {fileID: 7043378306973154462, guid: b50a0c38ca23b274a9b83b170cf17ca8, type: 3}
+  - {fileID: 6300180358806153160, guid: c7babef7506bd274ca95dc48befd41df, type: 3}
   treasureParentTrans: {fileID: 0}
 --- !u!1 &1087170772865486540
 GameObject:
