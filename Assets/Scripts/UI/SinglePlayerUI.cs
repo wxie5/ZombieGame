@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //Controll the UI in SinglePlayer Mode
+// This script is wrote by Jiacheng Sun
 public class SinglePlayerUI : MonoBehaviour
 {
     private int score;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// This script is worte by Wei Xie
 /// <summary>
 /// this class can be inherited to decide many other factors (whose hp bar, when to modify hp, etc.)
 /// </summary>

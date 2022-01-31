@@ -2,6 +2,8 @@ using UnityEngine;
 using Utils.MathTool;
 using System;
 
+//This script is created and wrote by Jiacheng Sun
+//Modified bt Wei Xie
 public class PlayerStats : MonoBehaviour
 {
     //Some buff multipliers that the player comes with, the initial value is 1

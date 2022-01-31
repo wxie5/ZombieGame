@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEditor;
+// This script is wrote by Jiacheng Sun
 public class ExitGame : MonoBehaviour
 {
     private void Start()

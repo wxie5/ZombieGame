@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using Utils.MathTool;
 using System;
 
+//This script is create and wrote by Wei Xie
 public class EnemyBehaviour : MonoBehaviour
 {
     //Player Transforms

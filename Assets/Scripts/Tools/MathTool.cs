@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//This script is created and wrote by Wei Xie
 namespace Utils.MathTool
 {
     /// <summary>

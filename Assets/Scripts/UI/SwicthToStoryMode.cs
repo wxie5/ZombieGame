@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+
+//This script is wrote by Jiacheng Sun
 public class SwicthToStoryMode : MonoBehaviour
 {
     [SerializeField] private AudioClip zombie_roar;

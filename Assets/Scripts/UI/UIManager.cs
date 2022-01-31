@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+//This script is wrote by Wei Xie
 public class UIManager : MonoBehaviour
 {
     [Header("Weapon Info")]

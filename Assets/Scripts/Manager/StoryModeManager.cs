@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+//This script is create and wrote by Jiacheng Sun
 public class StoryModeManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] m_zombiePrefab;

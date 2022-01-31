@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+//This script is create and wrote by Jiacheng Sun
 [Serializable]
 public class ZombieManager
 {

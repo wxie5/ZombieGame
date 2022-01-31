@@ -1,5 +1,5 @@
 using UnityEngine;
-
+//This script is create and wrote by Wei Xie
 public class InputManager : MonoBehaviour
 {
     public static float PlayerA_Horizontal

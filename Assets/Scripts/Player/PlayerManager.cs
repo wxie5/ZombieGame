@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 
+//This script is created and wrote by Wei Xie
 [RequireComponent(typeof(PlayerStats), typeof(PlayerBehaviour))]
 public class PlayerManager : MonoBehaviour
 {

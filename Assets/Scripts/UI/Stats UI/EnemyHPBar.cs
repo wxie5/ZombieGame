@@ -1,3 +1,4 @@
+//This script is wrote by Wei Xie
 public class EnemyHPBar : HPBar
 {
     private EnemyManager enemyManager;

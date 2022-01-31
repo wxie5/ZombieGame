@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 // Manage the game process and UI in Endless Mode
-
+//This script is create and wrote by Jiacheng Sun
 public class EndlessModeManager : MonoBehaviour
 {
     public GameObject[] m_zombiePrefab;

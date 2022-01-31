@@ -1,3 +1,5 @@
+//This script is wrote by Wei Xie
+
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Gun", menuName = "Weapons/Gun")]

@@ -1,3 +1,5 @@
+
+//This script is created and wrote by Wei Xie
 public static class EnemyConst
 {
     public static float MAX_HEALTH = 100f;

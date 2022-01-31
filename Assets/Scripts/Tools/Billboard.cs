@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//This script is created and wrote by Wei Xie
 /// <summary>
 /// attach this script to any world space UI element to let it look at the main camera
 /// </summary>

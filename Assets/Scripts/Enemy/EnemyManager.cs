@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 
+//This script is create and wrote by Wei Xie
+//Modified by Jiacheng Sun
 [RequireComponent(typeof(EnemyStats), typeof(EnemyBehaviour))]
 public class EnemyManager : MonoBehaviour
 {

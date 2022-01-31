@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//This script is create and wrote by Jiacheng Sun
+
+//Basiclly just add effects to props to change the player's basic attributes.
 public class Props : MonoBehaviour
 {
     public enum PropsType

@@ -2,6 +2,8 @@ using UnityEngine;
 using Utils.MathTool;
 using System;
 
+//This script is create and wrote by Wei Xie
+//Modified by Jiacheng Sun
 public class PlayerBehaviour : MonoBehaviour
 {
     [Header("Movement")]

@@ -1,3 +1,4 @@
+//This script is wrote by WeiXie
 public class PlayerHPBar : HPBar
 {
     private PlayerManager playerManager;

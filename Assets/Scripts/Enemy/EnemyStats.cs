@@ -2,6 +2,7 @@ using UnityEngine;
 using Utils.MathTool;
 using System;
 
+//This script is created and wrote by Wei Xie
 public class EnemyStats : MonoBehaviour
 {
     [Header("Set In Inspector")]
