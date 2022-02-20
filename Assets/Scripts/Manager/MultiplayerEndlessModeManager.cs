@@ -1,18 +1,17 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
-// Manage the game process and UI in Endless Mode
+// Manage the game process and UI in Multiplayer Endless Mode
 //This script is create and wrote by Jiacheng Sun
-public class EndlessModeManager : MonoBehaviour
+public class MultiplayerEndlessModeManager : MonoBehaviour
 {
     public GameObject[] m_zombiePrefab;
     public Transform[] m_SpawnPoint;
     private GameObject[] m_Zombies;
     private bool[] m_deadZombies;
-    [SerializeField] private GameObject m_PlayerPerfab;
-    [SerializeField] private Transform m_PlayerSpawnPoint;
-    [SerializeField] private GameObject m_CamaraCenter;
-    [HideInInspector] public GameObject m_PlayerInstance;
+    [SerializeField] private GameObject camCenter;
+    [SerializeField] private GameObject[] m_PlayerPerfab;
+    [SerializeField] private Transform[] m_PlayerSpawnPoint;
 
     [SerializeField] private float m_StartDelay = 1f;
     [SerializeField] private float m_EndDelay = 1f;
@@ -27,9 +26,13 @@ public class EndlessModeManager : MonoBehaviour
     [SerializeField] private float m_ZombieSpawnInterval = 0.5f;
 
     //components
-    private PlayerBehaviour playerbehaviour;
-    private PlayerStats playerStats;
-    private SinglePlayerUI singlePlayerUI;
+    private GameObject m_Player0Instance;
+    private GameObject m_Player1Instance;
+    private PlayerBehaviour player0behaviour;
+    private PlayerBehaviour player1behaviour;
+    private PlayerStats player0Stats;
+    private PlayerStats player1Stats;
+    private MultiPlayerUI multiPlayerUI;
 
 
     void Start()
@@ -38,25 +41,22 @@ public class EndlessModeManager : MonoBehaviour
         m_EndWait = new WaitForSeconds(m_EndDelay);
 
         SpawnPlayer();  //Set the player's starting position
-        playerbehaviour = m_PlayerInstance.GetComponent<PlayerBehaviour>();
-        playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
-        singlePlayerUI = gameObject.GetComponent<SinglePlayerUI>();
-        playerbehaviour.enabled = false;
+        multiPlayerUI = this.GetComponent<MultiPlayerUI>();
         StartCoroutine(GameLoop());
     }
     private void Update()
     {
         UpdateScore();
         UpdateBulletInfo();
-        if (playerStats.IsDead)
+        if (AllPlayerDead())
         {
             StartCoroutine(GameEnding());
         }
     }
-
     private void UpdateBulletInfo()
     {
-        singlePlayerUI.changeBulletMessage(playerStats.AmmoInfo());
+        multiPlayerUI.changeBulletMessage(0, player0Stats.AmmoInfo());
+        multiPlayerUI.changeBulletMessage(1, player1Stats.AmmoInfo());
     }
     private void SpawnZombies() // Summon zombies one by one
     {
@@ -76,12 +76,23 @@ public class EndlessModeManager : MonoBehaviour
 
     private void SpawnPlayer()
     {
-        m_PlayerInstance = Instantiate(m_PlayerPerfab, m_PlayerSpawnPoint) as GameObject;
-        m_CamaraCenter.GetComponent<SimpleCamFollow>().PlayerTrans = m_PlayerInstance.transform; //Set the camera position
+        m_Player0Instance = Instantiate(m_PlayerPerfab[0], m_PlayerSpawnPoint[0]) as GameObject;
+        m_Player1Instance = Instantiate(m_PlayerPerfab[1], m_PlayerSpawnPoint[1]) as GameObject;
+        player0behaviour = m_Player0Instance.GetComponent<PlayerBehaviour>();
+        player0Stats = m_Player0Instance.GetComponent<PlayerStats>();
+        player0behaviour.enabled = false;
+        player1behaviour = m_Player1Instance.GetComponent<PlayerBehaviour>();
+        player1Stats = m_Player1Instance.GetComponent<PlayerStats>();
+        player1behaviour.enabled = false;
+
+        camCenter.GetComponent<MultiplayerCamara>().Player0Trans = m_Player0Instance.transform;
+        camCenter.GetComponent<MultiplayerCamara>().Player1Trans = m_Player1Instance.transform;
+        camCenter.GetComponent<MultiplayerCamara>().Player0Dead = false;
+        camCenter.GetComponent<MultiplayerCamara>().Player1Dead = false;
     }
     private IEnumerator GameLoop()
     {
-        while (!m_PlayerInstance.GetComponent<PlayerStats>().IsDead)
+        while (!AllPlayerDead())
         {
             yield return StartCoroutine(GameStarting());
             yield return StartCoroutine(ZombieSpawning());
@@ -98,15 +109,16 @@ public class EndlessModeManager : MonoBehaviour
         m_deadZombies = new bool[m_numberOfZombies];
         m_numberOfWaves++;
         m_currentSpawningzombieNumber = 0;
-        singlePlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
+        multiPlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
 
         yield return m_StartWait;
     }
 
     private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
-        singlePlayerUI.ClearGmaeMessage();
-        playerbehaviour.enabled = true;
+        multiPlayerUI.ClearGmaeMessage();
+        player0behaviour.enabled = true;
+        player1behaviour.enabled = true;
         while (m_currentSpawningzombieNumber< m_Zombies.Length)
         {
             SpawnZombies();
@@ -114,9 +126,21 @@ public class EndlessModeManager : MonoBehaviour
             yield return new WaitForSeconds(m_ZombieSpawnInterval);
         }
     }
+    private bool AllPlayerDead()
+    {
+        if(player0Stats.IsDead)
+        {
+            camCenter.GetComponent<MultiplayerCamara>().Player0Dead = true;
+        }
+        if (player1Stats.IsDead)
+        {
+            camCenter.GetComponent<MultiplayerCamara>().Player1Dead = true;
+        }
+        return player0Stats.IsDead && player1Stats.IsDead;
+    }
     private IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
     {
-        while (!AllZombieDead() && !playerStats.IsDead)
+        while (!AllZombieDead() && !AllPlayerDead())
         {
             yield return null;
         }
@@ -124,13 +148,13 @@ public class EndlessModeManager : MonoBehaviour
 
     private IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
     {
-        if (!playerStats.IsDead)
+        if (!AllPlayerDead())
         {
             int counter = 5;
-            singlePlayerUI.ClearGmaeMessage();
+            multiPlayerUI.ClearGmaeMessage();
             while (counter > 0)
             {
-                singlePlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
+                multiPlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
                 counter -= 1;
                 yield return new WaitForSeconds(1f);
             }
@@ -143,8 +167,9 @@ public class EndlessModeManager : MonoBehaviour
 
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
-        singlePlayerUI.ChangeGameMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
-        playerbehaviour.enabled = false;
+        multiPlayerUI.ChangeGameMessage("YOU LOSE!" + "\n\n\n" + "Your final score: " + m_score);
+        player0behaviour.enabled = false;
+        player1behaviour.enabled = false;
         yield return m_EndWait;
         SceneManager.LoadScene("GameStartUi");
     }
@@ -179,6 +204,6 @@ public class EndlessModeManager : MonoBehaviour
                 m_score += m_Zombies[i].GetComponent<EnemyStats>().Score;
             }
         }
-        singlePlayerUI.ChangeScore(m_score);
+        multiPlayerUI.ChangeScore(m_score);
     }
 }

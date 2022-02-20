@@ -26,7 +26,7 @@ public class StoryModeManager : MonoBehaviour
     //components
     private PlayerBehaviour playerbehaviour;
     private PlayerStats playerStats;
-    private SinglePlayerUI singlePlayerUI;
+    private StorySinglePlayerUI singlePlayerUI;
     void Start()
     {
 
@@ -36,12 +36,12 @@ public class StoryModeManager : MonoBehaviour
         SpawnPlayer();  //Set the player's starting position
         playerbehaviour = m_PlayerInstance.GetComponent<PlayerBehaviour>();
         playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
-        singlePlayerUI = gameObject.GetComponent<SinglePlayerUI>();
+        singlePlayerUI = this.GetComponent<StorySinglePlayerUI>();
 
         StartCoroutine(GameLoop());
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         singlePlayerUI.changeBulletMessage(playerStats.AmmoInfo());
     }

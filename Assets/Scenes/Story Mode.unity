@@ -696,7 +696,7 @@ RectTransform:
   m_GameObject: {fileID: 636913464}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 929317452}
   m_RootOrder: 1
@@ -1263,14 +1263,14 @@ RectTransform:
   m_GameObject: {fileID: 800835464}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 929317452}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 274, y: 37}
+  m_AnchoredPosition: {x: 483, y: 80}
   m_SizeDelta: {x: 248.5517, y: 84.8177}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &800835466
@@ -2510,6 +2510,18 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8896123735029309365, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
   m_PrefabInstance: {fileID: 677293097}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1419246184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419246183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb8e51a8bde552347853fa6d5fe6760b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1467766660
 GameObject:
   m_ObjectHideFlags: 0
@@ -3504,14 +3516,14 @@ RectTransform:
   m_GameObject: {fileID: 1883688663}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 929317452}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 77, y: 64}
+  m_AnchoredPosition: {x: 106, y: 93}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1883688665
@@ -3907,10 +3919,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2139448383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47fd330fcfb84254d9c5823bb41b7116, type: 3}
+  m_Script: {fileID: 11500000, guid: d1f31904af925b84e9935caefaf3501c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreMessage: {fileID: 0}
   game_message: {fileID: 636913466}
   bullet_message: {fileID: 800835466}
 --- !u!1001 &1699853161511880549

@@ -150,6 +150,7 @@ public class PlayerStats : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(dead, gameObject.transform.position);
             isDead = true;
+            gameObject.tag = GameConst.DEAD_TAG;
         }
     }
 
@@ -316,6 +317,7 @@ public class PlayerStats : MonoBehaviour
 
     public string AmmoInfo()
     {
-        return cartridgeCaps[currentGunIndex] + "/" + ammoCaps[currentGunIndex];
+        //return cartridgeCaps[currentGunIndex] + "/" + ammoCaps[currentGunIndex];
+        return "info";
     }
 }

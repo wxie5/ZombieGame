@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 //Controll the UI in SinglePlayer Mode
 // This script is wrote by Jiacheng Sun
-public class SinglePlayerUI : MonoBehaviour
+public class StorySinglePlayerUI : MonoBehaviour
 {
     private int score;
     private int props_amount_DamageIncrease = 0;
@@ -13,23 +13,10 @@ public class SinglePlayerUI : MonoBehaviour
     private int props_amount_ShotRateDecrease = 0;
     private int props_max_amount;
 
-    [SerializeField] private Text scoreMessage;
     [SerializeField] private Text game_message;
     [SerializeField] private Text bullet_message;
 
-    // Update is called once per frame
-    void Update()
-    {
-        scoreMessage.text = "Current Score: " + score;
-    }
-    public void ChangeScore(int amount)
-    {
-        score = amount;
-    }
-    public int GetScore()
-    {
-        return score;
-    }
+
     public void Change_props_amount(Props.PropsType type)
     {
         if(type == Props.PropsType.DamageIncrease)

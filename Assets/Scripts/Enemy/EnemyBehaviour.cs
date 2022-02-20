@@ -48,6 +48,11 @@ public class EnemyBehaviour : MonoBehaviour
         agent.speed = stats.GetRandomChaseSpeed();
     }
 
+    public void Update()
+    {
+        //set the target
+        GetNearestPlayer();
+    }
     public void Attack()
     {
         if(target == null) { return; }
@@ -106,6 +111,10 @@ public class EnemyBehaviour : MonoBehaviour
         float curMinSqrMag = Mathf.Infinity;
         for (int i = 0; i < playersTrans.Length; i++)
         {
+            if(playersTrans[i].tag == "Dead")
+            {
+                continue;
+            }
             float sqrMag = (playersTrans[i].position - transform.position).sqrMagnitude;
             if (sqrMag < curMinSqrMag)
             {
