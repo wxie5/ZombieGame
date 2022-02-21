@@ -37,6 +37,11 @@ namespace Factory
         {
             InstantiateBoomerZombie(instantiatePos, 4, "Boomer");
         }
+
+        public void InstantiatePosion(Vector3 instantiatePos)
+        {
+            InstantiatePosionZombie(instantiatePos, 3, "Posion");
+        }
         #endregion
 
         #region Private Zombie Instantiator (For Different Type)
@@ -91,6 +96,34 @@ namespace Factory
 
             // set up view event (this is important for VFX, audio effects, etc)
             view.OnBoomStart += GameFactoryManager.Instance.VFXFact.InstBloodExplosion;
+        }
+
+        private void InstantiatePosionZombie(Vector3 instantiatePos, int id, string prefabName)
+        {
+            // get model
+            EnemyStatsCSV stats = enemyStatsBuffer[id];
+            EnemyBaseModel model = new EnemyBaseModel(id, stats.enemyName, stats.baseHealth, stats.moveSpeed,
+                stats.baseDmg, stats.alertDistance, stats.attackRange, stats.stopDistance, stats.attackRate,
+                stats.attackRateDefault, stats.score, stats.baseHealthMulti, stats.baseDmgMulti, stats.defaultLevel,
+                stats.maxLevel);
+
+            // get view
+            GameObject zombiePrefab = Resources.Load<GameObject>(filePath + prefabName);
+            GameObject zombieGO = Instantiate(zombiePrefab, instantiatePos, Quaternion.identity);
+            EnemyPosionView view = zombieGO.GetComponent<EnemyPosionView>();
+
+            // get controller
+            EnemyBaseController<EnemyPosionView> controller = new EnemyBaseController<EnemyPosionView>(view, model);
+
+            // set up view (this step is extremely important)
+            view.SetUp(controller);
+
+            // set up model event (this is also important, for UI, audio effects, especially)
+            model.OnCurHealthChange += view.HPBarChange;
+            model.OnDead += view.HPBarHide;
+
+            // set up view event (this is important for VFX, audio effects, etc)
+            view.OnShotProjectile += GameFactoryManager.Instance.ProjFact.InstPosionProj;
         }
         #endregion
     }

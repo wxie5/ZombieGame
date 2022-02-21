@@ -21,6 +21,10 @@ namespace View.EnemyView
         // Local UI
         protected HPBar hpbar;
 
+        // view delegate
+        public delegate void ProjectileEvent(Vector3 vec, Quaternion dir, float dmg);
+        public delegate void VFXEvent(Vector3 vec);
+
         public bool IsDead
         {
             get { return isDead; }

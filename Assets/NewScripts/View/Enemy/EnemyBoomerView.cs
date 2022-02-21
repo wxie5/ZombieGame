@@ -9,9 +9,8 @@ namespace View.EnemyView
 
         private EnemyBaseController<EnemyBoomerView> controller;
 
-        // VFX, Audio events
-        public delegate void Vector3Event(Vector3 vec);
-        public event Vector3Event OnBoomStart;
+        // view events
+        public event VFXEvent OnBoomStart;
 
         public void SetUp(EnemyBaseController<EnemyBoomerView> cc)
         {
@@ -91,8 +90,6 @@ namespace View.EnemyView
         {
             isDead = controller.GetHitLogic(damage);
 
-            Debug.Log("Take Damage: " + damage);
-
             if (isDead)
             {
                 DieView();
@@ -118,6 +115,9 @@ namespace View.EnemyView
             animator.applyRootMotion = true;
             animator.SetTrigger("Die");
             animator.SetBool("IsDead", true);
+
+            // Destroy gameobject after 3 secs
+            Destroy(this.gameObject, 3f);
         }
 
         private void HitView()
@@ -132,6 +132,26 @@ namespace View.EnemyView
 
             //reset velocity, change chase speed
             agent.velocity = Vector3.zero;
+        }
+
+        private void OnDestroy()
+        {
+            // unsubscribe model events
+            controller.Model.OnCurHealthChange -= HPBarChange;
+            controller.Model.OnDead -= HPBarHide;
+
+            // unsubscribe view events
+            OnBoomStart -= Factory.GameFactoryManager.Instance.VFXFact.InstBloodExplosion;
+
+            // unsubscribe controller events
+            controller.OnAttack -= AttackView;
+            controller.OnStateChangeToAttack -= ChangeToAttack;
+            controller.OnStateChangeToChase -= ChangeToChase;
+            controller.OnStateChangeToIdle -= ChangeToIdle;
+
+            // let GC clean up all the things that are not monobehaviour
+            controller.Model = null;
+            controller = null;
         }
     }
 }

@@ -17,6 +17,13 @@ namespace Controller.EnemyController
         public event VoidEvent OnStateChangeToAttack;
         public event VoidEvent OnAttack;
 
+        // this is only called for event unsubscription, view should never touch model unless unsubscribe events
+        public EnemyBaseModel Model
+        {
+            get { return model; }
+            set { model = value; }
+        }
+
         public EnemyBaseController(V view, EnemyBaseModel model)
         {
             this.view = view;
@@ -130,6 +137,11 @@ namespace Controller.EnemyController
             }
         }
 
+        public float DealProjectileLogic()
+        {
+            return model.CurDmg;
+        }
+
         public bool GetHitLogic(float damage)
         {
             float remainHealth = model.CurHealth - damage;
@@ -150,16 +162,19 @@ namespace Controller.EnemyController
         #region Small Helper Function
         private bool InAttackRange(Vector3 curPos, Transform target)
         {
+            if(target == null) { return false; }
             return Vector3.Distance(target.position, curPos) < model.AttackRange;
         }
 
         private bool InAlertRange(Vector3 curPos, Transform target)
         {
+            if (target == null) { return false; }
             return Vector3.Distance(target.position, curPos) < model.AlertDistance;
         }
 
         private bool InStopDisRange(Vector3 curPos, Transform target)
         {
+            if (target == null) { return false; }
             // here I add a small offset, so it can change to attack state
             return Vector3.Distance(target.position, curPos) < (model.StopDistance + 0.5f);
         }

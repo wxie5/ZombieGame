@@ -3,13 +3,16 @@ using UnityEngine;
 
 namespace View.EnemyView
 {
-    public class EnemyZombieView : EnemyBaseView
+    public class EnemyPosionView : EnemyBaseView
     {
         private Transform target;
 
-        private EnemyBaseController<EnemyZombieView> controller;
+        private EnemyBaseController<EnemyPosionView> controller;
 
-        public void SetUp(EnemyBaseController<EnemyZombieView> cc)
+        // view events
+        public event ProjectileEvent OnShotProjectile;
+
+        public void SetUp(EnemyBaseController<EnemyPosionView> cc)
         {
             controller = cc;
 
@@ -29,9 +32,10 @@ namespace View.EnemyView
         {
             if (!agent.enabled) { return; }
 
-            switch(curState)
+            switch (curState)
             {
                 case EnemyState.Attack:
+                    transform.LookAt(target, Vector3.up);
                     controller.AttackLogic(transform.position, target, false);
                     break;
                 case EnemyState.Chase:
@@ -42,13 +46,13 @@ namespace View.EnemyView
                     break;
             }
 
-            if(target != null)
+            if (target != null)
             {
                 agent.SetDestination(target.position);
                 animator.SetFloat("ChaseSpeed", agent.velocity.magnitude);
             }
 
-            if(curGetPlayerTimer < 0f)
+            if (curGetPlayerTimer < 0f)
             {
                 controller.GetNearestPlayer(transform.position, out target);
                 curGetPlayerTimer = getPlayerFreq;
@@ -131,7 +135,9 @@ namespace View.EnemyView
         #region Animation Events
         public void OnAnimationAttackPoint()
         {
-            controller.DealDamageLogic(transform.position, target);
+            Vector3 offset = new Vector3(0f, 1.5f, 0f) + transform.forward * 0.5f;
+            Quaternion dir = Quaternion.LookRotation(target.position - transform.position);
+            OnShotProjectile?.Invoke(transform.position + offset, dir, controller.DealProjectileLogic());
         }
         #endregion
 
@@ -142,6 +148,7 @@ namespace View.EnemyView
             controller.Model.OnDead -= HPBarHide;
 
             // unsubscribe view events
+            OnShotProjectile -= Factory.GameFactoryManager.Instance.ProjFact.InstPosionProj;
 
             // unsubscribe controller events
             controller.OnAttack -= AttackView;

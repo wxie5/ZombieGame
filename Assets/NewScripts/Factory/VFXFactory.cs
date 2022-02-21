@@ -11,10 +11,10 @@ namespace Factory
 
         public void InstBloodExplosion(Vector3 pos)
         {
-            InstVFXNotLoop(pos, "BloodExplosion");
+            InstVFX(pos, "BloodExplosion");
         }
 
-        private void InstVFXNotLoop(Vector3 pos, string fileName)
+        private void InstVFX(Vector3 pos, string fileName)
         {
             GameObject vfxPrefab = Resources.Load<GameObject>(filePath + fileName);
             Instantiate(vfxPrefab, pos, Quaternion.identity);
