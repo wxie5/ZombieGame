@@ -317,7 +317,6 @@ public class PlayerStats : MonoBehaviour
 
     public string AmmoInfo()
     {
-        //return cartridgeCaps[currentGunIndex] + "/" + ammoCaps[currentGunIndex];
-        return "info";
+        return cartridgeCaps[currentGunIndex] + "/" + ammoCaps[currentGunIndex];
     }
 }

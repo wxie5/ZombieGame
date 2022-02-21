@@ -9,6 +9,7 @@ public static class GameConst
     #endregion
 
     #region LayerMask
+    public static LayerMask PLAYER = LayerMask.NameToLayer("Player");
     public static LayerMask IGNORE_RAYCAST = LayerMask.NameToLayer("Ignore Raycast");
     #endregion
 }

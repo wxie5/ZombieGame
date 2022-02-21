@@ -201,6 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cc4571cd969580458dc12ac8fb737d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hpBarGO: {fileID: 968669512}
   fill: {fileID: 1326479322}
   inFill: {fileID: 1520026389}
   smoothTime: 0.2
