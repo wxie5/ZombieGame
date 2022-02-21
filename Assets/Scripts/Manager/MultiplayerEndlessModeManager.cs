@@ -28,8 +28,8 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
     //components
     private GameObject m_Player0Instance;
     private GameObject m_Player1Instance;
-    private PlayerBehaviour player0behaviour;
-    private PlayerBehaviour player1behaviour;
+    private PlayerManager player0manager;
+    private PlayerManager player1manager;
     private PlayerStats player0Stats;
     private PlayerStats player1Stats;
     private MultiPlayerUI multiPlayerUI;
@@ -78,12 +78,12 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
     {
         m_Player0Instance = Instantiate(m_PlayerPerfab[0], m_PlayerSpawnPoint[0]) as GameObject;
         m_Player1Instance = Instantiate(m_PlayerPerfab[1], m_PlayerSpawnPoint[1]) as GameObject;
-        player0behaviour = m_Player0Instance.GetComponent<PlayerBehaviour>();
+        player0manager = m_Player0Instance.GetComponent<PlayerManager>();
         player0Stats = m_Player0Instance.GetComponent<PlayerStats>();
-        player0behaviour.enabled = false;
-        player1behaviour = m_Player1Instance.GetComponent<PlayerBehaviour>();
+        player0manager.Enable(false);
+        player1manager = m_Player1Instance.GetComponent<PlayerManager>();
         player1Stats = m_Player1Instance.GetComponent<PlayerStats>();
-        player1behaviour.enabled = false;
+        player1manager.Enable(false);
 
         camCenter.GetComponent<MultiplayerCamara>().Player0Trans = m_Player0Instance.transform;
         camCenter.GetComponent<MultiplayerCamara>().Player1Trans = m_Player1Instance.transform;
@@ -117,8 +117,8 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
     private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
         multiPlayerUI.ClearGmaeMessage();
-        player0behaviour.enabled = true;
-        player1behaviour.enabled = true;
+        player0manager.Enable(true);
+        player1manager.Enable(true);
         while (m_currentSpawningzombieNumber< m_Zombies.Length)
         {
             SpawnZombies();
@@ -168,8 +168,8 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
         multiPlayerUI.ChangeGameMessage("YOU LOSE!" + "\n\n\n" + "Your final score: " + m_score);
-        player0behaviour.enabled = false;
-        player1behaviour.enabled = false;
+        player0manager.Enable(false);
+        player1manager.Enable(false);
         yield return m_EndWait;
         SceneManager.LoadScene("GameStartUi");
     }

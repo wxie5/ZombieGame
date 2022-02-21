@@ -27,7 +27,7 @@ public class EndlessModeManager : MonoBehaviour
     [SerializeField] private float m_ZombieSpawnInterval = 0.5f;
 
     //components
-    private PlayerBehaviour playerbehaviour;
+    private PlayerManager playermanager;
     private PlayerStats playerStats;
     private SinglePlayerUI singlePlayerUI;
 
@@ -38,10 +38,10 @@ public class EndlessModeManager : MonoBehaviour
         m_EndWait = new WaitForSeconds(m_EndDelay);
 
         SpawnPlayer();  //Set the player's starting position
-        playerbehaviour = m_PlayerInstance.GetComponent<PlayerBehaviour>();
+        playermanager = m_PlayerInstance.GetComponent<PlayerManager>();
         playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
         singlePlayerUI = gameObject.GetComponent<SinglePlayerUI>();
-        playerbehaviour.enabled = false;
+        playermanager.Enable(false);
         StartCoroutine(GameLoop());
     }
     private void Update()
@@ -106,7 +106,7 @@ public class EndlessModeManager : MonoBehaviour
     private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
         singlePlayerUI.ClearGmaeMessage();
-        playerbehaviour.enabled = true;
+        playermanager.Enable(true);
         while (m_currentSpawningzombieNumber< m_Zombies.Length)
         {
             SpawnZombies();
@@ -144,7 +144,7 @@ public class EndlessModeManager : MonoBehaviour
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
         singlePlayerUI.ChangeGameMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
-        playerbehaviour.enabled = false;
+        playermanager.Enable(false);
         yield return m_EndWait;
         SceneManager.LoadScene("GameStartUi");
     }
