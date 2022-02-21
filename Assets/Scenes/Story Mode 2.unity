@@ -658,7 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae8633c3f4c4bdb45bff101996570934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stage: 1
+  stage: 2
 --- !u!1 &112316168
 GameObject:
   m_ObjectHideFlags: 0
@@ -4452,6 +4452,10 @@ MonoBehaviour:
   - {fileID: 1656804043}
   - {fileID: 566223856}
   - {fileID: 1130693117}
+  - {fileID: 1204984395}
+  - {fileID: 1147304003}
+  - {fileID: 2009415832}
+  - {fileID: 279008951}
   m_SpawnPoint1:
   - {fileID: 1204984395}
   - {fileID: 1147304003}
@@ -4969,7 +4973,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1204984394}
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: -7.2, y: 0.28, z: 4.24}
+  m_LocalPosition: {x: -7.79, y: 0.28, z: 4.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 721276446}
@@ -6949,7 +6953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae8633c3f4c4bdb45bff101996570934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stage: 2
+  stage: 3
 --- !u!1001 &1636141583
 PrefabInstance:
   m_ObjectHideFlags: 0
