@@ -71,7 +71,7 @@ public class StorySinglePlayerUI : MonoBehaviour
     public IEnumerator PlayerChatMessage(string message)
     {
         chat_box_message.text = message;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
         while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)))
         {
             yield return null;

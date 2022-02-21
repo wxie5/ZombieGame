@@ -21,7 +21,6 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        enable = true;
         stats = GetComponent<PlayerStats>();
         behaviour = GetComponent<PlayerBehaviour>();
 
