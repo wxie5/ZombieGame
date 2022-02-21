@@ -1,11 +1,11 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 
 //Controll the UI in SinglePlayer Mode
 // This script is wrote by Jiacheng Sun
 public class StorySinglePlayerUI : MonoBehaviour
 {
-    private int score;
     private int props_amount_DamageIncrease = 0;
     private int props_amount_MoveSpeedIncrease = 0;
     private int props_amount_BulletNumberIncrease = 0;
@@ -15,6 +15,9 @@ public class StorySinglePlayerUI : MonoBehaviour
 
     [SerializeField] private Text game_message;
     [SerializeField] private Text bullet_message;
+    [SerializeField] private Text chat_box_message;
+    [SerializeField] private GameObject chat_box;
+    [SerializeField] private GameObject bullet_info;
 
 
     public void Change_props_amount(Props.PropsType type)
@@ -60,11 +63,25 @@ public class StorySinglePlayerUI : MonoBehaviour
     {
         bullet_message.text = bulletMessage;
     }
-    public void Show_final_score()
+    public void StartChat() //Need to call before chating!
     {
-
+        bullet_info.SetActive(false);
+        chat_box.SetActive(true);
     }
-
+    public IEnumerator PlayerChatMessage(string message)
+    {
+        chat_box_message.text = message;
+        yield return new WaitForSeconds(0.5f);
+        while (!(Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)))
+        {
+            yield return null;
+        }
+    }
+    public void AfterChat() //Need to call after chating!
+    {
+        chat_box.SetActive(false);
+        bullet_info.SetActive(true);
+    }
     public void updateBulletInfo(int current, int total)
     {
         bullet_message.text = "   "+current + "/" + total;

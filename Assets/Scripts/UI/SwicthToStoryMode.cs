@@ -22,6 +22,6 @@ public class SwicthToStoryMode : MonoBehaviour
     {
         AudioSource.PlayClipAtPoint(zombie_roar, new Vector3(0, 0, 0));
         yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene("Story Mode");
+        SceneManager.LoadScene("StoryMode1");
     }
 }
