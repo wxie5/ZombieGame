@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 // Manage the game process and UI in Multiplayer Endless Mode
-//This script is create and wrote by Jiacheng Sun
+//This script is create and wrote by Jiacheng Sun and Bolun Ruan
 public class MultiplayerEndlessModeManager : MonoBehaviour
 {
     public GameObject[] m_zombiePrefab;
