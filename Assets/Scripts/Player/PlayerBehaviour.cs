@@ -1,5 +1,6 @@
 using UnityEngine;
 using Utils.MathTool;
+using View.EnemyView;
 using System;
 
 //This script is create and wrote by Wei Xie
@@ -271,7 +272,7 @@ public class PlayerBehaviour : MonoBehaviour
         int currentNearestIdx = -1;
         for (int i = 0; i < enemies.Length; i++)
         {
-            if (!enemies[i].GetComponent<EnemyManager>().IsAttackable()) { continue; }
+            if (enemies[i] == null || enemies[i].GetComponent<EnemyBaseView>().IsDead) { continue; }
 
             //I choose to use sqrtMag instead of Vector3.Distance
             //because we don't need to know the exact distance between them
@@ -370,7 +371,7 @@ public class PlayerBehaviour : MonoBehaviour
             //Because bullet does not has speed, we immediately damage the enemy
             if (hit.collider.tag == "Enemy")
             {
-                hit.collider.GetComponent<EnemyManager>().GetHit(stats.CurrentDamage);
+                hit.collider.GetComponent<EnemyBaseView>().GetHitView(stats.CurrentDamage);
 
                 //play some blood effect based on the normal direction of hit point
                 GameObject bloodGO = Instantiate(bloodParticlePrefab, hit.point, Quaternion.Euler(hit.normal));

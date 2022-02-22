@@ -30,7 +30,7 @@ namespace Model.PlayerModel
         private float shotOffsetMulti = 1f;
         #endregion
 
-        // constructor
+        #region Constructor
         public PlayerModel(int playerID, float baseHealth, float baseMoveSpeed)
         {
             this.playerID = playerID;
@@ -46,6 +46,7 @@ namespace Model.PlayerModel
             DmgMulti = 1f;
             ShotOffsetMulti = 1f;
         }
+        #endregion
 
         #region Public Attributes
         public float PlayerID

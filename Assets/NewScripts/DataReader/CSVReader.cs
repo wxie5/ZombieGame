@@ -121,6 +121,43 @@ public class CSVReader
         return resultDict;
     }
 
+    public static Dictionary<int, EnemyStatsCSV> ReadEnemyStatsCSV()
+    {
+        string[,] enemyStatsCSV = ReadCSVFile("EnemyStats");
+        int rowCount = enemyStatsCSV.GetLength(0);
+
+        Dictionary<int, EnemyStatsCSV> resultDict = new Dictionary<int, EnemyStatsCSV>();
+
+        for (int r = 0; r < rowCount; r++)
+        {
+            // read primary key
+            int enemyID = int.Parse(enemyStatsCSV[r, 0]);
+
+            // read data
+            string enemyName = enemyStatsCSV[r, 1];
+            float baseHealth = float.Parse(enemyStatsCSV[r, 2]);
+            float moveSpeed = float.Parse(enemyStatsCSV[r, 3]);
+            float baseDmg = float.Parse(enemyStatsCSV[r, 4]);
+            float alertDistance = float.Parse(enemyStatsCSV[r, 5]);
+            float attackRange = float.Parse(enemyStatsCSV[r, 6]);
+            float stopDistance = float.Parse(enemyStatsCSV[r, 7]);
+            float attackRate = float.Parse(enemyStatsCSV[r, 8]);
+            float attackRateDefault = float.Parse(enemyStatsCSV[r, 9]);
+            int score = int.Parse(enemyStatsCSV[r, 10]);
+            float baseHealthMulti = float.Parse(enemyStatsCSV[r, 11]);
+            float baseDmgMulti = float.Parse(enemyStatsCSV[r, 12]);
+            int defaultLevel = int.Parse(enemyStatsCSV[r, 13]);
+            int maxLevel = int.Parse(enemyStatsCSV[r, 14]);
+            EnemyStatsCSV newEnemyStatsCSV = new EnemyStatsCSV(enemyName, baseHealth, moveSpeed, baseDmg,
+                alertDistance, attackRange, stopDistance, attackRate, attackRateDefault, score, baseHealthMulti,
+                baseDmgMulti, defaultLevel, maxLevel);
+
+            // add into dict
+            resultDict.Add(enemyID, newEnemyStatsCSV);
+        }
+
+        return resultDict;
+    }
     #endregion
 }
 
@@ -140,6 +177,67 @@ public class PlayerStatsCSV
     {
         string result = string.Format("BaseHealth: {0}\t BaseMoveSpeed: {1}", baseHealth, baseMoveSpeed);
         return result;
+    }
+}
+
+public class EnemyStatsCSV
+{
+    public string enemyName;
+    public float baseHealth;
+    public float moveSpeed;
+    public float baseDmg;
+    public float alertDistance;
+    public float attackRange;
+    public float stopDistance;
+    public float attackRate;
+    public float attackRateDefault;
+    public int score;
+    public float baseHealthMulti;
+    public float baseDmgMulti;
+    public int defaultLevel;
+    public int maxLevel;
+
+    public EnemyStatsCSV(string enemyName, float baseHealth, float moveSpeed, float baseDmg, float alertDistance, 
+        float attackRange, float stopDistance, float attackRate, float attackRateDefault, int score, float baseHealthMulti, 
+        float baseDmgMulti, int defaultLevel, int maxLevel)
+    {
+        this.enemyName = enemyName;
+        this.baseHealth = baseHealth;
+        this.moveSpeed = moveSpeed;
+        this.baseDmg = baseDmg;
+        this.alertDistance = alertDistance;
+        this.attackRange = attackRange;
+        this.stopDistance = stopDistance;
+        this.attackRate = attackRate;
+        this.attackRateDefault = attackRateDefault;
+        this.score = score;
+        this.baseHealthMulti = baseHealthMulti;
+        this.baseDmgMulti = baseDmgMulti;
+        this.defaultLevel = defaultLevel;
+        this.maxLevel = maxLevel;
+    }
+
+    public override string ToString()
+    {
+        string result = string.Format("Enemy Info: \n" +
+                                      "\tenemyName: {0}\n" +
+                                      "\tbaseHealth: {1}\n" +
+                                      "\tmoveSpeed: {2}\n" +
+                                      "\tbaseDmg: {3}\n" +
+                                      "\talertDistance: {4}\n" +
+                                      "\tattackRange: {5}\n" +
+                                      "\tstopDistance: {6}\n" +
+                                      "\tattackRate: {7}\n" +
+                                      "\tattackRateDefault: {8}\n" +
+                                      "\tscore: {9}\n" +
+                                      "\tbaseHealthMulti: {10}\n" +
+                                      "\tbaseDmgMulti: {11}\n" +
+                                      "\tdefaultLevel: {12}\n" +
+                                      "\tmaxLevel: {13}\n", enemyName, baseHealth, moveSpeed, baseDmg,
+                                      alertDistance, attackRange, stopDistance, attackRate, attackRateDefault, score,
+                                      baseHealthMulti, baseDmgMulti, defaultLevel, maxLevel);
+
+        return result;                              
     }
 }
 #endregion

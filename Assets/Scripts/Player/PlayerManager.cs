@@ -26,6 +26,8 @@ public class PlayerManager : MonoBehaviour
 
         stats.Initialize();
         behaviour.Initialize();
+
+        enable = true;
     }
 
     private void Update()

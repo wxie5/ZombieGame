@@ -1,19 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 // This script is worte by Wei Xie
-/// <summary>
-/// this class can be inherited to decide many other factors (whose hp bar, when to modify hp, etc.)
-/// </summary>
 public class HPBar : MonoBehaviour
 {
+    [SerializeField] private GameObject hpBarGO;
     [SerializeField] private RectTransform fill;
     [SerializeField] private RectTransform inFill;
     [SerializeField] private float smoothTime = 0.2f;
 
     private float smoothVelocityRef;
 
-    protected void SetFill(float currentHP, float maxHP)
+    public void SetFill(float currentHP, float maxHP)
     {
         // use clamp01 to avoid some error case (ex: currentHP is greater than maxHP)
         float normalizedX = Mathf.Clamp01(currentHP / maxHP);
@@ -21,8 +18,15 @@ public class HPBar : MonoBehaviour
         fill.localScale = new Vector3(normalizedX, fill.localScale.y, fill.localScale.z);
     }
 
+    public void DisableHPBar()
+    {
+        hpBarGO.SetActive(false);
+    }
+
     private void Update()
     {
+        if (!hpBarGO.activeSelf) { return; }
+
         SmoothUpdateInFill();
     }
 
