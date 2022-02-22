@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Factory;
 // Manage the game process and UI in Endless Mode
 //This script is create and wrote by Jiacheng Sun
 public class EndlessModeManager : MonoBehaviour
@@ -64,6 +65,7 @@ public class EndlessModeManager : MonoBehaviour
         int spawn_point_number;
         if(Random.Range(0,100)<15)
         {
+            //GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number]);
             zombie_number = 0;
         }
         else
