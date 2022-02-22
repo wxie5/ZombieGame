@@ -2,7 +2,10 @@ Basic operations:
 Player 1 ：WASD to move, U to pick up weapons, J to attack, K to switch weapons, L to replenish bullets.
 Player 2 ：↑↓←→ to move, 4 to pick up weapons, 1 to attack, 2 to switch weapons, 3 to replenish bullets
 
-We now provide story mode(New) and endless mode for players.
+We now provide story mode(New) and endless mode for players. The story mode has not been completed, only the first two levels are currently available.
+
+Story mode 1 --- Goal: Collect gasoline, alcohol, weapons in the map and leave
+Story mode 2 --- Goal: Enter the maze and reach the exit
 
 1. Your game should allow for local multiplayer with at least 2 players.
 
