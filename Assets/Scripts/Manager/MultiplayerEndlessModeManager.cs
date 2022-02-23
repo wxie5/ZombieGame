@@ -1,14 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Factory;
 // Manage the game process and UI in Multiplayer Endless Mode
 //This script is create and wrote by Jiacheng Sun and Bolun Ruan
-public class MultiplayerEndlessModeManager : MonoBehaviour
+public class MultiplayerEndlessModeManager : Singleton<MultiplayerEndlessModeManager>
 {
-    public GameObject[] m_zombiePrefab;
     public Transform[] m_SpawnPoint;
-    private GameObject[] m_Zombies;
-    private bool[] m_deadZombies;
     [SerializeField] private GameObject camCenter;
     [SerializeField] private GameObject[] m_PlayerPerfab;
     [SerializeField] private Transform[] m_PlayerSpawnPoint;
@@ -46,12 +44,31 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
     }
     private void Update()
     {
-        UpdateScore();
-        UpdateBulletInfo();
+        UpdateUI();
         if (AllPlayerDead())
         {
             StartCoroutine(GameEnding());
         }
+    }
+    private void UpdateUI()
+    {
+        UpdateScore();
+        UpdateBulletInfo();
+        UpdatePropsInfo();
+    }
+    private void UpdatePropsInfo()
+    {
+        multiPlayerUI.ChangePropsMessage_AmmoCapacity(0, player0Stats.Props_info_AmmoCap());
+        multiPlayerUI.ChangePropsMessage_AmmoCapacity(1, player1Stats.Props_info_AmmoCap());
+        multiPlayerUI.ChangePropsMessage_Damage(0, player0Stats.Props_info_Damage());
+        multiPlayerUI.ChangePropsMessage_MoveSpeed(0, player0Stats.Props_info_MoveSpeed());
+        multiPlayerUI.ChangePropsMessage_Offset(0, player0Stats.Props_info_Offset());
+        multiPlayerUI.ChangePropsMessage_ShotRate(0, player0Stats.Props_info_ShotRate());
+        multiPlayerUI.ChangePropsMessage_Damage(1, player1Stats.Props_info_Damage());
+        multiPlayerUI.ChangePropsMessage_MoveSpeed(1, player1Stats.Props_info_MoveSpeed());
+        multiPlayerUI.ChangePropsMessage_Offset(1, player1Stats.Props_info_Offset());
+        multiPlayerUI.ChangePropsMessage_ShotRate(1, player1Stats.Props_info_ShotRate());
+
     }
     private void UpdateBulletInfo()
     {
@@ -60,18 +77,80 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
     }
     private void SpawnZombies() // Summon zombies one by one
     {
-        int zombie_number;
         int spawn_point_number;
-        if(Random.Range(0,100)<15)
+        spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
+        if (m_numberOfWaves < 3)
         {
-            zombie_number = 0;
+            GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+        }
+        else if (m_numberOfWaves < 5)
+        {
+            if (Random.Range(0, 100) < 50)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+            }
+            else
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+            }
+        }
+        else if (m_numberOfWaves < 7)
+        {
+            if (Random.Range(0, 100) < 40)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+            }
+            else if (Random.Range(0, 100) < 70)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+            }
+            else
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
+            }
+        }
+        else if (m_numberOfWaves < 10)
+        {
+            if (Random.Range(0, 100) < 25)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+            }
+            else if (Random.Range(0, 100) < 50)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+            }
+            else if (Random.Range(0, 100) < 75)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint[spawn_point_number].position);
+            }
+            else
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
+            }
         }
         else
         {
-            zombie_number = 1;
+            if (Random.Range(0, 100) < 20)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+            }
+            else if (Random.Range(0, 100) < 40)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint[spawn_point_number].position);
+            }
+            else if (Random.Range(0, 100) < 60)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint[spawn_point_number].position);
+            }
+            else if (Random.Range(0, 100) < 80)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
+            }
+            else
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+            }
         }
-        spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
-        m_Zombies[m_currentSpawningzombieNumber] = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint[spawn_point_number]) as GameObject;
     } 
 
     private void SpawnPlayer()
@@ -105,11 +184,14 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
     private IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
         m_numberOfZombies += Random.Range(1, 3);
-        m_Zombies = new GameObject[m_numberOfZombies];
-        m_deadZombies = new bool[m_numberOfZombies];
         m_numberOfWaves++;
+        if(m_numberOfWaves%5 == 0)
+        {
+            player0Stats.ChangeMaximumPropsNumber(1);
+            player1Stats.ChangeMaximumPropsNumber(1);
+        }
         m_currentSpawningzombieNumber = 0;
-        multiPlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
+        multiPlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_numberOfZombies + "  Zombies are coming!");
 
         yield return m_StartWait;
     }
@@ -119,7 +201,7 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
         multiPlayerUI.ClearGmaeMessage();
         player0manager.Enable(true);
         player1manager.Enable(true);
-        while (m_currentSpawningzombieNumber< m_Zombies.Length)
+        while (m_currentSpawningzombieNumber< m_numberOfZombies)
         {
             SpawnZombies();
             m_currentSpawningzombieNumber++;
@@ -159,10 +241,6 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
                 yield return new WaitForSeconds(1f);
             }
         }
-        for(int i = 0; i<m_numberOfZombies; i++)
-        {
-            Destroy(m_Zombies[i]);
-        }
     }
 
     private IEnumerator GameEnding() //Defeat all zombies and the game is over
@@ -176,34 +254,20 @@ public class MultiplayerEndlessModeManager : MonoBehaviour
 
     private bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.
     {
-        if(m_currentSpawningzombieNumber < m_numberOfZombies)
-        {
-            return false;
-        }
-        for (int i = 0; i < m_Zombies.Length; i++)
-        {
-            if (!m_Zombies[i].GetComponent<EnemyStats>().IsDead)
-            {
-                return false;
-            }
-        }
-        return true;
+        return GameFactoryManager.Instance.EnemyFact.GetZombieCount() == 0;
     }
 
     private void UpdateScore()
     {
-        for (int i = 0; i < m_Zombies.Length; i++)
-        {
-            if(m_Zombies[i] == null)
-            {
-                continue;
-            }
-            if (!m_deadZombies[i] && m_Zombies[i].GetComponent<EnemyStats>().IsDead)
-            {
-                m_deadZombies[i] = true;
-                m_score += m_Zombies[i].GetComponent<EnemyStats>().Score;
-            }
-        }
         multiPlayerUI.ChangeScore(m_score);
+    }
+
+    public void onDeadAddScore(int score)
+    {
+        m_score += score;
+    }
+    public void AddScore(int amount)
+    {
+        m_score += amount;
     }
 }

@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using Model.EnemyModel;
 using View.EnemyView;
 using Controller.EnemyController;
-
+//This script is created and wrote by Wei Xie
+//Modified by Jiacheng Sun
 namespace Factory
 {
     public class EnemyFactory : BaseFactory
     {
+        //Props
+        [SerializeField] private GameObject[] props;
         private Dictionary<int, EnemyStatsCSV> enemyStatsBuffer;
+        private int zombieCount;
 
         protected override void Start()
         {
             filePath = "Prefabs/Enemy/";
-
             enemyStatsBuffer = CSVReader.ReadEnemyStatsCSV();
         }
 
@@ -65,9 +68,23 @@ namespace Factory
             // set up view (this step is extremely important)
             view.SetUp(controller);
 
+            // set up view events
+            view.OnDead += InstantiateProps;
+
             // set up model event (this is also important, for UI especially)
             model.OnCurHealthChange += view.HPBarChange;
             model.OnDead += view.HPBarHide;
+            if (EndlessModeManager.Instance != null)
+            {
+                model.OnDead += EndlessModeManager.Instance.onDeadAddScore;
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+            }
+            model.OnDead += OndeadHandler;
+
+            zombieCount++;
         }
 
         private void InstantiateBoomerZombie(Vector3 instantiatePos, int id, string prefabName)
@@ -93,9 +110,21 @@ namespace Factory
             // set up model event (this is also important, for UI, audio effects, especially)
             model.OnCurHealthChange += view.HPBarChange;
             model.OnDead += view.HPBarHide;
+            if (EndlessModeManager.Instance != null)
+            {
+                model.OnDead += EndlessModeManager.Instance.onDeadAddScore;
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+            }
+            model.OnDead += OndeadHandler;
 
             // set up view event (this is important for VFX, audio effects, etc)
             view.OnBoomStart += GameFactoryManager.Instance.VFXFact.InstBloodExplosion;
+            view.OnDead += InstantiateProps;
+
+            zombieCount++;
         }
 
         private void InstantiatePosionZombie(Vector3 instantiatePos, int id, string prefabName)
@@ -121,10 +150,41 @@ namespace Factory
             // set up model event (this is also important, for UI, audio effects, especially)
             model.OnCurHealthChange += view.HPBarChange;
             model.OnDead += view.HPBarHide;
+            if (EndlessModeManager.Instance != null)
+            {
+                model.OnDead += EndlessModeManager.Instance.onDeadAddScore;
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+            }
+            model.OnDead += OndeadHandler;
 
             // set up view event (this is important for VFX, audio effects, etc)
             view.OnShotProjectile += GameFactoryManager.Instance.ProjFact.InstPosionProj;
+            view.OnDead += InstantiateProps;
+
+            zombieCount++;
         }
         #endregion
+        public void OndeadHandler(int score)
+        {
+            zombieCount--;
+        }
+        public int GetZombieCount()
+        {
+            return zombieCount;
+        }
+
+        public void InstantiateProps(Vector3 position)
+        {
+            if (Random.Range(0, 100) < 15)
+            {
+                int randomInstID = Random.Range(0, props.Length);
+                Vector3 instantiatePosition = position;
+                instantiatePosition.y += 0.5f;
+                Instantiate(props[randomInstID], instantiatePosition, transform.rotation, null);
+            }
+        }
     }
 }

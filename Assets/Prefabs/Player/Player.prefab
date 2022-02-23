@@ -2740,6 +2740,7 @@ MonoBehaviour:
   getHurt: {fileID: 8300000, guid: d07dd84f326d8524c8639de2004324e5, type: 3}
   dead: {fileID: 8300000, guid: 3b4701f3f3a60344db6ff47e1cbc582f, type: 3}
   recover: {fileID: 8300000, guid: 3c03efec2088d2f4190bba4534a05848, type: 3}
+  maximumPropsNumber: 3
 --- !u!114 &1511758529570404423
 MonoBehaviour:
   m_ObjectHideFlags: 0

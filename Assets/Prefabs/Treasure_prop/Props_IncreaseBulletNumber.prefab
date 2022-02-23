@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5791676629652892292}
   - component: {fileID: 8692159719240285939}
   - component: {fileID: 9056177882182280374}
+  - component: {fileID: 3822125533303345321}
   m_Layer: 9
   m_Name: Props_IncreaseBulletNumber
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3784120701208356910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.49, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 2380549441384485666}
@@ -110,15 +111,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79ad27d6d6b4b6a4e93f25e9833474f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  props_exists_time: 10
+  props_exists_time: 15
   getPropsSE: {fileID: 8300000, guid: 5df9f81736ea87b43ba6bbe485c76c8e, type: 3}
   propsType: 3
   recoverAmount: 30
   damageIncreasePercentage: 0.1
   moveSpeedIncreasePercentage: 0.1
-  bulletNumberIncreaseNumber: 1
+  ammoCapacityIncreaseNumber: 2
   offSetDecreasePercentage: 0.1
   ShotRateDecreasePercentage: 0.1
+  AmmoNumberIncreaseAmount: 3
 --- !u!108 &9056177882182280374
 Light:
   m_ObjectHideFlags: 0
@@ -181,6 +183,19 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &3822125533303345321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3784120701208356910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0f199b4443ae214e99e5abcbd65f1ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 45
 --- !u!1001 &7798296905150476684
 PrefabInstance:
   m_ObjectHideFlags: 0

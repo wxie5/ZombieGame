@@ -12,12 +12,13 @@ public class Props : MonoBehaviour
         BloodRecover,
         DamageIncrease,
         MoveSpeedIncrease,
-        BulletNumberIncrease,
+        AmmoCapacityIncrease,
         OffSetDecrease,
         ShotRateDecrease,
+        Ammo
     };
 
-    [SerializeField] private float props_exists_time = 10;
+    [SerializeField] private float props_exists_time = 15;
     private float timer = 0;
     [SerializeField] private AudioClip getPropsSE;
 
@@ -25,9 +26,10 @@ public class Props : MonoBehaviour
     [SerializeField] private float recoverAmount = 30;
     [SerializeField] private float damageIncreasePercentage = 0.1f;
     [SerializeField] private float moveSpeedIncreasePercentage = 0.1f;
-    [SerializeField] private int bulletNumberIncreaseNumber = 1;
+    [SerializeField] private int ammoCapacityIncreaseNumber = 2;
     [SerializeField] private float offSetDecreasePercentage = 0.1f;
     [SerializeField] private float ShotRateDecreasePercentage = 0.1f;
+    [SerializeField] private int AmmoNumberIncreaseAmount = 3;
     private void FixedUpdate()
     {
         timer += Time.fixedDeltaTime;
@@ -51,9 +53,9 @@ public class Props : MonoBehaviour
         {
             other.GetComponent<PlayerStats>().ChangeMoveSpeed(moveSpeedIncreasePercentage);
         }
-        if (propsType == PropsType.BulletNumberIncrease)
+        if (propsType == PropsType.AmmoCapacityIncrease)
         {
-            other.GetComponent<PlayerStats>().ChangeBulletNumber(bulletNumberIncreaseNumber);
+            other.GetComponent<PlayerStats>().ChangeAmmoCapcity(ammoCapacityIncreaseNumber);
         }
         if (propsType == PropsType.OffSetDecrease)
         {
@@ -62,6 +64,10 @@ public class Props : MonoBehaviour
         if (propsType == PropsType.ShotRateDecrease)
         {
             other.GetComponent<PlayerStats>().ChangeShotRate(ShotRateDecreasePercentage);
+        }
+        if (propsType == PropsType.Ammo)
+        {
+            other.GetComponent<PlayerStats>().ChangeAmmoAmount(AmmoNumberIncreaseAmount);
         }
         Destroy(gameObject);
     }

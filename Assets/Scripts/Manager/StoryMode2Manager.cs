@@ -2,34 +2,14 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Factory;
 //This script is create and wrote by Jiacheng Sun
-public class StoryMode2Manager : MonoBehaviour
+public class StoryMode2Manager : Singleton<StoryMode2Manager>
 {
-    private static StoryMode2Manager instance;
-    public static StoryMode2Manager Instance
-    {
-        get { return instance; }
-    }
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = (StoryMode2Manager)this;
-        }
-        else
-        {
-            Debug.LogError("More Than One Instance of Singleton!");
-        }
-    }
-
-    [SerializeField] private GameObject[] m_zombiePrefab;
     [SerializeField] private Transform[] m_SpawnPoint0;
     [SerializeField] private Transform[] m_SpawnPoint1;
     [SerializeField] private Transform[] m_SpawnPoint2;
     [SerializeField] private Transform[] m_SpawnPoint3;
-    [SerializeField] private bool m_RandomSpawn;
-    [SerializeField] private ZombieManager[] m_Zombies;
     [SerializeField] private GameObject m_PlayerPerfab;
     [SerializeField] private Transform m_PlayerSpawnPoint;
     [SerializeField] private GameObject m_CamaraCenter;
@@ -37,6 +17,8 @@ public class StoryMode2Manager : MonoBehaviour
 
     [SerializeField] private float m_StartDelay = 1f;
     [SerializeField] private float m_EndDelay = 1f;
+    [SerializeField] private int m_numberOfZombies;
+
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
 
@@ -68,8 +50,7 @@ public class StoryMode2Manager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(stage);
-        Debug.Log(arriveDoor);
+        UpdatePropsInfo();
         singlePlayerUI.changeBulletMessage(playerStats.AmmoInfo());
         if (playerStats.IsDead)
         {
@@ -81,43 +62,117 @@ public class StoryMode2Manager : MonoBehaviour
             firstWin = false;
         }
     }
-   
+    private void UpdatePropsInfo()
+    {
+        singlePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats.Props_info_AmmoCap());
+        singlePlayerUI.ChangePropsMessage_Damage(playerStats.Props_info_Damage());
+        singlePlayerUI.ChangePropsMessage_MoveSpeed(playerStats.Props_info_MoveSpeed());
+        singlePlayerUI.ChangePropsMessage_Offset(playerStats.Props_info_Offset());
+        singlePlayerUI.ChangePropsMessage_ShotRate(playerStats.Props_info_ShotRate());
+    }
     private void SpawnZombies() // Summon zombies one by one
     {
         if (!arriveDoor)
         {
-            if (m_RandomSpawn) //If set random spawn, random types of zombies will be randomly summoned from each spawn point.
-            {
-                int zombie_number;
-                int spawn_point_number;
-                zombie_number = Random.Range(0, m_zombiePrefab.Length);
-                if (stage == 0)
+            int spawn_point_number;
+            if (stage == 0)
                 {
-                    spawn_point_number = Random.Range(0, m_SpawnPoint0.Length);
-                    m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint0[spawn_point_number]) as GameObject;
-                }
-                if (stage == 1)
+                spawn_point_number = Random.Range(0, m_SpawnPoint0.Length);
+                if (Random.Range(0, 100) < 20)
                 {
-                    spawn_point_number = Random.Range(0, m_SpawnPoint1.Length);
-                    m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint1[spawn_point_number]) as GameObject;
+                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint0[spawn_point_number].position);
                 }
-                if (stage == 2)
+                else if (Random.Range(0, 100) < 40)
                 {
-                    spawn_point_number = Random.Range(0, m_SpawnPoint2.Length);
-                    m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint2[spawn_point_number]) as GameObject;
+                    GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint0[spawn_point_number].position);
                 }
-                if (stage == 3)
+                else if (Random.Range(0, 100) < 60)
                 {
-                    spawn_point_number = Random.Range(0, m_SpawnPoint3.Length);
-                    m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint3[spawn_point_number]) as GameObject;
+                    GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint0[spawn_point_number].position);
                 }
+                else if (Random.Range(0, 100) < 80)
+                {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint0[spawn_point_number].position);
+                }
+                else
+                {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint0[spawn_point_number].position);
+                }
+             }
+             if (stage == 1)
+             {
+                 spawn_point_number = Random.Range(0, m_SpawnPoint1.Length);
+                 if (Random.Range(0, 100) < 20)
+                 {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint1[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 40)
+                 {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint1[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 60)
+                 {
+                     GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint1[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 80)
+                 {
+                     GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint1[spawn_point_number].position);
+                 }
+                 else
+                 {
+                     GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint1[spawn_point_number].position);
+                 }
+             }
+             if (stage == 2)
+             {
+                 spawn_point_number = Random.Range(0, m_SpawnPoint2.Length);
+                 if (Random.Range(0, 100) < 20)
+                 {
+                     GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint2[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 40)
+                 {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint2[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 60)
+                 {
+                     GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint2[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 80)
+                 {
+                     GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint2[spawn_point_number].position);
+                 }
+                 else
+                 {
+                     GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint2[spawn_point_number].position);
+                 }
+             }
+             if (stage == 3)
+             {
+                 spawn_point_number = Random.Range(0, m_SpawnPoint3.Length);
+                 if (Random.Range(0, 100) < 20)
+                 {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint3[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 40)
+                 {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint3[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 60)
+                 {
+                    GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint3[spawn_point_number].position);
+                 }
+                 else if (Random.Range(0, 100) < 80)
+                 {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint3[spawn_point_number].position);
+                 }
+                 else
+                 {
+                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint3[spawn_point_number].position);
+                 }
             }
-            else //Otherwise, the specified zombie will be spawned at the specified location
-            {
-                m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_Zombies[m_currentSpawningzombieNumber].m_ZombieType, m_Zombies[m_currentSpawningzombieNumber].m_SpawnPoint) as GameObject;
-            }
-            m_currentSpawningzombieNumber++;
         }
+        m_currentSpawningzombieNumber++;
     } 
 
     private void SpawnPlayer()
@@ -157,7 +212,7 @@ public class StoryMode2Manager : MonoBehaviour
         {
             singlePlayerUI.ClearGmaeMessage();
             playermanager.Enable(true);
-            while (m_currentSpawningzombieNumber < m_Zombies.Length)
+            while (m_currentSpawningzombieNumber < m_numberOfZombies)
             {
                 SpawnZombies();
                 yield return new WaitForSeconds(m_ZombieSpawnInterval);
@@ -174,10 +229,7 @@ public class StoryMode2Manager : MonoBehaviour
 
     private IEnumerator BeforeEnding() 
     {
-        for (int i = 0; i < m_Zombies.Length; i++)
-        {
-            Destroy(m_Zombies[i].m_Instance);
-        }
+        DestroyAllZombie();
         if (!playerStats.IsDead)
         {
             playermanager.Enable(false);
@@ -203,10 +255,10 @@ public class StoryMode2Manager : MonoBehaviour
         }
         else
         {
-            singlePlayerUI.ChangeGameMessage("Get ready for the next scene!");
+            singlePlayerUI.ChangeGameMessage("TO BE CONTINUE");
             playermanager.Enable(false);
             yield return m_EndWait;
-            SceneManager.LoadScene("Story Mode 2");
+            SceneManager.LoadScene("GameStartUi");
         }
     }
     public void changeStage(int s)
@@ -216,5 +268,14 @@ public class StoryMode2Manager : MonoBehaviour
     public void ArriveDoor(bool a)
     {
         arriveDoor = a;
+    }
+    private void DestroyAllZombie()
+    {
+        GameObject[] allEnemy = GameObject.FindGameObjectsWithTag("Enemy");
+
+        for (int i = 0; i < allEnemy.Length; i++)
+        {
+            GameObject.Destroy(allEnemy[i]);
+        }
     }
 }

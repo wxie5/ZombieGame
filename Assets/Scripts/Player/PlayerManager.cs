@@ -26,55 +26,51 @@ public class PlayerManager : MonoBehaviour
 
         stats.Initialize();
         behaviour.Initialize();
-
-        enable = true;
     }
 
     private void Update()
     {
         if (stats.IsDead) { return; }
+        if (!enable) { return; }
 
         //Get Input based on player
         float hori, verti;
         bool attack, switchGun, reload, pick;
-        if (enable)
+        if (stats.ID == PlayerID.PlayerA)
         {
-            if (stats.ID == PlayerID.PlayerA)
-            {
-                hori = InputManager.PlayerA_Horizontal;
-                verti = InputManager.PlayerA_Vertical;
-                attack = InputManager.PlayerA_Attack;
-                switchGun = InputManager.PlayerA_Switch;
-                reload = InputManager.PlayerA_Reload;
-                pick = InputManager.PlayerA_Pick;
-            }
-            else
-            {
-                hori = InputManager.PlayerB_Horizontal;
-                verti = InputManager.PlayerB_Vertical;
-                attack = InputManager.PlayerB_Attack;
-                switchGun = InputManager.PlayerB_Switch;
-                reload = InputManager.PlayerB_Reload;
-                pick = InputManager.PlayerB_Pick;
-            }
-
-            Vector3 inputAxis = new Vector2(hori, verti).normalized;
-
-            // Movement
-            behaviour.PlayerMoveSystem(inputAxis);
-
-            //Combat
-            behaviour.PlayerShotSystem(attack);
-
-            //Weapon Switch
-            behaviour.PlayerWeaponSwitchSystem(switchGun);
-
-            //Reload
-            behaviour.PlayerReloadSystem(reload);
-
-            //Pick Weapon
-            behaviour.PlayerPickUpSystem(pick);
+            hori = InputManager.PlayerA_Horizontal;
+            verti = InputManager.PlayerA_Vertical;
+            attack = InputManager.PlayerA_Attack;
+            switchGun = InputManager.PlayerA_Switch;
+            reload = InputManager.PlayerA_Reload;
+            pick = InputManager.PlayerA_Pick;
         }
+        else
+        {
+            hori = InputManager.PlayerB_Horizontal;
+            verti = InputManager.PlayerB_Vertical;
+            attack = InputManager.PlayerB_Attack;
+            switchGun = InputManager.PlayerB_Switch;
+            reload = InputManager.PlayerB_Reload;
+            pick = InputManager.PlayerB_Pick;
+        }
+
+        Vector3 inputAxis = new Vector2(hori, verti).normalized;
+
+        // Movement
+        behaviour.PlayerMoveSystem(inputAxis);
+
+        //Combat
+        behaviour.PlayerShotSystem(attack);
+
+        //Weapon Switch
+        behaviour.PlayerWeaponSwitchSystem(switchGun);
+
+        //Reload
+        behaviour.PlayerReloadSystem(reload);
+
+        //Pick Weapon
+        behaviour.PlayerPickUpSystem(pick);
     }
 
     public void GetHit(float damage)

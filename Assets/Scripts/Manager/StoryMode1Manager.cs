@@ -2,20 +2,19 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Factory;
 //This script is create and wrote by Jiacheng Sun & Bolun Ruan
-public class StoryMode1Manager : MonoBehaviour
+public class StoryMode1Manager : Singleton<StoryMode1Manager>
 {
-    [SerializeField] private GameObject[] m_zombiePrefab;
     [SerializeField] private Transform[] m_SpawnPoint;
-    [SerializeField] private bool m_RandomSpawn;
-    [SerializeField] private ZombieManager[] m_Zombies;
     [SerializeField] private GameObject m_PlayerPerfab;
     [SerializeField] private Transform m_PlayerSpawnPoint;
     [SerializeField] private GameObject m_CamaraCenter;
-    [HideInInspector] public GameObject m_PlayerInstance;
+    private GameObject m_PlayerInstance;
 
     [SerializeField] private float m_StartDelay = 1f;
     [SerializeField] private float m_EndDelay = 1f;
+    [SerializeField] private int m_numberOfZombies;
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
 
@@ -50,6 +49,7 @@ public class StoryMode1Manager : MonoBehaviour
     private void Update()
     {
         singlePlayerUI.changeBulletMessage(playerStats.AmmoInfo());
+        UpdatePropsInfo();
         CollectItem();
         if (playerStats.IsDead)
         {
@@ -60,6 +60,14 @@ public class StoryMode1Manager : MonoBehaviour
             StartCoroutine(BeforeEnding());
             firstWin = false;
         }
+    }
+    private void UpdatePropsInfo()
+    {
+        singlePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats.Props_info_AmmoCap());
+        singlePlayerUI.ChangePropsMessage_Damage(playerStats.Props_info_Damage());
+        singlePlayerUI.ChangePropsMessage_MoveSpeed(playerStats.Props_info_MoveSpeed());
+        singlePlayerUI.ChangePropsMessage_Offset(playerStats.Props_info_Offset());
+        singlePlayerUI.ChangePropsMessage_ShotRate(playerStats.Props_info_ShotRate());
     }
     private void CollectItem()
     {
@@ -92,17 +100,26 @@ public class StoryMode1Manager : MonoBehaviour
     {
         if (!AllItemCollected())
         {
-            if (m_RandomSpawn) //If set random spawn, random types of zombies will be randomly summoned from each spawn point.
+            int spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
+            if (Random.Range(0, 100) < 20)
             {
-                int zombie_number;
-                int spawn_point_number;
-                zombie_number = Random.Range(0, m_zombiePrefab.Length);
-                spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
-                m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint[spawn_point_number]) as GameObject;
+                GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
             }
-            else //Otherwise, the specified zombie will be spawned at the specified location
+            else if(Random.Range(0, 100) < 40)
             {
-                m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_Zombies[m_currentSpawningzombieNumber].m_ZombieType, m_Zombies[m_currentSpawningzombieNumber].m_SpawnPoint) as GameObject;
+                GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint[spawn_point_number].position);
+            }
+            else if (Random.Range(0, 100) < 60)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint[spawn_point_number].position);
+            }
+            else if (Random.Range(0, 100) < 80)
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
+            }
+            else
+            {
+                GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
             }
             m_currentSpawningzombieNumber++;
         }
@@ -155,7 +172,7 @@ public class StoryMode1Manager : MonoBehaviour
     {
         singlePlayerUI.ClearGmaeMessage();
         playermanager.Enable(true);
-        while (m_currentSpawningzombieNumber<m_Zombies.Length)
+        while (m_currentSpawningzombieNumber<m_numberOfZombies)
         {
             SpawnZombies();
             yield return new WaitForSeconds(m_ZombieSpawnInterval);
@@ -171,10 +188,7 @@ public class StoryMode1Manager : MonoBehaviour
 
     private IEnumerator BeforeEnding() 
     {
-        for (int i = 0; i < m_Zombies.Length; i++)
-        {
-            Destroy(m_Zombies[i].m_Instance);
-        }
+        DestroyAllZombie();
         if (!playerStats.IsDead)
         {
             playermanager.Enable(false);
@@ -211,5 +225,15 @@ public class StoryMode1Manager : MonoBehaviour
     private bool AllItemCollected()
     {
         return (!playerStats.IsSingleWeapon()) && collectItem == 2;
+    }
+
+    private void DestroyAllZombie()
+    {
+        GameObject[] allEnemy = GameObject.FindGameObjectsWithTag("Enemy");
+
+        for(int i = 0; i<allEnemy.Length; i++)
+        {
+            GameObject.Destroy(allEnemy[i]);
+        }
     }
 }

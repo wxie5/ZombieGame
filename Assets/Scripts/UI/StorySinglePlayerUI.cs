@@ -6,59 +6,25 @@ using UnityEngine.UI;
 // This script is wrote by Jiacheng Sun
 public class StorySinglePlayerUI : MonoBehaviour
 {
-    private int props_amount_DamageIncrease = 0;
-    private int props_amount_MoveSpeedIncrease = 0;
-    private int props_amount_BulletNumberIncrease = 0;
-    private int props_amount_OffSetDecrease = 0;
-    private int props_amount_ShotRateDecrease = 0;
-    private int props_max_amount;
-
     [SerializeField] private Text game_message;
     [SerializeField] private Text bullet_message;
     [SerializeField] private Text chat_box_message;
     [SerializeField] private GameObject chat_box;
     [SerializeField] private GameObject bullet_info;
-
-
-    public void Change_props_amount(Props.PropsType type)
-    {
-        if(type == Props.PropsType.DamageIncrease)
-        {
-            props_amount_DamageIncrease++;
-        }
-        if(type == Props.PropsType.MoveSpeedIncrease)
-        {
-            props_amount_MoveSpeedIncrease++;
-        }
-        if(type == Props.PropsType.BulletNumberIncrease)
-        {
-            props_amount_BulletNumberIncrease++;
-        }
-        if(type == Props.PropsType.OffSetDecrease)
-        {
-            props_amount_OffSetDecrease++;
-        }
-        if (type == Props.PropsType.ShotRateDecrease)
-        {
-            props_amount_ShotRateDecrease++;
-        }
-    }
-
-    public void Change_props_max_amount(int amount)
-    {
-        props_max_amount = amount;
-    }
+    [SerializeField] private Text props_message_Offset;
+    [SerializeField] private Text props_message_shotRate;
+    [SerializeField] private Text props_message_AmmoCapacity;
+    [SerializeField] private Text props_message_Damage;
+    [SerializeField] private Text props_message_MoveSpeed;
 
     public void ClearGmaeMessage()
     {
         game_message.text = string.Empty;
     }
-
     public void ChangeGameMessage(string gameMessage)
     {
         game_message.text = gameMessage;
     }
-
     public void changeBulletMessage(string bulletMessage)
     {
         bullet_message.text = bulletMessage;
@@ -82,8 +48,24 @@ public class StorySinglePlayerUI : MonoBehaviour
         chat_box.SetActive(false);
         bullet_info.SetActive(true);
     }
-    public void updateBulletInfo(int current, int total)
+    public void ChangePropsMessage_Offset(string message)
     {
-        bullet_message.text = "   "+current + "/" + total;
+        props_message_Offset.text = message;
+    }
+    public void ChangePropsMessage_ShotRate(string message)
+    {
+        props_message_shotRate.text = message;
+    }
+    public void ChangePropsMessage_AmmoCapacity(string message)
+    {
+        props_message_AmmoCapacity.text = message;
+    }
+    public void ChangePropsMessage_Damage(string message)
+    {
+        props_message_Damage.text = message;
+    }
+    public void ChangePropsMessage_MoveSpeed(string message)
+    {
+        props_message_MoveSpeed.text = message;
     }
 }

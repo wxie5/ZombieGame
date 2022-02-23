@@ -44,6 +44,13 @@ public class PlayerStats : MonoBehaviour
     private float damageRateMulti = 1f;
     private float moveSpeedMulti = 1f;
     private float shotOffsetMulti = 1f; //The offset when shooting, which is more and more accurate from 1->0.
+    private int AmmoCapInc = 0;
+    private int maximumPropsNumber = 3;
+    private int currentPropsNumber_DecreaseOffset = 0;
+    private int currentPropsNumber_DecreaseShotRate = 0;
+    private int currentPropsNumber_IncreaseAmmoCapacity = 0;
+    private int currentPropsNumber_IncreaseDamage = 0;
+    private int currentPropsNumber_IncreaseMoveSpeed = 0;
 
     //Stats Events
     public Action<float, float> onHealthChange;
@@ -165,37 +172,131 @@ public class PlayerStats : MonoBehaviour
     //Here are some functions that interact with the props class that can affect the multipliers value.
     public void ChangeShotRate(float amount)
     {
-        shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, amount);
-
-        currentShotRate = shotRateMulti * gunInfos[currentGunIndex].shotRate;
+        if (currentPropsNumber_DecreaseShotRate >= maximumPropsNumber)
+        {
+            if (EndlessModeManager.Instance != null)
+            {
+                EndlessModeManager.Instance.AddScore(500);
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                MultiplayerEndlessModeManager.Instance.AddScore(500);
+            }
+        }
+        else
+        {
+            shotRateMulti = MathTool.NonNegativeSub(shotRateMulti, amount);
+            currentShotRate = shotRateMulti * gunInfos[currentGunIndex].shotRate;
+            currentPropsNumber_DecreaseShotRate++;
+        }
     }
 
     public void ChangeDamage(float amount)
     {
-        damageRateMulti = MathTool.NonNegativeSub(damageRateMulti, -amount);
-
-        currentDamage = damageRateMulti * gunInfos[currentGunIndex].damage;
+        if (currentPropsNumber_IncreaseDamage >= maximumPropsNumber)
+        {
+            Debug.Log(1);
+            if (EndlessModeManager.Instance != null)
+            {
+                Debug.Log(2);
+                EndlessModeManager.Instance.AddScore(500);
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                Debug.Log(3);
+                MultiplayerEndlessModeManager.Instance.AddScore(500);
+            }
+        }
+        else
+        {
+            Debug.Log(0);
+            damageRateMulti = MathTool.NonNegativeSub(damageRateMulti, -amount);
+            currentDamage = damageRateMulti * gunInfos[currentGunIndex].damage;
+            currentPropsNumber_IncreaseDamage++;
+        }
     }
 
     public void ChangeMoveSpeed(float amount)
     {
-        moveSpeedMulti = MathTool.NonNegativeSub(moveSpeedMulti, -amount);
-
-        currentMoveSpeed = moveSpeedMulti * maxMoveSpeed;
-    }
-
-    public void ChangeBulletNumber(int amount)
-    {
-        currentBulletNumber = MathTool.NonNegativeSub(currentBulletNumber, -amount);
+        if (currentPropsNumber_IncreaseMoveSpeed >= maximumPropsNumber)
+        {
+            if (EndlessModeManager.Instance != null)
+            {
+                EndlessModeManager.Instance.AddScore(500);
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                MultiplayerEndlessModeManager.Instance.AddScore(500);
+            }
+        }
+        else
+        {
+            moveSpeedMulti = MathTool.NonNegativeSub(moveSpeedMulti, -amount);
+            currentMoveSpeed = moveSpeedMulti * maxMoveSpeed;
+            currentPropsNumber_IncreaseMoveSpeed++;
+        }
     }
 
     public void ChangeOffset(float amount)
     {
-        shotOffsetMulti = MathTool.NonNegativeSub(shotOffsetMulti, amount);
-
-        currentShotOffset = shotOffsetMulti * gunInfos[currentGunIndex].offset;
+        if (currentPropsNumber_DecreaseOffset >= maximumPropsNumber)
+        {
+            if (EndlessModeManager.Instance != null)
+            {
+                EndlessModeManager.Instance.AddScore(500);
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                MultiplayerEndlessModeManager.Instance.AddScore(500);
+            }
+        }
+        else
+        {
+            shotOffsetMulti = MathTool.NonNegativeSub(shotOffsetMulti, amount);
+            currentShotOffset = shotOffsetMulti * gunInfos[currentGunIndex].offset;
+            currentPropsNumber_DecreaseOffset++;
+        }
     }
 
+    public void ChangeAmmoCapcity(int amount)
+    {
+        if (currentPropsNumber_IncreaseAmmoCapacity >= maximumPropsNumber)
+        {
+            if (EndlessModeManager.Instance != null)
+            {
+                EndlessModeManager.Instance.AddScore(500);
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                MultiplayerEndlessModeManager.Instance.AddScore(500);
+            }
+        }
+        else
+        {
+            AmmoCapInc += amount;
+            currentPropsNumber_IncreaseAmmoCapacity++;
+        }
+    }
+
+    public void ChangeMaximumPropsNumber(int amount)
+    {
+        if (maximumPropsNumber < 7)
+        {
+            maximumPropsNumber += amount;
+        }
+    }
+
+    public int GetMaximumPropsNumber()
+    {
+        return maximumPropsNumber;
+    }
+    public void ChangeAmmoAmount(int amount)
+    {
+        for (int i = 0; i < ammoCaps.Length; i++)
+        {
+            ammoCaps[i] += (gunInfos[i].cartridgeCapacity + AmmoCapInc) * amount;
+        }
+    }
     public void SwitchGunUpdateState()
     {
         int newGunIndex = MathTool.NextIndexNoOverflow(currentGunIndex, gunInfos.Length);
@@ -233,7 +334,7 @@ public class PlayerStats : MonoBehaviour
     }
     public void UpdateReloadData()
     {
-        int curCartCap = gunInfos[currentGunIndex].cartridgeCapacity;
+        int curCartCap = gunInfos[currentGunIndex].cartridgeCapacity + AmmoCapInc;
         int fillNum = curCartCap - cartridgeCaps[currentGunIndex];
         if((ammoCaps[currentGunIndex] - fillNum) >= 0)
         {
@@ -322,6 +423,25 @@ public class PlayerStats : MonoBehaviour
             return null;
         }
         return cartridgeCaps[currentGunIndex] + "/" + ammoCaps[currentGunIndex];
-        //return "info";
+    }
+    public string Props_info_Offset()
+    {
+        return currentPropsNumber_DecreaseOffset + "/" + maximumPropsNumber;
+    }
+    public string Props_info_ShotRate()
+    {
+        return currentPropsNumber_DecreaseShotRate + "/" + maximumPropsNumber;
+    }
+    public string Props_info_AmmoCap()
+    {
+        return currentPropsNumber_IncreaseAmmoCapacity + "/" + maximumPropsNumber;
+    }
+    public string Props_info_Damage()
+    {
+        return currentPropsNumber_IncreaseDamage + "/" + maximumPropsNumber;
+    }
+    public string Props_info_MoveSpeed()
+    {
+        return currentPropsNumber_IncreaseMoveSpeed + "/" + maximumPropsNumber;
     }
 }

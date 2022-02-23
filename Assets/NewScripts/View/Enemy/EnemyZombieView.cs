@@ -94,8 +94,9 @@ namespace View.EnemyView
             }
         }
 
-        private void DieView()
+        protected override void DieView()
         {
+            base.DieView();
             //disable nav mesh agent
             agent.enabled = false;
 
@@ -140,6 +141,15 @@ namespace View.EnemyView
             // unsubscribe model events
             controller.Model.OnCurHealthChange -= HPBarChange;
             controller.Model.OnDead -= HPBarHide;
+            if (EndlessModeManager.Instance != null)
+            {
+                controller.Model.OnDead -= EndlessModeManager.Instance.onDeadAddScore;
+            }
+            if (MultiplayerEndlessModeManager.Instance != null)
+            {
+                controller.Model.OnDead -= MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+            }
+            controller.Model.OnDead -= Factory.GameFactoryManager.Instance.EnemyFact.OndeadHandler;
 
             // unsubscribe view events
 

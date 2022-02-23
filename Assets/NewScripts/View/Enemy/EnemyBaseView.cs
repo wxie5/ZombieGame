@@ -24,7 +24,13 @@ namespace View.EnemyView
         // view delegate
         public delegate void ProjectileEvent(Vector3 vec, Quaternion dir, float dmg);
         public delegate void VFXEvent(Vector3 vec);
+        public delegate void PositionEvent(Vector3 vec);
 
+        public event PositionEvent OnDead;
+        protected virtual void DieView()
+        {
+            OnDead?.Invoke(transform.position);
+        }
         public bool IsDead
         {
             get { return isDead; }

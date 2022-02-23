@@ -5,64 +5,20 @@ using UnityEngine.UI;
 // This script is wrote by Jiacheng Sun
 public class MultiPlayerUI : MonoBehaviour
 {
-    private int score;
-    private int props_amount_DamageIncrease = 0;
-    private int props_amount_MoveSpeedIncrease = 0;
-    private int props_amount_BulletNumberIncrease = 0;
-    private int props_amount_OffSetDecrease = 0;
-    private int props_amount_ShotRateDecrease = 0;
-    private int props_max_amount;
-
     [SerializeField] private Text scoreMessage;
     [SerializeField] private Text game_message;
     [SerializeField] private Text[] bullet_message;
+    [SerializeField] private Text[] props_message_Offset;
+    [SerializeField] private Text[] props_message_shotRate;
+    [SerializeField] private Text[] props_message_AmmoCapacity;
+    [SerializeField] private Text[] props_message_Damage;
+    [SerializeField] private Text[] props_message_MoveSpeed;
 
     // Update is called once per frame
-    void Update()
-    {
-        UpdateScore();
-    }
     public void ChangeScore(int amount)
     {
-        score = amount;
+        scoreMessage.text = "Current Score: " + amount;
     }
-    public void UpdateScore()
-    {
-        scoreMessage.text = "Current Score: " + score;
-    }
-    public int GetScore()
-    {
-        return score;
-    }
-    public void Change_props_amount(Props.PropsType type)
-    {
-        if(type == Props.PropsType.DamageIncrease)
-        {
-            props_amount_DamageIncrease++;
-        }
-        if(type == Props.PropsType.MoveSpeedIncrease)
-        {
-            props_amount_MoveSpeedIncrease++;
-        }
-        if(type == Props.PropsType.BulletNumberIncrease)
-        {
-            props_amount_BulletNumberIncrease++;
-        }
-        if(type == Props.PropsType.OffSetDecrease)
-        {
-            props_amount_OffSetDecrease++;
-        }
-        if (type == Props.PropsType.ShotRateDecrease)
-        {
-            props_amount_ShotRateDecrease++;
-        }
-    }
-
-    public void Change_props_max_amount(int amount)
-    {
-        props_max_amount = amount;
-    }
-
     public void ClearGmaeMessage()
     {
         game_message.text = string.Empty;
@@ -77,13 +33,24 @@ public class MultiPlayerUI : MonoBehaviour
     {
         bullet_message[playerNumber].text = bulletMessage;
     }
-    public void Show_final_score()
+    public void ChangePropsMessage_Offset(int playerNumber, string message)
     {
-
+        props_message_Offset[playerNumber].text = message;
     }
-
-    public void updateBulletInfo(int playerNumber, int current, int total)
+    public void ChangePropsMessage_ShotRate(int playerNumber, string message)
     {
-        bullet_message[playerNumber].text = "   "+current + "/" + total;
+        props_message_shotRate[playerNumber].text = message;
+    }
+    public void ChangePropsMessage_AmmoCapacity(int playerNumber, string message)
+    {
+        props_message_AmmoCapacity[playerNumber].text = message;
+    }
+    public void ChangePropsMessage_Damage(int playerNumber, string message)
+    {
+        props_message_Damage[playerNumber].text = message;
+    }
+    public void ChangePropsMessage_MoveSpeed(int playerNumber, string message)
+    {
+        props_message_MoveSpeed[playerNumber].text = message;
     }
 }
