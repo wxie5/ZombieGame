@@ -207,11 +207,8 @@ public class StoryMode1Manager : Singleton<StoryMode1Manager>
         if (playerStats.IsDead)
         {
             singlePlayerUI.ChangeGameMessage("YOU Dead!");
-            if (Input.anyKeyDown)
-            {
-                SceneManager.LoadScene("GameStartUi");
-            }
             yield return m_EndWait;
+            SceneManager.LoadScene("GameStartUi");
         }
         else
         {
