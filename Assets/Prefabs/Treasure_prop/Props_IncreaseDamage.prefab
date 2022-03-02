@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7585115236679616149}
   m_Layer: 9
   m_Name: Props_IncreaseDamage
-  m_TagString: Untagged
+  m_TagString: Props
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

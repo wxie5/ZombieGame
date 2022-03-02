@@ -28,7 +28,6 @@ public class PlayerStats : MonoBehaviour
     private float currentShotRate;
     private float currentDamage;
     private float currentMoveSpeed;
-    private int currentBulletNumber = 1;
     private Vector2 currentShotOffset;
     private bool isDead = false;
 
@@ -97,11 +96,6 @@ public class PlayerStats : MonoBehaviour
         get { return currentMoveSpeed * targetingSpeedRatio; }
     }
 
-    public int BulletNumber
-    {
-        get { return currentBulletNumber; }
-    }
-
     public Vector2 CurrentShotOffset
     {
         get { return currentShotOffset; }
@@ -121,7 +115,10 @@ public class PlayerStats : MonoBehaviour
     {
         get { return cartridgeCaps[currentGunIndex]; }
     }
-
+    public int CurrentCartridgeCapacity
+    {
+        get { return gunInfos[currentGunIndex].cartridgeCapacity + AmmoCapInc; }
+    }
     public int CurrentRestAmmo
     {
         get { return ammoCaps[currentGunIndex]; }
@@ -209,7 +206,6 @@ public class PlayerStats : MonoBehaviour
         }
         else
         {
-            Debug.Log(0);
             damageRateMulti = MathTool.NonNegativeSub(damageRateMulti, -amount);
             currentDamage = damageRateMulti * gunInfos[currentGunIndex].damage;
             currentPropsNumber_IncreaseDamage++;
@@ -292,9 +288,16 @@ public class PlayerStats : MonoBehaviour
     }
     public void ChangeAmmoAmount(int amount)
     {
-        for (int i = 0; i < ammoCaps.Length; i++)
+        if (IsSingleWeapon())
         {
-            ammoCaps[i] += (gunInfos[i].cartridgeCapacity + AmmoCapInc) * amount;
+            ammoCaps[0] += (gunInfos[0].cartridgeCapacity + AmmoCapInc) * amount;
+        }
+        else
+        {
+            for (int i = 0; i < gunInfos.Length; i++)
+            {
+                ammoCaps[i] += (gunInfos[i].cartridgeCapacity + AmmoCapInc) * amount;
+            }
         }
     }
     public void SwitchGunUpdateState()
@@ -443,5 +446,27 @@ public class PlayerStats : MonoBehaviour
     public string Props_info_MoveSpeed()
     {
         return currentPropsNumber_IncreaseMoveSpeed + "/" + maximumPropsNumber;
+    }
+    public bool AI_TimeToSwitchWeapon()
+    {
+        if(IsSingleWeapon())
+        {
+            return false;
+        }
+        if (currentGunIndex != 0) //Not HandGun
+        {
+            if(CurrentCartridgeCap + CurrentRestAmmo == 0)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (cartridgeCaps[1] + ammoCaps[1] > 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -8944617015659652219}
   m_Layer: 9
   m_Name: Props_DecreaseShotRate
-  m_TagString: Untagged
+  m_TagString: Props
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -182,6 +182,7 @@ MonoBehaviour:
   ammoCapacityIncreaseNumber: 2
   offSetDecreasePercentage: 0.1
   ShotRateDecreasePercentage: 0.1
+  AmmoNumberIncreaseAmount: 3
 --- !u!114 &-8944617015659652219
 MonoBehaviour:
   m_ObjectHideFlags: 0

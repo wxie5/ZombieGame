@@ -2640,14 +2640,14 @@ RectTransform:
   m_GameObject: {fileID: 1101298181}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_Children: []
   m_Father: {fileID: 1952283297}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -4.0110016}
+  m_AnchoredPosition: {x: -1.8, y: -4}
   m_SizeDelta: {x: 8.022, y: -60.9668}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1101298183
@@ -2733,7 +2733,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -88.696365, y: 58.560516, z: -81.23586, w: 58.560547}
+  m_margin: {x: -2.6644595, y: 58.560516, z: -1.4770737, w: 58.560547}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -6484,7 +6484,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2063853186}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17b26d0877693984c9cb452aaad89f04, type: 3}
+  m_Script: {fileID: 11500000, guid: 4544532a7be2594469d58d601daaa971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   zombie_roar: {fileID: 8300000, guid: 3735613601a439e45aec3bf0f2dfd976, type: 3}
@@ -6527,7 +6527,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 2063853190}
   m_OnClick:
     m_PersistentCalls:

@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Story Mode 2.unity
     guid: 3de2fff59938a554991a4ce195a58232
+  - enabled: 1
+    path: Assets/Scenes/AI Multiplayer Endless Mode.unity
+    guid: e1fe25298f1d8f641a8a86f83e69ed09
   m_configObjects: {}

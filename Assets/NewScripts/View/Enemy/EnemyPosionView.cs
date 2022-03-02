@@ -155,6 +155,10 @@ namespace View.EnemyView
             {
                 controller.Model.OnDead -= MultiplayerEndlessModeManager.Instance.onDeadAddScore;
             }
+            if (AIMultiplayerEndlessModeManager.Instance != null)
+            {
+                controller.Model.OnDead -= AIMultiplayerEndlessModeManager.Instance.onDeadAddScore;
+            }
             controller.Model.OnDead -= Factory.GameFactoryManager.Instance.EnemyFact.OndeadHandler;
 
             // unsubscribe view events

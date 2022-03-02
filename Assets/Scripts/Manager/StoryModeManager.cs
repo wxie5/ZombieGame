@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Factory;
 using UnityEngine.UI;
 //This script is create and wrote by Jiacheng Sun
 public class StoryModeManager : MonoBehaviour
@@ -26,6 +27,7 @@ public class StoryModeManager : MonoBehaviour
     //components
     private PlayerBehaviour playerbehaviour;
     private PlayerStats playerStats;
+    private PlayerManager playerManager;
     private StorySinglePlayerUI singlePlayerUI;
     void Start()
     {
@@ -37,6 +39,7 @@ public class StoryModeManager : MonoBehaviour
         playerbehaviour = m_PlayerInstance.GetComponent<PlayerBehaviour>();
         playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
         singlePlayerUI = this.GetComponent<StorySinglePlayerUI>();
+        playerManager = m_PlayerInstance.GetComponent<PlayerManager>();
 
         StartCoroutine(GameLoop());
     }
@@ -47,19 +50,9 @@ public class StoryModeManager : MonoBehaviour
     }
     private void SpawnZombies() // Summon zombies one by one
     {
-        if (m_RandomSpawn) //If set random spawn, random types of zombies will be randomly summoned from each spawn point.
-        {
-            int zombie_number;
-            int spawn_point_number;
-            zombie_number = Random.Range(0, m_zombiePrefab.Length);
-            spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
-            m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_zombiePrefab[zombie_number], m_SpawnPoint[spawn_point_number]) as GameObject;
-        }
-        else //Otherwise, the specified zombie will be spawned at the specified location
-        {
-            m_Zombies[m_currentSpawningzombieNumber].m_Instance = Instantiate(m_Zombies[m_currentSpawningzombieNumber].m_ZombieType, m_Zombies[m_currentSpawningzombieNumber].m_SpawnPoint) as GameObject;
-        }
-        m_currentSpawningzombieNumber++;
+        int spawn_point_number;
+        spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
+        GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
     } 
 
     private void SpawnPlayer()
@@ -79,16 +72,15 @@ public class StoryModeManager : MonoBehaviour
 
     private IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
-        playerbehaviour.enabled = false;
         singlePlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " + m_Zombies.Length + "  Zombies are coming!");
-
+        
         yield return m_StartWait;
     }
 
     private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
+        playerManager.Enable(true);
         singlePlayerUI.ClearGmaeMessage();
-        playerbehaviour.enabled = true;
         while (m_currentSpawningzombieNumber<m_Zombies.Length)
         {
             SpawnZombies();

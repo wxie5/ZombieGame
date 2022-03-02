@@ -8,7 +8,6 @@ using System;
 public class PlayerBehaviour : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private PlayerID playerNum = PlayerID.PlayerA;
     [SerializeField] private float playerRotSmoothTime = 0.02f;
     [Range(9.81f, 20f)]
     [SerializeField] private float posGravity = 9.81f;
@@ -336,9 +335,6 @@ public class PlayerBehaviour : MonoBehaviour
             {
                 Reload();
             }
-
-            // print rest ammo
-            Debug.Log("Rest Ammo: " + stats.CurrentCartridgeCap + "/" + stats.CurrentRestAmmo);
         }
     }
 

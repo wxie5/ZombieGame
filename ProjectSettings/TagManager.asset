@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Enemy
   - Dead
+  - Weapon
+  - Props
+  - Environment
   layers:
   - Default
   - TransparentFX

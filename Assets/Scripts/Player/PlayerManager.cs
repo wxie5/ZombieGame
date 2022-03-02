@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System;
 
 //This script is created and wrote by Wei Xie
@@ -8,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     private PlayerStats stats;
     private PlayerBehaviour behaviour;
     private bool enable;
+    private AIMultiplayerEndlessModeManager gameManager;
 
     public PlayerID playerID
     {
@@ -26,6 +28,10 @@ public class PlayerManager : MonoBehaviour
 
         stats.Initialize();
         behaviour.Initialize();
+        if (AIMultiplayerEndlessModeManager.Instance != null)
+        {
+            gameManager = AIMultiplayerEndlessModeManager.Instance;
+        }
     }
 
     private void Update()
@@ -44,8 +50,24 @@ public class PlayerManager : MonoBehaviour
             switchGun = InputManager.PlayerA_Switch;
             reload = InputManager.PlayerA_Reload;
             pick = InputManager.PlayerA_Pick;
+            Vector3 inputAxis = new Vector2(hori, verti).normalized;
+
+            // Movement
+            behaviour.PlayerMoveSystem(inputAxis);
+
+            //Combat
+            behaviour.PlayerShotSystem(attack);
+
+            //Weapon Switch
+            behaviour.PlayerWeaponSwitchSystem(switchGun);
+
+            //Reload
+            behaviour.PlayerReloadSystem(reload);
+
+            //Pick Weapon
+            behaviour.PlayerPickUpSystem(pick);
         }
-        else
+        else if (stats.ID == PlayerID.PlayerB)
         {
             hori = InputManager.PlayerB_Horizontal;
             verti = InputManager.PlayerB_Vertical;
@@ -53,24 +75,31 @@ public class PlayerManager : MonoBehaviour
             switchGun = InputManager.PlayerB_Switch;
             reload = InputManager.PlayerB_Reload;
             pick = InputManager.PlayerB_Pick;
+            Vector3 inputAxis = new Vector2(hori, verti).normalized;
+
+            // Movement
+            behaviour.PlayerMoveSystem(inputAxis);
+
+            //Combat
+            behaviour.PlayerShotSystem(attack);
+
+            //Weapon Switch
+            behaviour.PlayerWeaponSwitchSystem(switchGun);
+
+            //Reload
+            behaviour.PlayerReloadSystem(reload);
+
+            //Pick Weapon
+            behaviour.PlayerPickUpSystem(pick);
         }
-
-        Vector3 inputAxis = new Vector2(hori, verti).normalized;
-
-        // Movement
-        behaviour.PlayerMoveSystem(inputAxis);
-
-        //Combat
-        behaviour.PlayerShotSystem(attack);
-
-        //Weapon Switch
-        behaviour.PlayerWeaponSwitchSystem(switchGun);
-
-        //Reload
-        behaviour.PlayerReloadSystem(reload);
-
-        //Pick Weapon
-        behaviour.PlayerPickUpSystem(pick);
+        else //AI
+        {
+            behaviour.PlayerPickUpSystem(gameManager.AI_WeaponNearBy());
+            behaviour.PlayerWeaponSwitchSystem(gameManager.AI_SwitchWeapon());
+            behaviour.PlayerMoveSystem(gameManager.AIMoveInput());
+            behaviour.PlayerReloadSystem(gameManager.AI_AmmoNotFull());
+            behaviour.PlayerShotSystem(gameManager.AI_EnemyInAttackRange());
+        }
     }
 
     public void GetHit(float damage)
@@ -108,5 +137,6 @@ public enum PlayerID
 {
     PlayerA,
     PlayerB,
+    AI,
     None
 }

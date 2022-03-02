@@ -6,7 +6,6 @@ public class PlayerHPBar : HPBar
     private void Start()
     {
         playerManager = GetComponentInParent<PlayerManager>();
-
         playerManager.OnHealthChangeAdd(ModifyHP);
     }
 

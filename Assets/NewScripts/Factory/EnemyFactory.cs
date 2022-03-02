@@ -82,6 +82,10 @@ namespace Factory
             {
                 model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
             }
+            if (AIMultiplayerEndlessModeManager.Instance != null)
+            {
+                model.OnDead += AIMultiplayerEndlessModeManager.Instance.onDeadAddScore;
+            }
             model.OnDead += OndeadHandler;
 
             zombieCount++;
@@ -117,6 +121,10 @@ namespace Factory
             if (MultiplayerEndlessModeManager.Instance != null)
             {
                 model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+            }
+            if (AIMultiplayerEndlessModeManager.Instance != null)
+            {
+                model.OnDead += AIMultiplayerEndlessModeManager.Instance.onDeadAddScore;
             }
             model.OnDead += OndeadHandler;
 
@@ -157,6 +165,10 @@ namespace Factory
             if (MultiplayerEndlessModeManager.Instance != null)
             {
                 model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+            }
+            if (AIMultiplayerEndlessModeManager.Instance != null)
+            {
+                model.OnDead += AIMultiplayerEndlessModeManager.Instance.onDeadAddScore;
             }
             model.OnDead += OndeadHandler;
 

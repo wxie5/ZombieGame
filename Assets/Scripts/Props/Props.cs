@@ -18,8 +18,8 @@ public class Props : MonoBehaviour
         Ammo
     };
 
-    [SerializeField] private float props_exists_time = 15;
-    private float timer = 0;
+    //[SerializeField] private float props_exists_time = 15;
+    //private float timer = 0;
     [SerializeField] private AudioClip getPropsSE;
 
     [SerializeField] private PropsType propsType;
@@ -32,11 +32,11 @@ public class Props : MonoBehaviour
     [SerializeField] private int AmmoNumberIncreaseAmount = 3;
     private void FixedUpdate()
     {
-        timer += Time.fixedDeltaTime;
-        if(timer > props_exists_time)
-        {
-            Destroy(gameObject);
-        }
+        //timer += Time.fixedDeltaTime;
+        //if(timer > props_exists_time)
+        //{
+            //Destroy(gameObject);
+        //}
     }
     private void OnTriggerEnter(Collider other)
     {
