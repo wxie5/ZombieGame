@@ -9,6 +9,7 @@ TagManager:
   - Weapon
   - Props
   - Environment
+  - Manager
   layers:
   - Default
   - TransparentFX

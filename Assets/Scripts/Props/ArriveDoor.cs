@@ -7,6 +7,6 @@ public class ArriveDoor : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        StoryMode2Manager.Instance.ArriveDoor(true);
+        GameObject.FindGameObjectWithTag("Manager").GetComponent<StoryMode2Manager>().ArriveDoor(true);
     }
 }

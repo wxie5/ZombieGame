@@ -8,6 +8,6 @@ public class StageChange : MonoBehaviour
     [SerializeField] private int stage;
     private void OnTriggerEnter(Collider other)
     {
-        StoryMode2Manager.Instance.changeStage(stage);
+        GameObject.FindGameObjectWithTag("Manager").GetComponent<StoryMode2Manager>().changeStage(stage);
     }
 }

@@ -4,99 +4,84 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Factory;
 //This script is create and wrote by Jiacheng Sun & Bolun Ruan
-public class StoryMode1Manager : Singleton<StoryMode1Manager>
+public class StoryMode1Manager : ModeManagerBase
 {
-    [SerializeField] private Transform[] m_SpawnPoint;
-    [SerializeField] private GameObject m_PlayerPerfab;
-    [SerializeField] private Transform m_PlayerSpawnPoint;
-    [SerializeField] private GameObject m_CamaraCenter;
-    private GameObject m_PlayerInstance;
-
-    [SerializeField] private float m_StartDelay = 1f;
-    [SerializeField] private float m_EndDelay = 1f;
-    [SerializeField] private int m_numberOfZombies;
-    private WaitForSeconds m_StartWait;
-    private WaitForSeconds m_EndWait;
-
-    private int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
-
-    [SerializeField] private float m_ZombieSpawnInterval = 0.5f;
-
-    //components
-    private PlayerManager playermanager;
-    private PlayerStats playerStats;
-    private StorySinglePlayerUI singlePlayerUI;
+    private StoryModePlayerUI storyModePlayerUI;
 
     //win condition
     private int collectItem;
     [SerializeField] private GameObject[] collect_Item;
     [SerializeField] private AudioClip pickItem;
     private bool firstWin;
-    void Start()
+    protected override void Start()
     {
-
-        m_StartWait = new WaitForSeconds(m_StartDelay);
-        m_EndWait = new WaitForSeconds(m_EndDelay);
+        base.Start();
         collectItem = 0;
         firstWin = true;
-        SpawnPlayer();  //Set the player's starting position
-        playermanager = m_PlayerInstance.GetComponent<PlayerManager>();
-        playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
-        singlePlayerUI = this.GetComponent<StorySinglePlayerUI>();
+        storyModePlayerUI = this.GetComponent<StoryModePlayerUI>();
         StartCoroutine(GameLoop());
     }
-
-    private void Update()
+    protected override void Update()
     {
-        singlePlayerUI.changeBulletMessage(playerStats.AmmoInfo());
+        UpdateBulletInfo();
         UpdatePropsInfo();
         CollectItem();
-        if (playerStats.IsDead)
-        {
-            StartCoroutine(GameEnding());
-        }
+        base.Update();
         if(AllItemCollected() && firstWin)
         {
             StartCoroutine(BeforeEnding());
             firstWin = false;
         }
     }
+    private void UpdateBulletInfo()
+    {
+        for (int i = 0; i < playerStats.Length; i++)
+        {
+            storyModePlayerUI.changeBulletMessage(playerStats[i].AmmoInfo());
+        }
+    }
     private void UpdatePropsInfo()
     {
-        singlePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats.Props_info_AmmoCap());
-        singlePlayerUI.ChangePropsMessage_Damage(playerStats.Props_info_Damage());
-        singlePlayerUI.ChangePropsMessage_MoveSpeed(playerStats.Props_info_MoveSpeed());
-        singlePlayerUI.ChangePropsMessage_Offset(playerStats.Props_info_Offset());
-        singlePlayerUI.ChangePropsMessage_ShotRate(playerStats.Props_info_ShotRate());
+        for (int i = 0; i < playerStats.Length; i++)
+        {
+            storyModePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats[i].Props_info_AmmoCap());
+            storyModePlayerUI.ChangePropsMessage_Damage(playerStats[i].Props_info_Damage());
+            storyModePlayerUI.ChangePropsMessage_MoveSpeed(playerStats[i].Props_info_MoveSpeed());
+            storyModePlayerUI.ChangePropsMessage_Offset(playerStats[i].Props_info_Offset());
+            storyModePlayerUI.ChangePropsMessage_ShotRate(playerStats[i].Props_info_ShotRate());
+        }
     }
     private void CollectItem()
     {
-        if (collect_Item[0].activeSelf == true)
+        for (int i = 0; i < m_PlayerInstance.Length; i++)
         {
-            if (Vector3.Distance(m_PlayerInstance.transform.position, collect_Item[0].transform.position) < 2f)
+            if (collect_Item[0].activeSelf == true)
             {
-                if (Input.GetKeyDown(KeyCode.U))
+                if (Vector3.Distance(m_PlayerInstance[i].transform.position, collect_Item[0].transform.position) < 2f)
                 {
-                    collect_Item[0].SetActive(false);
-                    collectItem++;
-                    AudioSource.PlayClipAtPoint(pickItem, m_PlayerInstance.transform.position);
+                    if (Input.GetKeyDown(KeyCode.U))
+                    {
+                        collect_Item[0].SetActive(false);
+                        collectItem++;
+                        AudioSource.PlayClipAtPoint(pickItem, m_PlayerInstance[i].transform.position);
+                    }
                 }
             }
-        }
-        if (collect_Item[1].activeSelf == true)
-        { 
-            if (Vector3.Distance(m_PlayerInstance.transform.position, collect_Item[1].transform.position) < 2f)
+            if (collect_Item[1].activeSelf == true)
             {
-                if (Input.GetKeyDown(KeyCode.U))
+                if (Vector3.Distance(m_PlayerInstance[i].transform.position, collect_Item[1].transform.position) < 2f)
                 {
-                    collect_Item[1].SetActive(false);
-                    collectItem++;
-                    AudioSource.PlayClipAtPoint(pickItem, m_PlayerInstance.transform.position);
+                    if (Input.GetKeyDown(KeyCode.U))
+                    {
+                        collect_Item[1].SetActive(false);
+                        collectItem++;
+                        AudioSource.PlayClipAtPoint(pickItem, m_PlayerInstance[i].transform.position);
+                    }
                 }
             }
         }
     }
-    private void SpawnZombies() // Summon zombies one by one
+    protected override void SpawnZombies() // Summon zombies one by one
     {
         if (!AllItemCollected())
         {
@@ -123,14 +108,8 @@ public class StoryMode1Manager : Singleton<StoryMode1Manager>
             }
             m_currentSpawningzombieNumber++;
         }
-    } 
-
-    private void SpawnPlayer()
-    {
-        m_PlayerInstance = Instantiate(m_PlayerPerfab, m_PlayerSpawnPoint) as GameObject;
-        m_CamaraCenter.GetComponent<SimpleCamFollow>().PlayerTrans = m_PlayerInstance.transform; //Set the camera position
     }
-    private IEnumerator GameLoop()
+    protected override IEnumerator GameLoop()
     {
         yield return StartCoroutine(BeforeStarting());
         yield return StartCoroutine(GameStarting());
@@ -139,98 +118,89 @@ public class StoryMode1Manager : Singleton<StoryMode1Manager>
         yield return StartCoroutine(BeforeEnding());
         yield return StartCoroutine(GameEnding());
     }
-
     private IEnumerator BeforeStarting() //The game starts, showing the UI prompt
     {
-        playermanager.Enable(false);
-        singlePlayerUI.StartChat();
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("It's time for me to return to base now that I've completed my forest patrol."));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("dudududu.... I'm not sure why no one is connected, but I have to get back."));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("What's going on here appears to be a major conflict."));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("Hello!!!"));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("Is there anyone here?"));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("What is that, exactly? Zombies?"));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("The entire city is broadcasting. "));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("Warning: The biological virus has been spilled and spread; "));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("please go to the nearest shelter as soon as possible. The location is..."));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("It seems that zombies have attacked our base."));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("I need to get the essential supplies and head to the shelter as soon as possible."));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("I think I need more firepower to fight with these monsters."));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("And food, of course."));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("ALCOHOL!"));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("Nothing is more important than alcohol at a time like this!"));
-        yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("No time to waste, zombies can come anytime!"));
-        singlePlayerUI.AfterChat();
+        UnableAllPlayers();
+        storyModePlayerUI.StartChat();
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("It's time for me to return to base now that I've completed my forest patrol."));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("dudududu.... I'm not sure why no one is connected, but I have to get back."));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("What's going on here appears to be a major conflict."));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Hello!!!"));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Is there anyone here?"));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("What is that, exactly? Zombies?"));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("The entire city is broadcasting. "));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Warning: The biological virus has been spilled and spread; "));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("please go to the nearest shelter as soon as possible. The location is..."));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("It seems that zombies have attacked our base."));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("I need to get the essential supplies and head to the shelter as soon as possible."));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("I think I need more firepower to fight with these monsters."));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("And food, of course."));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("ALCOHOL!"));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Nothing is more important than alcohol at a time like this!"));
+        yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("No time to waste, zombies can come anytime!"));
+        storyModePlayerUI.AfterChat();
     }
-    private IEnumerator GameStarting() //The game starts, showing the UI prompt
+    protected override IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
-        singlePlayerUI.ChangeGameMessage("Try to find: " + "\n\n\n " + "Gun, Food and ALCOHOL!");
-        yield return m_StartWait;
+        storyModePlayerUI.ChangeGameMessage("Try to find: " + "\n\n\n " + "Gun, Food and ALCOHOL!");
+        return base.GameStarting();
     }
-
-    private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
+    protected override IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
-        singlePlayerUI.ClearGmaeMessage();
-        playermanager.Enable(true);
-        while (m_currentSpawningzombieNumber<m_numberOfZombies)
-        {
-            SpawnZombies();
-            yield return new WaitForSeconds(m_ZombieSpawnInterval);
-        }
+        storyModePlayerUI.ClearGmaeMessage();
+        return base.ZombieSpawning();
     }
-    private IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
+    protected override IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
     {
-        while (!AllItemCollected() && !playerStats.IsDead)
+        while (!AllItemCollected() && !AllPlayerDead())
         {
             yield return null;
         }
     }
-
-    private IEnumerator BeforeEnding() 
+    protected override IEnumerator BeforeEnding() 
     {
         DestroyAllZombie();
-        if (!playerStats.IsDead)
+        if (!AllPlayerDead())
         {
-            playermanager.Enable(false);
-            singlePlayerUI.StartChat();
-            yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("Finally!"));
-            yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("I got all I need now!"));
-            yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("These monsters are getting crazy!"));
-            yield return StartCoroutine(singlePlayerUI.PlayerChatMessage("I need to get out of here!"));
-            singlePlayerUI.AfterChat();
+            UnableAllPlayers();
+            storyModePlayerUI.StartChat();
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Finally!"));
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("I got all I need now!"));
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("These monsters are getting crazy!"));
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("I need to get out of here!"));
+            storyModePlayerUI.AfterChat();
         }
         yield return StartCoroutine(GameEnding());
     }
-
-    private IEnumerator GameEnding()
+    protected override IEnumerator GameEnding()
     {
-        if (playerStats.IsDead)
+        if (AllPlayerDead())
         {
-            singlePlayerUI.ChangeGameMessage("YOU Dead!");
+            storyModePlayerUI.ChangeGameMessage("YOU Dead!");
             yield return m_EndWait;
-            SceneManager.LoadScene("GameStartUi");
+            SwitchToScene("GameStartUi");
         }
         else
         {
-            singlePlayerUI.ChangeGameMessage("Get ready for the next scene!");
-            playermanager.Enable(false);
+            storyModePlayerUI.ChangeGameMessage("Get ready for the next scene!");
+            UnableAllPlayers();
             yield return m_EndWait;
-            SceneManager.LoadScene("Story Mode 2");
+            SwitchToScene("Story Mode 2");
         }
     }
-
     private bool AllItemCollected()
     {
-        return (!playerStats.IsSingleWeapon()) && collectItem == 2;
-    }
-
-    private void DestroyAllZombie()
-    {
-        GameObject[] allEnemy = GameObject.FindGameObjectsWithTag("Enemy");
-
-        for(int i = 0; i<allEnemy.Length; i++)
+        if(collectItem!=2)
         {
-            GameObject.Destroy(allEnemy[i]);
+            return false;
         }
+        for(int i=0;i<playerStats.Length;i++)
+        {
+            if(!playerStats[i].IsSingleWeapon())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

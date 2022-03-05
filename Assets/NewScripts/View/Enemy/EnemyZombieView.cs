@@ -5,10 +5,29 @@ namespace View.EnemyView
 {
     public class EnemyZombieView : EnemyBaseView
     {
+        private EndlessModeManager endlessModeManager;
+        private MultiplayerEndlessModeManager multiplayerEndlessModeManager;
+        private AIMultiplayerEndlessModeManager aIMultiplayerEndlessModeManager;
+
         private Transform target;
 
         private EnemyBaseController<EnemyZombieView> controller;
 
+        private void Start()
+        {
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
+            {
+                endlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>();
+            }
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
+            {
+                multiplayerEndlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>();
+            }
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
+            {
+                aIMultiplayerEndlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>();
+            }
+        }
         public void SetUp(EnemyBaseController<EnemyZombieView> cc)
         {
             controller = cc;
@@ -141,17 +160,17 @@ namespace View.EnemyView
             // unsubscribe model events
             controller.Model.OnCurHealthChange -= HPBarChange;
             controller.Model.OnDead -= HPBarHide;
-            if (EndlessModeManager.Instance != null)
+            if (endlessModeManager != null)
             {
-                controller.Model.OnDead -= EndlessModeManager.Instance.onDeadAddScore;
+                controller.Model.OnDead -= endlessModeManager.onDeadAddScore;
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (multiplayerEndlessModeManager != null)
             {
-                controller.Model.OnDead -= MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+                controller.Model.OnDead -= multiplayerEndlessModeManager.onDeadAddScore;
             }
-            if (AIMultiplayerEndlessModeManager.Instance != null)
+            if (aIMultiplayerEndlessModeManager != null)
             {
-                controller.Model.OnDead -= AIMultiplayerEndlessModeManager.Instance.onDeadAddScore;
+                controller.Model.OnDead -= aIMultiplayerEndlessModeManager.onDeadAddScore;
             }
             controller.Model.OnDead -= Factory.GameFactoryManager.Instance.EnemyFact.OndeadHandler;
 

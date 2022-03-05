@@ -4,72 +4,25 @@ using UnityEngine.SceneManagement;
 using Factory;
 // Manage the game process and UI in Endless Mode
 //This script is create and wrote by Jiacheng Sun
-public class EndlessModeManager : Singleton<EndlessModeManager>
+public class EndlessModeManager : ModeManagerBase
 {
-    public Transform[] m_SpawnPoint;
-    [SerializeField] private GameObject m_PlayerPerfab;
-    [SerializeField] private Transform m_PlayerSpawnPoint;
-    [SerializeField] private GameObject m_CamaraCenter;
-    [HideInInspector] public GameObject m_PlayerInstance;
-
-    [SerializeField] private float m_StartDelay = 1f;
-    [SerializeField] private float m_EndDelay = 1f;
-    private WaitForSeconds m_StartWait;
-    private WaitForSeconds m_EndWait;
-
     private int m_numberOfWaves = 0;
-    [HideInInspector] public int m_score = 0;
+    private int m_score = 0;
 
-    private int m_numberOfZombies = 5;
-    private int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
-    [SerializeField] private float m_ZombieSpawnInterval = 0.5f;
-
-    //components
-    private PlayerManager playermanager;
-    private PlayerStats playerStats;
-    private SinglePlayerUI singlePlayerUI;
-
-
-    void Start()
+    private EndlessModePlayerUI endlessModePlayerUI;
+    protected override void Start()
     {
-        m_StartWait = new WaitForSeconds(m_StartDelay);
-        m_EndWait = new WaitForSeconds(m_EndDelay);
-
-        SpawnPlayer();  //Set the player's starting position
-        playermanager = m_PlayerInstance.GetComponent<PlayerManager>();
-        playerStats = m_PlayerInstance.GetComponent<PlayerStats>();
-        singlePlayerUI = gameObject.GetComponent<SinglePlayerUI>();
-        playermanager.Enable(false);
+        base.Start();
+        endlessModePlayerUI = gameObject.GetComponent<EndlessModePlayerUI>();
         StartCoroutine(GameLoop());
     }
-    private void Update()
+    protected override void Update()
     {
         UpdateUI();
-        if (playerStats.IsDead)
-        {
-            StartCoroutine(GameEnding());
-        }
+        base.Update();
     }
 
-    private void UpdateUI()
-    {
-        UpdateScore();
-        UpdateBulletInfo();
-        UpdatePropsInfo();
-    }
-    private void UpdatePropsInfo()
-    {
-        singlePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats.Props_info_AmmoCap());
-        singlePlayerUI.ChangePropsMessage_Damage(playerStats.Props_info_Damage());
-        singlePlayerUI.ChangePropsMessage_MoveSpeed(playerStats.Props_info_MoveSpeed());
-        singlePlayerUI.ChangePropsMessage_Offset(playerStats.Props_info_Offset());
-        singlePlayerUI.ChangePropsMessage_ShotRate(playerStats.Props_info_ShotRate());
-    }
-    private void UpdateBulletInfo()
-    {
-        singlePlayerUI.changeBulletMessage(playerStats.AmmoInfo());
-    }
-    private void SpawnZombies() // Summon zombies one by one
+    protected override void SpawnZombies() // Summon zombies one by one
     {
         int spawn_point_number;
         spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
@@ -146,94 +99,67 @@ public class EndlessModeManager : Singleton<EndlessModeManager>
             }
         }
     } 
-
-    private void SpawnPlayer()
-    {
-        m_PlayerInstance = Instantiate(m_PlayerPerfab, m_PlayerSpawnPoint) as GameObject;
-        m_CamaraCenter.GetComponent<SimpleCamFollow>().PlayerTrans = m_PlayerInstance.transform; //Set the camera position
-    }
-    private IEnumerator GameLoop()
-    {
-        while (!m_PlayerInstance.GetComponent<PlayerStats>().IsDead)
-        {
-            yield return StartCoroutine(GameStarting());
-            yield return StartCoroutine(ZombieSpawning());
-            yield return StartCoroutine(GamePlaying());
-            yield return StartCoroutine(BeforeEnding());
-        }
-    }
-
-
-    private IEnumerator GameStarting() //The game starts, showing the UI prompt
+    protected override IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
         m_numberOfZombies += Random.Range(1, 3);
         m_numberOfWaves++;
         if (m_numberOfWaves % 5 == 0)
         {
-            playerStats.ChangeMaximumPropsNumber(1);
+            playerStats[0].ChangeMaximumPropsNumber(1);
         }
-        m_currentSpawningzombieNumber = 0;
-        singlePlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_numberOfZombies + "  Zombies are coming!");
-
-        yield return m_StartWait;
+        endlessModePlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_numberOfZombies + "  Zombies are coming!");
+        return base.GameStarting();
     }
-
-    private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
+    protected override IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
-        singlePlayerUI.ClearGmaeMessage();
-        playermanager.Enable(true);
-        while (m_currentSpawningzombieNumber< m_numberOfZombies)
-        {
-            SpawnZombies();
-            m_currentSpawningzombieNumber++;
-            yield return new WaitForSeconds(m_ZombieSpawnInterval);
-        }
+        endlessModePlayerUI.ClearGmaeMessage();
+        return base.ZombieSpawning();
     }
-    private IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
+    protected override IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
     {
-        while (!AllZombieDead() && !playerStats.IsDead)
-        {
-            yield return null;
-        }
-    }
-
-    private IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
-    {
-        if (!playerStats.IsDead)
+        if (!AllPlayerDead())
         {
             int counter = 5;
-            singlePlayerUI.ClearGmaeMessage();
+            endlessModePlayerUI.ClearGmaeMessage();
             while (counter > 0)
             {
-                singlePlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
+                endlessModePlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
                 counter -= 1;
                 yield return new WaitForSeconds(1f);
             }
         }
     }
-
-    private IEnumerator GameEnding() //Defeat all zombies and the game is over
+    protected override IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
-        singlePlayerUI.ChangeGameMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
-        playermanager.Enable(false);
-        yield return m_EndWait;
-        SceneManager.LoadScene("GameStartUi");
-    }
-
-    private bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.
-    {
-        return GameFactoryManager.Instance.EnemyFact.GetZombieCount() == 0;
+        endlessModePlayerUI.ChangeGameMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
+        return base.GameEnding();
     }
     public void AddScore(int amount)
     {
         m_score += amount;
     }
-
+    private void UpdatePropsInfo()
+    {
+        endlessModePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats[0].Props_info_AmmoCap());
+        endlessModePlayerUI.ChangePropsMessage_Damage(playerStats[0].Props_info_Damage());
+        endlessModePlayerUI.ChangePropsMessage_MoveSpeed(playerStats[0].Props_info_MoveSpeed());
+        endlessModePlayerUI.ChangePropsMessage_Offset(playerStats[0].Props_info_Offset());
+        endlessModePlayerUI.ChangePropsMessage_ShotRate(playerStats[0].Props_info_ShotRate());
+    }
+    private void UpdateBulletInfo()
+    {
+        endlessModePlayerUI.changeBulletMessage(playerStats[0].AmmoInfo());
+    }
     private void UpdateScore()
     {
-        singlePlayerUI.ChangeScore(m_score);
+        endlessModePlayerUI.ChangeScore(m_score);
     }
-
+    private void UpdateUI()
+    {
+        UpdateScore();
+        UpdateBulletInfo();
+        UpdatePropsInfo();
+    }
     public void onDeadAddScore(int score)
     {
         m_score += score;

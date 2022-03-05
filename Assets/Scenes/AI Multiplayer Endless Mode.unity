@@ -1879,26 +1879,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da6445fe8b3384d479bc163b4c98874e, type: 3}
---- !u!1 &360290357 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8896123735029309365, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-  m_PrefabInstance: {fileID: 677293097}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &360290358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360290357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb468939764499a4dbc6666198eee772, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cof_y: 0.3
-  cof_z: -0.3
-  cameraMovingSpeed: 2
 --- !u!1001 &370538334
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3809,10 +3789,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1419246184, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-      propertyPath: m_Volume
-      value: 0.3
-      objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -3860,10 +3836,6 @@ PrefabInstance:
     - target: {fileID: 8896123735029309365, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_Name
       value: CamCenter
-      objectReference: {fileID: 0}
-    - target: {fileID: 8896123735029309365, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
@@ -7644,7 +7616,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -71.273895, y: -20.6763}
+  m_AnchoredPosition: {x: -71.273926, y: -20.67627}
   m_SizeDelta: {x: 138.5477, y: 41.3527}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1274093407
@@ -12494,7 +12466,7 @@ GameObject:
   - component: {fileID: 2139448386}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: Manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12511,7 +12483,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2363f38daa1130049b52f1f492c98140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreMessage: {fileID: 1274093407}
   game_message: {fileID: 1176526031}
   bullet_message:
   - {fileID: 1135883360}
@@ -12531,6 +12502,7 @@ MonoBehaviour:
   props_message_MoveSpeed:
   - {fileID: 1369312656}
   - {fileID: 1988212343}
+  scoreMessage: {fileID: 1274093407}
 --- !u!4 &2139448385
 Transform:
   m_ObjectHideFlags: 0
@@ -12562,7 +12534,6 @@ MonoBehaviour:
   - {fileID: 566223856}
   - {fileID: 1130693117}
   - {fileID: 107435279}
-  camCenter: {fileID: 360290357}
   m_PlayerPerfab:
   - {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
   - {fileID: 7981481663472377377, guid: e4d6a78ab8a328a429ca64eafca49b03, type: 3}
@@ -12571,7 +12542,6 @@ MonoBehaviour:
   - {fileID: 78877140}
   m_StartDelay: 2
   m_EndDelay: 3
-  m_score: 0
   m_ZombieSpawnInterval: 0.5
 --- !u!114 &2139448387
 MonoBehaviour:

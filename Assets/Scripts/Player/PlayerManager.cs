@@ -30,7 +30,7 @@ public class PlayerManager : MonoBehaviour
         behaviour.Initialize();
         if (AIMultiplayerEndlessModeManager.Instance != null)
         {
-            gameManager = AIMultiplayerEndlessModeManager.Instance;
+            gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>();
         }
     }
 

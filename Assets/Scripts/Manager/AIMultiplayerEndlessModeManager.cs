@@ -4,51 +4,25 @@ using UnityEngine.SceneManagement;
 using Factory;
 // Manage the game process and UI in Multiplayer Endless Mode
 //This script is create and wrote by Jiacheng Sun and Bolun Ruan
-public class AIMultiplayerEndlessModeManager : Singleton<AIMultiplayerEndlessModeManager>
+
+public class AIMultiplayerEndlessModeManager : ModeManagerBase
 {
-    [SerializeField] private Transform[] m_SpawnPoint;
-    [SerializeField] private GameObject camCenter;
-    [SerializeField] private GameObject[] m_PlayerPerfab;
-    [SerializeField] private Transform[] m_PlayerSpawnPoint;
-
-    [SerializeField] private float m_StartDelay = 2f;
-    [SerializeField] private float m_EndDelay = 3f;
-    private WaitForSeconds m_StartWait;
-    private WaitForSeconds m_EndWait;
-
     private int m_numberOfWaves = 0;
-    [HideInInspector] public int m_score = 0;
+    private int m_score = 0;
 
-    private int m_numberOfZombies = 5;
-    private int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
-    [SerializeField] private float m_ZombieSpawnInterval = 0.5f;
-
-    //components
-    private GameObject m_Player0Instance;
-    private GameObject m_Player1Instance;
-    private PlayerManager player0manager;
-    private PlayerManager player1manager;
-    private PlayerStats player0Stats;
-    private PlayerStats player1Stats;
-    private MultiPlayerUI multiPlayerUI;
+    private EndlessModePlayerUI endlessModePlayerUI;
 
 
-    void Start()
+    protected override void Start()
     {
-        m_StartWait = new WaitForSeconds(m_StartDelay);
-        m_EndWait = new WaitForSeconds(m_EndDelay);
-
-        SpawnPlayer();  //Set the player's starting position
-        multiPlayerUI = this.GetComponent<MultiPlayerUI>();
+        base.Start();
+        endlessModePlayerUI = this.GetComponent<EndlessModePlayerUI>();
         StartCoroutine(GameLoop());
     }
-    private void Update()
+    protected override void Update()
     {
         UpdateUI();
-        if (AllPlayerDead())
-        {
-            StartCoroutine(GameEnding());
-        }
+        base.Update();
     }
     private void UpdateUI()
     {
@@ -58,24 +32,24 @@ public class AIMultiplayerEndlessModeManager : Singleton<AIMultiplayerEndlessMod
     }
     private void UpdatePropsInfo()
     {
-        multiPlayerUI.ChangePropsMessage_AmmoCapacity(0, player0Stats.Props_info_AmmoCap());
-        multiPlayerUI.ChangePropsMessage_AmmoCapacity(1, player1Stats.Props_info_AmmoCap());
-        multiPlayerUI.ChangePropsMessage_Damage(0, player0Stats.Props_info_Damage());
-        multiPlayerUI.ChangePropsMessage_MoveSpeed(0, player0Stats.Props_info_MoveSpeed());
-        multiPlayerUI.ChangePropsMessage_Offset(0, player0Stats.Props_info_Offset());
-        multiPlayerUI.ChangePropsMessage_ShotRate(0, player0Stats.Props_info_ShotRate());
-        multiPlayerUI.ChangePropsMessage_Damage(1, player1Stats.Props_info_Damage());
-        multiPlayerUI.ChangePropsMessage_MoveSpeed(1, player1Stats.Props_info_MoveSpeed());
-        multiPlayerUI.ChangePropsMessage_Offset(1, player1Stats.Props_info_Offset());
-        multiPlayerUI.ChangePropsMessage_ShotRate(1, player1Stats.Props_info_ShotRate());
+        for (int i = 0; i < playerStats.Length; i++)
+        {
+            endlessModePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats[i].Props_info_AmmoCap(), i);
+            endlessModePlayerUI.ChangePropsMessage_Damage(playerStats[i].Props_info_Damage(), i);
+            endlessModePlayerUI.ChangePropsMessage_MoveSpeed(playerStats[i].Props_info_MoveSpeed(),i);
+            endlessModePlayerUI.ChangePropsMessage_Offset(playerStats[i].Props_info_Offset(),i);
+            endlessModePlayerUI.ChangePropsMessage_ShotRate(playerStats[i].Props_info_ShotRate(),i);
+        }
 
     }
     private void UpdateBulletInfo()
     {
-        multiPlayerUI.changeBulletMessage(0, player0Stats.AmmoInfo());
-        multiPlayerUI.changeBulletMessage(1, player1Stats.AmmoInfo());
+        for (int i = 0; i < playerStats.Length; i++)
+        {
+            endlessModePlayerUI.changeBulletMessage(playerStats[i].AmmoInfo(),i);
+        }
     }
-    private void SpawnZombies() // Summon zombies one by one
+    protected override void SpawnZombies() // Summon zombies one by one
     {
         int spawn_point_number;
         spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
@@ -151,117 +125,51 @@ public class AIMultiplayerEndlessModeManager : Singleton<AIMultiplayerEndlessMod
                 GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
             }
         }
-    } 
-
-    private void SpawnPlayer()
-    {
-        m_Player0Instance = Instantiate(m_PlayerPerfab[0], m_PlayerSpawnPoint[0]) as GameObject;
-        m_Player1Instance = Instantiate(m_PlayerPerfab[1], m_PlayerSpawnPoint[1]) as GameObject;
-        player0manager = m_Player0Instance.GetComponent<PlayerManager>();
-        player0Stats = m_Player0Instance.GetComponent<PlayerStats>();
-        player0manager.Enable(false);
-        player1manager = m_Player1Instance.GetComponent<PlayerManager>();
-        player1Stats = m_Player1Instance.GetComponent<PlayerStats>();
-        player1manager.Enable(false);
-
-        camCenter.GetComponent<MultiplayerCamara>().Player0Trans = m_Player0Instance.transform;
-        camCenter.GetComponent<MultiplayerCamara>().Player1Trans = m_Player1Instance.transform;
-        camCenter.GetComponent<MultiplayerCamara>().Player0Dead = false;
-        camCenter.GetComponent<MultiplayerCamara>().Player1Dead = false;
     }
-    private IEnumerator GameLoop()
-    {
-        while (!AllPlayerDead())
-        {
-            yield return StartCoroutine(GameStarting());
-            yield return StartCoroutine(ZombieSpawning());
-            yield return StartCoroutine(GamePlaying());
-            yield return StartCoroutine(BeforeEnding());
-        }
-    }
-
-
-    private IEnumerator GameStarting() //The game starts, showing the UI prompt
+    protected override IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
         m_numberOfZombies += Random.Range(1, 3);
         m_numberOfWaves++;
         if(m_numberOfWaves%5 == 0)
         {
-            player0Stats.ChangeMaximumPropsNumber(1);
-            player1Stats.ChangeMaximumPropsNumber(1);
+            for (int i = 0; i < playerStats.Length; i++)
+            {
+                playerStats[i].ChangeMaximumPropsNumber(1);
+            }
         }
-        m_currentSpawningzombieNumber = 0;
-        multiPlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_numberOfZombies + "  Zombies are coming!");
-
-        yield return m_StartWait;
+        endlessModePlayerUI.ChangeGameMessage("Game Start!" + "\n\n\n " +"Wave: " + m_numberOfWaves + "\n\n\n " + m_numberOfZombies + "  Zombies are coming!");
+        return base.GameStarting();
     }
-
-    private IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
+    protected override IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
-        multiPlayerUI.ClearGmaeMessage();
-        player0manager.Enable(true);
-        player1manager.Enable(true);
-        while (m_currentSpawningzombieNumber< m_numberOfZombies)
-        {
-            SpawnZombies();
-            m_currentSpawningzombieNumber++;
-            yield return new WaitForSeconds(m_ZombieSpawnInterval);
-        }
+        endlessModePlayerUI.ClearGmaeMessage();
+        return base.ZombieSpawning();
     }
-    private bool AllPlayerDead()
-    {
-        if(player0Stats.IsDead)
-        {
-            camCenter.GetComponent<MultiplayerCamara>().Player0Dead = true;
-        }
-        if (player1Stats.IsDead)
-        {
-            camCenter.GetComponent<MultiplayerCamara>().Player1Dead = true;
-        }
-        return player0Stats.IsDead && player1Stats.IsDead;
-    }
-    private IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
-    {
-        while (!AllZombieDead() && !AllPlayerDead())
-        {
-            yield return null;
-        }
-    }
-
-    private IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
+    protected override IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
     {
         if (!AllPlayerDead())
         {
             int counter = 5;
-            multiPlayerUI.ClearGmaeMessage();
+            endlessModePlayerUI.ClearGmaeMessage();
             while (counter > 0)
             {
-                multiPlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
+                endlessModePlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
                 counter -= 1;
                 yield return new WaitForSeconds(1f);
             }
         }
     }
 
-    private IEnumerator GameEnding() //Defeat all zombies and the game is over
+    protected override IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
-        multiPlayerUI.ChangeGameMessage("YOU LOSE!" + "\n\n\n" + "Your final score: " + m_score);
-        player0manager.Enable(false);
-        player1manager.Enable(false);
-        yield return m_EndWait;
-        SceneManager.LoadScene("GameStartUi");
-    }
-
-    private bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.
-    {
-        return GameFactoryManager.Instance.EnemyFact.GetZombieCount() == 0;
+        endlessModePlayerUI.ChangeGameMessage("YOU LOSE!" + "\n\n\n" + "Your final score: " + m_score);
+        return GameEnding();
     }
 
     private void UpdateScore()
     {
-        multiPlayerUI.ChangeScore(m_score);
+        endlessModePlayerUI.ChangeScore(m_score);
     }
-
     public void onDeadAddScore(int score)
     {
         m_score += score;
@@ -276,22 +184,22 @@ public class AIMultiplayerEndlessModeManager : Singleton<AIMultiplayerEndlessMod
         Vector3 bestPostion = CurrentPositionForAI();
 
         //Follow player
-        if (Vector3.Distance(m_Player0Instance.transform.position, CurrentPositionForAI()) > 5.0f)
+        if (Vector3.Distance(m_PlayerInstance[0].transform.position, CurrentPositionForAI()) > 5.0f)
         {
-            bestPostion = m_Player0Instance.transform.position;
+            bestPostion = m_PlayerInstance[0].transform.position;
         }
 
         //check if there is a props
         GameObject[] props = GameObject.FindGameObjectsWithTag("Props");
         if (props.Length > 0)
         {
-            float min_distance = Vector3.Distance(props[0].transform.position, m_Player1Instance.transform.position);
+            float min_distance = Vector3.Distance(props[0].transform.position, m_PlayerInstance[1].transform.position);
             int props_index = 0;
             for (int i = 1; i < props.Length; i++)
             {
-                if (Vector3.Distance(props[i].transform.position, m_Player1Instance.transform.position) < min_distance)
+                if (Vector3.Distance(props[i].transform.position, m_PlayerInstance[1].transform.position) < min_distance)
                 {
-                    min_distance = Vector3.Distance(props[i].transform.position, m_Player1Instance.transform.position);
+                    min_distance = Vector3.Distance(props[i].transform.position, m_PlayerInstance[1].transform.position);
                     props_index = i;
                 }
             }
@@ -299,18 +207,18 @@ public class AIMultiplayerEndlessModeManager : Singleton<AIMultiplayerEndlessMod
         }
 
         //if only equip handgun check if there is a weapon
-        if (player1Stats.IsSingleWeapon())
+        if (playerStats[1].IsSingleWeapon())
         {
             GameObject[] weapon = GameObject.FindGameObjectsWithTag("Weapon");
             if (weapon.Length > 0)
             {
-                float min_distance = Vector3.Distance(weapon[0].transform.position, m_Player1Instance.transform.position);
+                float min_distance = Vector3.Distance(weapon[0].transform.position, m_PlayerInstance[1].transform.position);
                 int weapon_index = 0;
                 for (int i = 1; i < weapon.Length; i++)
                 {
-                    if (Vector3.Distance(weapon[i].transform.position, m_Player1Instance.transform.position) < min_distance)
+                    if (Vector3.Distance(weapon[i].transform.position, m_PlayerInstance[1].transform.position) < min_distance)
                     {
-                        min_distance = Vector3.Distance(weapon[i].transform.position, m_Player1Instance.transform.position);
+                        min_distance = Vector3.Distance(weapon[i].transform.position, m_PlayerInstance[1].transform.position);
                         weapon_index = i;
                     }
                 }
@@ -377,14 +285,14 @@ public class AIMultiplayerEndlessModeManager : Singleton<AIMultiplayerEndlessMod
     }
     public Vector3 CurrentPositionForAI()
     {
-        return m_Player1Instance.transform.position;
+        return m_PlayerInstance[1].transform.position;
     }
     public bool AI_EnemyInAttackRange()
     {
         GameObject[] zombies = GameObject.FindGameObjectsWithTag("Enemy");
         for(int i = 0; i< zombies.Length; i++)
         {
-            if(Vector3.Distance(zombies[i].transform.position,m_Player1Instance.transform.position) <= 8)
+            if(Vector3.Distance(zombies[i].transform.position,m_PlayerInstance[1].transform.position) <= 8)
             {
                 /*RaycastHit hitInfo;
                 if (Physics.Raycast(CurrentPositionForAI(), zombies[i].transform.position - CurrentPositionForAI(), out hitInfo, 8))
@@ -402,15 +310,15 @@ public class AIMultiplayerEndlessModeManager : Singleton<AIMultiplayerEndlessMod
     }
     public bool AI_AmmoNotFull()
     {
-        if (player1Stats.CurrentCartridgeCap < player1Stats.CurrentCartridgeCapacity)
+        if (playerStats[1].CurrentCartridgeCap < playerStats[1].CurrentCartridgeCapacity)
         {
-            if (player1Stats.CurrentRestAmmo > 0)
+            if (playerStats[1].CurrentRestAmmo > 0)
             {
                 if (AllZombieDead())
                 {
                     return true;
                 }
-                if (player1Stats.CurrentCartridgeCap <= 1)
+                if (playerStats[1].CurrentCartridgeCap <= 1)
                 {
                     return true;
                 }
@@ -420,14 +328,14 @@ public class AIMultiplayerEndlessModeManager : Singleton<AIMultiplayerEndlessMod
     }
     public bool AI_SwitchWeapon()
     {
-        return player1Stats.AI_TimeToSwitchWeapon();
+        return playerStats[1].AI_TimeToSwitchWeapon();
     }
     public bool AI_WeaponNearBy()
     {
         GameObject[] weapon = GameObject.FindGameObjectsWithTag("Weapon");
         for (int i = 0; i< weapon.Length; i++)
         {
-            if(Vector3.Distance(weapon[i].transform.position, m_Player1Instance.transform.position) < 1.5f)
+            if(Vector3.Distance(weapon[i].transform.position, m_PlayerInstance[1].transform.position) < 1.5f)
             {
                 return true;
             }

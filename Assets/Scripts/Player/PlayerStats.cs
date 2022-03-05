@@ -56,6 +56,8 @@ public class PlayerStats : MonoBehaviour
     public Action<int, int> onUpdateAmmoInfo; //current Ammo in use, left ammo in pack
 
     #region Attribute Fields
+
+
     public PlayerID ID
     {
         get { return id; }
@@ -171,13 +173,17 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentPropsNumber_DecreaseShotRate >= maximumPropsNumber)
         {
-            if (EndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
             {
-                EndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>().AddScore(500);
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
             {
-                MultiplayerEndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>().AddScore(500);
+            }
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
+            {
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>().AddScore(500);
             }
         }
         else
@@ -192,16 +198,17 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentPropsNumber_IncreaseDamage >= maximumPropsNumber)
         {
-            Debug.Log(1);
-            if (EndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
             {
-                Debug.Log(2);
-                EndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>().AddScore(500);
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
             {
-                Debug.Log(3);
-                MultiplayerEndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>().AddScore(500);
+            }
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
+            {
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>().AddScore(500);
             }
         }
         else
@@ -216,13 +223,17 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentPropsNumber_IncreaseMoveSpeed >= maximumPropsNumber)
         {
-            if (EndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
             {
-                EndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>().AddScore(500);
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
             {
-                MultiplayerEndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>().AddScore(500);
+            }
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
+            {
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>().AddScore(500);
             }
         }
         else
@@ -237,13 +248,17 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentPropsNumber_DecreaseOffset >= maximumPropsNumber)
         {
-            if (EndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
             {
-                EndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>().AddScore(500);
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
             {
-                MultiplayerEndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>().AddScore(500);
+            }
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
+            {
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>().AddScore(500);
             }
         }
         else
@@ -258,13 +273,17 @@ public class PlayerStats : MonoBehaviour
     {
         if (currentPropsNumber_IncreaseAmmoCapacity >= maximumPropsNumber)
         {
-            if (EndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
             {
-                EndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>().AddScore(500);
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
             {
-                MultiplayerEndlessModeManager.Instance.AddScore(500);
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>().AddScore(500);
+            }
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
+            {
+                GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>().AddScore(500);
             }
         }
         else

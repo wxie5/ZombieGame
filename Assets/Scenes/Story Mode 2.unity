@@ -2568,37 +2568,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1419246184, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-      propertyPath: m_Volume
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8896123734714700820, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-      propertyPath: m_ClearFlags
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8896123734714700820, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.38679248
-      objectReference: {fileID: 0}
-    - target: {fileID: 8896123734714700820, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.38679248
-      objectReference: {fileID: 0}
-    - target: {fileID: 8896123734714700820, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.38679248
-      objectReference: {fileID: 0}
-    - target: {fileID: 8896123735029309363, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-      propertyPath: playerTrans
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.47
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2606,7 +2582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.21
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2614,15 +2590,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2642,24 +2618,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
---- !u!1 &677293098 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8896123735029309365, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
-  m_PrefabInstance: {fileID: 677293097}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &677293099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677293098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb8e51a8bde552347853fa6d5fe6760b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTrans: {fileID: 0}
 --- !u!4 &686289192 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4302106969946132, guid: 411a5ee19077b1d46b9960f64c7ffde8, type: 3}
@@ -5188,7 +5146,7 @@ GameObject:
   - component: {fileID: 1134224175}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: Manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5220,6 +5178,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e4b9453514ef5498260778f6f30c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SpawnPoint: []
+  m_PlayerPerfab:
+  - {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
+  m_PlayerSpawnPoint:
+  - {fileID: 1467766661}
+  m_StartDelay: 3
+  m_EndDelay: 3
+  m_numberOfZombies: 30
+  m_ZombieSpawnInterval: 1.5
   m_SpawnPoint0:
   - {fileID: 1656804043}
   - {fileID: 566223856}
@@ -5245,14 +5212,6 @@ MonoBehaviour:
   - {fileID: 666804893}
   - {fileID: 1404880814}
   - {fileID: 1638584898}
-  m_PlayerPerfab: {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
-  m_PlayerSpawnPoint: {fileID: 1467766661}
-  m_CamaraCenter: {fileID: 677293098}
-  m_PlayerInstance: {fileID: 0}
-  m_StartDelay: 3
-  m_EndDelay: 3
-  m_numberOfZombies: 50
-  m_ZombieSpawnInterval: 1.5
 --- !u!114 &1134224177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5266,15 +5225,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   game_message: {fileID: 82897456}
-  bullet_message: {fileID: 1039067766}
+  bullet_message:
+  - {fileID: 1039067766}
+  props_message_Offset:
+  - {fileID: 901373478}
+  props_message_shotRate:
+  - {fileID: 704070880}
+  props_message_AmmoCapacity:
+  - {fileID: 2085845189}
+  props_message_Damage:
+  - {fileID: 1436275270}
+  props_message_MoveSpeed:
+  - {fileID: 19586067}
   chat_box_message: {fileID: 1025215218}
   chat_box: {fileID: 1725715133}
   bullet_info: {fileID: 528171300}
-  props_message_Offset: {fileID: 901373478}
-  props_message_shotRate: {fileID: 704070880}
-  props_message_AmmoCapacity: {fileID: 2085845189}
-  props_message_Damage: {fileID: 1436275270}
-  props_message_MoveSpeed: {fileID: 19586067}
 --- !u!4 &1134224178
 Transform:
   m_ObjectHideFlags: 0

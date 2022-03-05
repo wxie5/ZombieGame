@@ -13,11 +13,26 @@ namespace Factory
         [SerializeField] private GameObject[] props;
         private Dictionary<int, EnemyStatsCSV> enemyStatsBuffer;
         private int zombieCount;
+        private EndlessModeManager endlessModeManager;
+        private MultiplayerEndlessModeManager multiplayerEndlessModeManager;
+        private AIMultiplayerEndlessModeManager aIMultiplayerEndlessMode;
 
         protected override void Start()
         {
             filePath = "Prefabs/Enemy/";
             enemyStatsBuffer = CSVReader.ReadEnemyStatsCSV();
+            if(GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
+            {
+                endlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>();
+            }
+            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
+            {
+                multiplayerEndlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>();
+            }
+            if(GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
+            {
+                aIMultiplayerEndlessMode = GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>();
+            }
         }
 
         #region Public Instantiator
@@ -74,17 +89,17 @@ namespace Factory
             // set up model event (this is also important, for UI especially)
             model.OnCurHealthChange += view.HPBarChange;
             model.OnDead += view.HPBarHide;
-            if (EndlessModeManager.Instance != null)
+            if (endlessModeManager != null)
             {
-                model.OnDead += EndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += endlessModeManager.onDeadAddScore;
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (multiplayerEndlessModeManager != null)
             {
-                model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += multiplayerEndlessModeManager.onDeadAddScore;
             }
-            if (AIMultiplayerEndlessModeManager.Instance != null)
+            if (aIMultiplayerEndlessMode != null)
             {
-                model.OnDead += AIMultiplayerEndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += aIMultiplayerEndlessMode.onDeadAddScore;
             }
             model.OnDead += OndeadHandler;
 
@@ -114,17 +129,17 @@ namespace Factory
             // set up model event (this is also important, for UI, audio effects, especially)
             model.OnCurHealthChange += view.HPBarChange;
             model.OnDead += view.HPBarHide;
-            if (EndlessModeManager.Instance != null)
+            if (endlessModeManager != null)
             {
-                model.OnDead += EndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += endlessModeManager.onDeadAddScore;
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (multiplayerEndlessModeManager != null)
             {
-                model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += multiplayerEndlessModeManager.onDeadAddScore;
             }
-            if (AIMultiplayerEndlessModeManager.Instance != null)
+            if (aIMultiplayerEndlessMode != null)
             {
-                model.OnDead += AIMultiplayerEndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += aIMultiplayerEndlessMode.onDeadAddScore;
             }
             model.OnDead += OndeadHandler;
 
@@ -158,17 +173,17 @@ namespace Factory
             // set up model event (this is also important, for UI, audio effects, especially)
             model.OnCurHealthChange += view.HPBarChange;
             model.OnDead += view.HPBarHide;
-            if (EndlessModeManager.Instance != null)
+            if (endlessModeManager != null)
             {
-                model.OnDead += EndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += endlessModeManager.onDeadAddScore;
             }
-            if (MultiplayerEndlessModeManager.Instance != null)
+            if (multiplayerEndlessModeManager != null)
             {
-                model.OnDead += MultiplayerEndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += multiplayerEndlessModeManager.onDeadAddScore;
             }
-            if (AIMultiplayerEndlessModeManager.Instance != null)
+            if (aIMultiplayerEndlessMode != null)
             {
-                model.OnDead += AIMultiplayerEndlessModeManager.Instance.onDeadAddScore;
+                model.OnDead += aIMultiplayerEndlessMode.onDeadAddScore;
             }
             model.OnDead += OndeadHandler;
 
