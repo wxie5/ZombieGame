@@ -28,14 +28,13 @@ public class GameSetting : Singleton<GameSetting>
             PlayerB_Reload_Key = InputManager.Instance.get_PlayerB_Reload_Key(),
             PlayerB_Pick_Key = InputManager.Instance.get_PlayerB_Pick_Key(),
         };
+        Debug.Log(InputManager.Instance.get_PlayerA_Reload_Key());
         string json = JsonUtility.ToJson(saveObject);
         File.WriteAllText(Application.dataPath + "/save.txt", json);
-        Debug.Log(this.gameObject.name + "Save");
     }
 
     public void Load()
     {
-        Debug.Log(this.gameObject.name + "Load");
         if (File.Exists(Application.dataPath + "/save.txt"))
         {
             string saveString = File.ReadAllText(Application.dataPath + "/save.txt");
@@ -58,6 +57,9 @@ public class GameSetting : Singleton<GameSetting>
             InputManager.Instance.Set_PlayerB_Switch_Key(saveObject.PlayerB_Switch_Key);
             InputManager.Instance.Set_PlayerB_Reload_Key(saveObject.PlayerB_Reload_Key);
             InputManager.Instance.Set_PlayerB_Pick_Key(saveObject.PlayerB_Pick_Key);
+            Debug.Log(saveObject.PlayerA_Reload_Key);
+            Debug.Log(saveObject.PlayerA_Move_Up_Key);
+            Debug.Log(InputManager.Instance.get_PlayerA_Reload_Key());
         }
     }
     private class SaveObject
@@ -70,6 +72,7 @@ public class GameSetting : Singleton<GameSetting>
         public KeyCode PlayerA_Switch_Key;
         public KeyCode PlayerA_Reload_Key;
         public KeyCode PlayerA_Pick_Key;
+
         public KeyCode PlayerB_Move_Up_Key;
         public KeyCode PlayerB_Move_Down_Key;
         public KeyCode PlayerB_Move_Left_Key;
