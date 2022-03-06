@@ -28,14 +28,15 @@ public class GameSetting : Singleton<GameSetting>
             PlayerB_Reload_Key = InputManager.Instance.get_PlayerB_Reload_Key(),
             PlayerB_Pick_Key = InputManager.Instance.get_PlayerB_Pick_Key(),
         };
-
         string json = JsonUtility.ToJson(saveObject);
         File.WriteAllText(Application.dataPath + "/save.txt", json);
+        Debug.Log(this.gameObject.name + "Save");
     }
 
     public void Load()
     {
-        if(File.Exists(Application.dataPath + "/save.txt"))
+        Debug.Log(this.gameObject.name + "Load");
+        if (File.Exists(Application.dataPath + "/save.txt"))
         {
             string saveString = File.ReadAllText(Application.dataPath + "/save.txt");
             SaveObject saveObject = JsonUtility.FromJson<SaveObject>(saveString);

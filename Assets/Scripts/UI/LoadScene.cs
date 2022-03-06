@@ -25,6 +25,7 @@ public class LoadScene : MonoBehaviour
     void OnClick()
     {
         Time.timeScale = 1;
+        GameSetting.Instance.Save();
         StartCoroutine(load());
     }
 
@@ -32,7 +33,6 @@ public class LoadScene : MonoBehaviour
     {
         if (playSoundEffect)
         {
-            GameSetting.Instance.Save();
             AudioSource.PlayClipAtPoint(soundEffect, new Vector3(0, 0, 0));
             yield return new WaitForSeconds(1f);
         }

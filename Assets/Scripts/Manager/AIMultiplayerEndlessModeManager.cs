@@ -163,7 +163,7 @@ public class AIMultiplayerEndlessModeManager : ModeManagerBase
     protected override IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
         endlessModePlayerUI.ChangeGameMessage("YOU LOSE!" + "\n\n\n" + "Your final score: " + m_score);
-        return GameEnding();
+        return base.GameEnding();
     }
 
     private void UpdateScore()

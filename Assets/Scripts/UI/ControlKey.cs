@@ -76,6 +76,8 @@ public class ControlKey : MonoBehaviour, IPointerClickHandler
             case "A_Pick":
                 keyCodeText.text = InputManager.Instance.get_PlayerA_Pick_Key().ToString();
                 break;
+
+
             case "B_Up":
                 keyCodeText.text = InputManager.Instance.get_PlayerB_Move_Up_Key().ToString();
                 break;

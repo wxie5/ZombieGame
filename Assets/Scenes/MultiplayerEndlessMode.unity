@@ -12218,6 +12218,7 @@ GameObject:
   - component: {fileID: 2139448386}
   - component: {fileID: 2139448384}
   - component: {fileID: 2139448387}
+  - component: {fileID: 2139448388}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Manager
@@ -12315,6 +12316,18 @@ MonoBehaviour:
   pauseMainUI: {fileID: 197691818}
   helpUI: {fileID: 791869508}
   settingUI: {fileID: 1475921249}
+--- !u!114 &2139448388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139448383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7d2b96f78fa6d43bd015971cd5582e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1699853161511880549
 PrefabInstance:
   m_ObjectHideFlags: 0

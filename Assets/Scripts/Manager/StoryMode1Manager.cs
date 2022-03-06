@@ -178,14 +178,14 @@ public class StoryMode1Manager : ModeManagerBase
         {
             storyModePlayerUI.ChangeGameMessage("YOU Dead!");
             yield return m_EndWait;
-            SwitchToScene("GameStartUi");
+            SwitchToScene("GameStartUI");
         }
         else
         {
             storyModePlayerUI.ChangeGameMessage("Get ready for the next scene!");
             UnableAllPlayers();
             yield return m_EndWait;
-            SwitchToScene("Story Mode 2");
+            SwitchToScene("StoryMode2");
         }
     }
     private bool AllItemCollected()
