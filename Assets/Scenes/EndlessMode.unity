@@ -1022,6 +1022,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4176410186140992, guid: e6ad818f73011bb42ac5c5e629434bcc, type: 3}
   m_PrefabInstance: {fileID: 935777388}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &183164872 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 183164872, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+  m_PrefabInstance: {fileID: 5429486783990107050}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &187898202 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4300724218257806, guid: 9082ffb6ae18fd54292f0645b15cbde2, type: 3}
@@ -10794,6 +10799,7 @@ GameObject:
   - component: {fileID: 2139448384}
   - component: {fileID: 2139448387}
   - component: {fileID: 2139448386}
+  - component: {fileID: 2139448388}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Manager
@@ -10824,6 +10830,7 @@ MonoBehaviour:
   - {fileID: 1467766661}
   m_StartDelay: 3
   m_EndDelay: 3
+  m_numberOfZombies: 5
   m_ZombieSpawnInterval: 0.5
 --- !u!4 &2139448385
 Transform:
@@ -10880,6 +10887,19 @@ MonoBehaviour:
   pauseUI: {fileID: 1158354211}
   pauseMainUI: {fileID: 1045772806}
   helpUI: {fileID: 984525533}
+  settingUI: {fileID: 183164872}
+--- !u!114 &2139448388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139448383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7d2b96f78fa6d43bd015971cd5582e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1699853161511880549
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10972,6 +10992,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 183164872, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1415643445, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 2139448387}
     - target: {fileID: 5429486783948187364, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 

@@ -2591,6 +2591,7 @@ GameObject:
   - component: {fileID: 2185816344692045585}
   - component: {fileID: 6610907676015907719}
   - component: {fileID: 1511758529570404423}
+  - component: {fileID: 803357272}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2695,7 +2696,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89922b7e5bc93c8489b32e3965b9e6b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNum: 0
   playerRotSmoothTime: 0.1
   posGravity: 9.81
   shotTrans: {fileID: 7599032378898168952}
@@ -2740,7 +2740,6 @@ MonoBehaviour:
   getHurt: {fileID: 8300000, guid: d07dd84f326d8524c8639de2004324e5, type: 3}
   dead: {fileID: 8300000, guid: 3b4701f3f3a60344db6ff47e1cbc582f, type: 3}
   recover: {fileID: 8300000, guid: 3c03efec2088d2f4190bba4534a05848, type: 3}
-  maximumPropsNumber: 3
 --- !u!114 &1511758529570404423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2753,6 +2752,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee15ee1ffe89c1468574cf4f987d7bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &803357272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7981481663472377377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54060ce003727a74ab2f5e3fb4860d92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerA_Move_Up_Key: 119
+  PlayerA_Move_Down_Key: 115
+  PlayerA_Move_Left_Key: 97
+  PlayerA_Move_Right_Key: 100
+  PlayerA_Attack_Key: 106
+  PlayerA_Switch_Key: 107
+  PlayerA_Reload_Key: 108
+  PlayerA_Pick_Key: 117
+  PlayerB_Move_Up_Key: 273
+  PlayerB_Move_Down_Key: 274
+  PlayerB_Move_Left_Key: 276
+  PlayerB_Move_Right_Key: 275
+  PlayerB_Attack_Key: 257
+  PlayerB_Switch_Key: 258
+  PlayerB_Reload_Key: 259
+  PlayerB_Pick_Key: 260
 --- !u!1 &7981499750272343303
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,6 +32,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
         SpawnPlayer();  //Set the player's starting position
+        GameSetting.Instance.Load();
     }
     protected virtual void Update()
     {
@@ -158,6 +159,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     }
     protected void SwitchToScene(string scene)
     {
+        GameSetting.Instance.Save();
         SceneManager.LoadScene(scene);
     }
     protected void DestroyAllZombie()

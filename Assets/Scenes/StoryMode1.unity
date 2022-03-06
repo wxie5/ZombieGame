@@ -3990,6 +3990,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1415643445, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 2139448387}
+    - target: {fileID: 1415643445, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ContinueGame
+      objectReference: {fileID: 0}
     - target: {fileID: 5429486783948187364, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -4120,6 +4128,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+--- !u!1 &582138619 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 183164872, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+  m_PrefabInstance: {fileID: 582138618}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &584999695
 GameObject:
   m_ObjectHideFlags: 0
@@ -15355,6 +15368,7 @@ MonoBehaviour:
   - {fileID: 1467766661}
   m_StartDelay: 3
   m_EndDelay: 3
+  m_numberOfZombies: 5
   m_ZombieSpawnInterval: 5
   collect_Item:
   - {fileID: 1486466135}
@@ -15417,6 +15431,7 @@ MonoBehaviour:
   pauseUI: {fileID: 2649175}
   pauseMainUI: {fileID: 1523701504}
   helpUI: {fileID: 1820069227}
+  settingUI: {fileID: 582138619}
 --- !u!1001 &1699853161511880549
 PrefabInstance:
   m_ObjectHideFlags: 0

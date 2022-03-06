@@ -5166,6 +5166,7 @@ MonoBehaviour:
   pauseUI: {fileID: 1859038618}
   pauseMainUI: {fileID: 1859038617}
   helpUI: {fileID: 1859038616}
+  settingUI: {fileID: 1859038619}
 --- !u!114 &1134224176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9313,6 +9314,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1415643445, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1134224175}
+    - target: {fileID: 1415643445, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ContinueGame
+      objectReference: {fileID: 0}
     - target: {fileID: 5429486783948187364, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -9452,6 +9461,11 @@ GameObject:
 --- !u!1 &1859038618 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5429486785147412105, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
+  m_PrefabInstance: {fileID: 1859038615}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1859038619 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 183164872, guid: df9b1ebf75830e441b56e6d3da2e7efa, type: 3}
   m_PrefabInstance: {fileID: 1859038615}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1867375270

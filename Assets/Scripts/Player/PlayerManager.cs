@@ -44,12 +44,12 @@ public class PlayerManager : MonoBehaviour
         bool attack, switchGun, reload, pick;
         if (stats.ID == PlayerID.PlayerA)
         {
-            hori = InputManager.PlayerA_Horizontal;
-            verti = InputManager.PlayerA_Vertical;
-            attack = InputManager.PlayerA_Attack;
-            switchGun = InputManager.PlayerA_Switch;
-            reload = InputManager.PlayerA_Reload;
-            pick = InputManager.PlayerA_Pick;
+            hori = InputManager.Instance.PlayerA_Horizontal();
+            verti = InputManager.Instance.PlayerA_Vertical();
+            attack = InputManager.Instance.PlayerA_Attack;
+            switchGun = InputManager.Instance.PlayerA_Switch;
+            reload = InputManager.Instance.PlayerA_Reload;
+            pick = InputManager.Instance.PlayerA_Pick;
             Vector3 inputAxis = new Vector2(hori, verti).normalized;
 
             // Movement
@@ -69,12 +69,12 @@ public class PlayerManager : MonoBehaviour
         }
         else if (stats.ID == PlayerID.PlayerB)
         {
-            hori = InputManager.PlayerB_Horizontal;
-            verti = InputManager.PlayerB_Vertical;
-            attack = InputManager.PlayerB_Attack;
-            switchGun = InputManager.PlayerB_Switch;
-            reload = InputManager.PlayerB_Reload;
-            pick = InputManager.PlayerB_Pick;
+            hori = InputManager.Instance.PlayerB_Horizontal();
+            verti = InputManager.Instance.PlayerB_Vertical();
+            attack = InputManager.Instance.PlayerB_Attack;
+            switchGun = InputManager.Instance.PlayerB_Switch;
+            reload = InputManager.Instance.PlayerB_Reload;
+            pick = InputManager.Instance.PlayerB_Pick;
             Vector3 inputAxis = new Vector2(hori, verti).normalized;
 
             // Movement

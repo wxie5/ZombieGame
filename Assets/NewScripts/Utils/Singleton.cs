@@ -16,6 +16,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
         }
         else
         {
+            Debug.Log(this.gameObject.name);
             Debug.LogError("More Than One Instance of Singleton!");
         }
     }
