@@ -3,9 +3,9 @@ using Model.EnemyModel;
 
 namespace Controller.EnemyController
 {
-    public class EnemyBaseController<V> : IEnemyController<V>
+    public class EnemyBaseController : IEnemyController
     {
-        protected V view;
+        //protected V view;
         protected EnemyBaseModel model;
 
         protected Transform[] playerTrans;
@@ -24,9 +24,9 @@ namespace Controller.EnemyController
             set { model = value; }
         }
 
-        public EnemyBaseController(V view, EnemyBaseModel model)
+        public EnemyBaseController(EnemyBaseModel model)
         {
-            this.view = view;
+            //this.view = view;
             this.model = model;
 
             this.playerTrans = GetAllPlayerTrans();

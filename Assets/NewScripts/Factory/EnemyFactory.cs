@@ -78,7 +78,7 @@ namespace Factory
             EnemyZombieView view = zombieGO.GetComponent<EnemyZombieView>();
 
             // get controller
-            EnemyBaseController<EnemyZombieView> controller = new EnemyBaseController<EnemyZombieView>(view, model);
+            EnemyBaseController controller = new EnemyBaseController(model);
 
             // set up view (this step is extremely important)
             view.SetUp(controller);
@@ -121,7 +121,7 @@ namespace Factory
             EnemyBoomerView view = zombieGO.GetComponent<EnemyBoomerView>();
 
             // get controller
-            EnemyBaseController<EnemyBoomerView> controller = new EnemyBaseController<EnemyBoomerView>(view, model);
+            EnemyBaseController controller = new EnemyBaseController(model);
 
             // set up view (this step is extremely important)
             view.SetUp(controller);
@@ -165,7 +165,7 @@ namespace Factory
             EnemyPosionView view = zombieGO.GetComponent<EnemyPosionView>();
 
             // get controller
-            EnemyBaseController<EnemyPosionView> controller = new EnemyBaseController<EnemyPosionView>(view, model);
+            EnemyBaseController controller = new EnemyBaseController(model);
 
             // set up view (this step is extremely important)
             view.SetUp(controller);

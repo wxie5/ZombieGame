@@ -1,4 +1,4 @@
-public interface IEnemyController<V> { }
+public interface IEnemyController { }
 
 public interface IEnemyView { }
 
