@@ -10,6 +10,7 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] private KeyCode PlayerA_Switch_Key = KeyCode.K;
     [SerializeField] private KeyCode PlayerA_Reload_Key = KeyCode.L;
     [SerializeField] private KeyCode PlayerA_Pick_Key = KeyCode.U;
+
     [SerializeField] private KeyCode PlayerB_Move_Up_Key = KeyCode.UpArrow;
     [SerializeField] private KeyCode PlayerB_Move_Down_Key = KeyCode.DownArrow;
     [SerializeField] private KeyCode PlayerB_Move_Left_Key = KeyCode.LeftArrow;
@@ -161,11 +162,11 @@ public class InputManager : Singleton<InputManager>
     }
     public void Set_PlayerB_Reload_Key(KeyCode key)
     {
-        PlayerA_Reload_Key = key;
+        PlayerB_Reload_Key = key;
     }
     public void Set_PlayerB_Pick_Key(KeyCode key)
     {
-        PlayerA_Pick_Key = key;
+        PlayerB_Pick_Key = key;
     }
     public KeyCode get_PlayerA_Move_Up_Key()
     {

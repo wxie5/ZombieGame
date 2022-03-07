@@ -126,7 +126,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     {
         UnableAllPlayers();
         yield return m_EndWait;
-        SwitchToScene("GameStartUi");
+        SwitchToScene("GameStartUI");
     }
     protected bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.
     {

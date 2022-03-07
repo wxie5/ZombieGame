@@ -378,7 +378,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 225261065}
   keyCodeText: {fileID: 1861009108}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -473,7 +472,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 237802938}
   keyCodeText: {fileID: 560912328}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -785,7 +783,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1266751082}
   keyCodeText: {fileID: 1243403891}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -1988,7 +1985,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 447911675}
   keyCodeText: {fileID: 1745178045}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -2042,6 +2038,7 @@ GameObject:
   - component: {fileID: 442662758}
   - component: {fileID: 442662757}
   - component: {fileID: 442662756}
+  - component: {fileID: 442662759}
   m_Layer: 0
   m_Name: StartUIManager
   m_TagString: Untagged
@@ -2103,6 +2100,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &442662759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442662755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 868e8eedc02e2f94eb54a37422c67cd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &447911673
 GameObject:
   m_ObjectHideFlags: 0
@@ -2459,7 +2468,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1624546444}
   keyCodeText: {fileID: 1688718772}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -3314,7 +3322,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1849780716}
   keyCodeText: {fileID: 892684018}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -3409,7 +3416,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 2095125314}
   keyCodeText: {fileID: 1777148680}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -3573,7 +3579,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1635964268}
   keyCodeText: {fileID: 478119858}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -4734,7 +4739,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 234568597}
   keyCodeText: {fileID: 490198891}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -4963,7 +4967,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 2011354906}
   keyCodeText: {fileID: 1148255164}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -6121,7 +6124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 392899244}
   keyCodeText: {fileID: 1915972839}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -6625,7 +6627,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1822257559}
   keyCodeText: {fileID: 1535957639}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -8573,7 +8574,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1773753394}
   keyCodeText: {fileID: 57100088}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -10986,7 +10986,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 298853752}
   keyCodeText: {fileID: 1443100058}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -11302,7 +11301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1468010186}
   keyCodeText: {fileID: 1438533172}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}
@@ -11397,7 +11395,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13863e6c541840f488398ca6d1bd5eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1274487627}
   keyCodeText: {fileID: 628183236}
   enableColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   UnableColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 1}

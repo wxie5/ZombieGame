@@ -18,12 +18,17 @@ public class KeyCodeSettingPanel : Singleton<KeyCodeSettingPanel>
     public void UnChooseCurrentKey()
     {
         currentKey.IsShowing = false;
+        currentKey = null;
     }
     private void OnGUI()
     {
         if(currentKey !=null && Input.anyKeyDown)
         {
             Event e = Event.current;
+            if(e.isMouse)
+            {
+                UnChooseCurrentKey();
+            }
             if(e != null && e.isKey && e.keyCode != KeyCode.None && e.keyCode!=KeyCode.Escape)
             {
                 KeyCode DownKey = e.keyCode;
@@ -54,6 +59,7 @@ public class KeyCodeSettingPanel : Singleton<KeyCodeSettingPanel>
                     case "A_Pick":
                         InputManager.Instance.Set_PlayerA_Pick_Key(DownKey);
                         break;
+
                     case "B_Up":
                         InputManager.Instance.Set_PlayerB_Move_Up_Key(DownKey);
                         break;
@@ -79,6 +85,7 @@ public class KeyCodeSettingPanel : Singleton<KeyCodeSettingPanel>
                         InputManager.Instance.Set_PlayerB_Pick_Key(DownKey);
                         break;
                 }
+                UnChooseCurrentKey();
             }
         }
     }
