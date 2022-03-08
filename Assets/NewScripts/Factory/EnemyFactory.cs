@@ -14,8 +14,6 @@ namespace Factory
         private Dictionary<int, EnemyStatsCSV> enemyStatsBuffer;
         private int zombieCount;
         private EndlessModeManager endlessModeManager;
-        private MultiplayerEndlessModeManager multiplayerEndlessModeManager;
-        private AIMultiplayerEndlessModeManager aIMultiplayerEndlessMode;
 
         protected override void Start()
         {
@@ -24,14 +22,6 @@ namespace Factory
             if(GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
             {
                 endlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>();
-            }
-            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
-            {
-                multiplayerEndlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>();
-            }
-            if(GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
-            {
-                aIMultiplayerEndlessMode = GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>();
             }
         }
 
@@ -93,14 +83,6 @@ namespace Factory
             {
                 model.OnDead += endlessModeManager.onDeadAddScore;
             }
-            if (multiplayerEndlessModeManager != null)
-            {
-                model.OnDead += multiplayerEndlessModeManager.onDeadAddScore;
-            }
-            if (aIMultiplayerEndlessMode != null)
-            {
-                model.OnDead += aIMultiplayerEndlessMode.onDeadAddScore;
-            }
             model.OnDead += OndeadHandler;
 
             zombieCount++;
@@ -132,14 +114,6 @@ namespace Factory
             if (endlessModeManager != null)
             {
                 model.OnDead += endlessModeManager.onDeadAddScore;
-            }
-            if (multiplayerEndlessModeManager != null)
-            {
-                model.OnDead += multiplayerEndlessModeManager.onDeadAddScore;
-            }
-            if (aIMultiplayerEndlessMode != null)
-            {
-                model.OnDead += aIMultiplayerEndlessMode.onDeadAddScore;
             }
             model.OnDead += OndeadHandler;
 
@@ -176,14 +150,6 @@ namespace Factory
             if (endlessModeManager != null)
             {
                 model.OnDead += endlessModeManager.onDeadAddScore;
-            }
-            if (multiplayerEndlessModeManager != null)
-            {
-                model.OnDead += multiplayerEndlessModeManager.onDeadAddScore;
-            }
-            if (aIMultiplayerEndlessMode != null)
-            {
-                model.OnDead += aIMultiplayerEndlessMode.onDeadAddScore;
             }
             model.OnDead += OndeadHandler;
 

@@ -17,8 +17,6 @@ namespace View.EnemyView
         protected EnemyBaseController controller;
 
         protected EndlessModeManager endlessModeManager;
-        protected MultiplayerEndlessModeManager multiplayerEndlessModeManager;
-        protected AIMultiplayerEndlessModeManager aIMultiplayerEndlessModeManager;
 
         // AI state
         protected EnemyState curState;
@@ -43,14 +41,6 @@ namespace View.EnemyView
             if (GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
             {
                 endlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>();
-            }
-            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>())
-            {
-                multiplayerEndlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<MultiplayerEndlessModeManager>();
-            }
-            if (GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>())
-            {
-                aIMultiplayerEndlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>();
             }
 
             controller = cc;
@@ -201,14 +191,6 @@ namespace View.EnemyView
             if (endlessModeManager != null)
             {
                 controller.Model.OnDead -= endlessModeManager.onDeadAddScore;
-            }
-            if (multiplayerEndlessModeManager != null)
-            {
-                controller.Model.OnDead -= multiplayerEndlessModeManager.onDeadAddScore;
-            }
-            if (aIMultiplayerEndlessModeManager != null)
-            {
-                controller.Model.OnDead -= aIMultiplayerEndlessModeManager.onDeadAddScore;
             }
             controller.Model.OnDead -= Factory.GameFactoryManager.Instance.EnemyFact.OndeadHandler;
 

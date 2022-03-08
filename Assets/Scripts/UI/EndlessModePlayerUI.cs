@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-//Controll the UI in SinglePlayer Mode
 // This script is wrote by Jiacheng Sun
 public class EndlessModePlayerUI : InGameUIBase
 {

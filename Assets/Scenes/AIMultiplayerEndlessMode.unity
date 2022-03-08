@@ -12476,8 +12476,8 @@ GameObject:
   - component: {fileID: 2139448385}
   - component: {fileID: 2139448384}
   - component: {fileID: 2139448387}
-  - component: {fileID: 2139448386}
   - component: {fileID: 2139448388}
+  - component: {fileID: 2139448386}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Manager
@@ -12540,7 +12540,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2139448383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad3c6e288235c6043b8e96065c9b7b30, type: 3}
+  m_Script: {fileID: 11500000, guid: 335ff364fe006f742a02f947acb15466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_SpawnPoint:
@@ -12554,7 +12554,7 @@ MonoBehaviour:
   m_PlayerSpawnPoint:
   - {fileID: 1467766661}
   - {fileID: 78877140}
-  m_StartDelay: 2
+  m_StartDelay: 3
   m_EndDelay: 3
   m_numberOfZombies: 5
   m_ZombieSpawnInterval: 0.5

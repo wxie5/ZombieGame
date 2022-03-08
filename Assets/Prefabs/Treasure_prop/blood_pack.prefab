@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 8391315083091977571}
   - component: {fileID: 8391315083091977570}
   - component: {fileID: 8391315083091977573}
-  - component: {fileID: 5078381880475403054}
   - component: {fileID: 8721617955613900059}
+  - component: {fileID: 1200625064}
   m_Layer: 9
   m_Name: blood_pack
   m_TagString: Props
@@ -161,28 +161,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &5078381880475403054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8391315083091977575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79ad27d6d6b4b6a4e93f25e9833474f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  props_exists_time: 15
-  getPropsSE: {fileID: 8300000, guid: 5df9f81736ea87b43ba6bbe485c76c8e, type: 3}
-  propsType: 0
-  recoverAmount: 30
-  damageIncreasePercentage: 0.1
-  moveSpeedIncreasePercentage: 0.1
-  ammoCapacityIncreaseNumber: 2
-  offSetDecreasePercentage: 0.1
-  ShotRateDecreasePercentage: 0.1
-  AmmoNumberIncreaseAmount: 3
 --- !u!114 &8721617955613900059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,6 +174,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 45
+--- !u!114 &1200625064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8391315083091977575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8c44c9e4e5e8dd4284bfc376eda227e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  getPropsSE: {fileID: 8300000, guid: 3c03efec2088d2f4190bba4534a05848, type: 3}
+  amount: 30
 --- !u!1001 &7109214834571739444
 PrefabInstance:
   m_ObjectHideFlags: 0

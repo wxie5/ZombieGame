@@ -12215,7 +12215,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2139448385}
-  - component: {fileID: 2139448386}
+  - component: {fileID: 2139448389}
   - component: {fileID: 2139448384}
   - component: {fileID: 2139448387}
   - component: {fileID: 2139448388}
@@ -12272,34 +12272,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2139448386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2139448383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6bd0b9b63f1f648aa683ca79046ce1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SpawnPoint:
-  - {fileID: 1656804043}
-  - {fileID: 566223856}
-  - {fileID: 1130693117}
-  - {fileID: 107435279}
-  m_PlayerPerfab:
-  - {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
-  - {fileID: 7981481663472377377, guid: 9ac5b3c2d6cd84344822d6cde2aadbfc, type: 3}
-  m_PlayerSpawnPoint:
-  - {fileID: 1467766661}
-  - {fileID: 78877140}
-  m_StartDelay: 2
-  m_EndDelay: 3
-  m_numberOfZombies: 5
-  m_ZombieSpawnInterval: 0.5
-  m_score: 0
 --- !u!114 &2139448387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12328,6 +12300,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7d2b96f78fa6d43bd015971cd5582e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2139448389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139448383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335ff364fe006f742a02f947acb15466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpawnPoint:
+  - {fileID: 1656804043}
+  - {fileID: 566223856}
+  - {fileID: 1130693117}
+  - {fileID: 107435279}
+  m_PlayerPerfab:
+  - {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
+  - {fileID: 7981481663472377377, guid: 9ac5b3c2d6cd84344822d6cde2aadbfc, type: 3}
+  m_PlayerSpawnPoint:
+  - {fileID: 1467766661}
+  - {fileID: 78877140}
+  m_StartDelay: 2
+  m_EndDelay: 3
+  m_numberOfZombies: 5
+  m_ZombieSpawnInterval: 0.5
 --- !u!1001 &1699853161511880549
 PrefabInstance:
   m_ObjectHideFlags: 0

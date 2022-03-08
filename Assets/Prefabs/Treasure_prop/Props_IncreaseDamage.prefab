@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 8217337580966475919}
   - component: {fileID: 605536382934848269}
   - component: {fileID: 8582432309103615962}
-  - component: {fileID: 1603432244808712351}
   - component: {fileID: 7585115236679616149}
+  - component: {fileID: 1450480139}
   m_Layer: 9
   m_Name: Props_IncreaseDamage
   m_TagString: Props
@@ -161,28 +161,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &1603432244808712351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7043378306973154462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79ad27d6d6b4b6a4e93f25e9833474f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  props_exists_time: 15
-  getPropsSE: {fileID: 8300000, guid: 5df9f81736ea87b43ba6bbe485c76c8e, type: 3}
-  propsType: 1
-  recoverAmount: 30
-  damageIncreasePercentage: 0.1
-  moveSpeedIncreasePercentage: 0.1
-  ammoCapacityIncreaseNumber: 2
-  offSetDecreasePercentage: 0.1
-  ShotRateDecreasePercentage: 0.1
-  AmmoNumberIncreaseAmount: 3
 --- !u!114 &7585115236679616149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,6 +174,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 45
+--- !u!114 &1450480139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7043378306973154462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd8c1a5f2ca8e77489c0717728264bd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  getPropsSE: {fileID: 8300000, guid: 5df9f81736ea87b43ba6bbe485c76c8e, type: 3}
+  amount: 0.1
 --- !u!1001 &2333843395552589749
 PrefabInstance:
   m_ObjectHideFlags: 0

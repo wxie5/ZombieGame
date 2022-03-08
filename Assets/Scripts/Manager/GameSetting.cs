@@ -57,9 +57,6 @@ public class GameSetting : Singleton<GameSetting>
             InputManager.Instance.Set_PlayerB_Switch_Key(saveObject.PlayerB_Switch_Key);
             InputManager.Instance.Set_PlayerB_Reload_Key(saveObject.PlayerB_Reload_Key);
             InputManager.Instance.Set_PlayerB_Pick_Key(saveObject.PlayerB_Pick_Key);
-            Debug.Log(saveObject.PlayerA_Reload_Key);
-            Debug.Log(saveObject.PlayerA_Move_Up_Key);
-            Debug.Log(InputManager.Instance.get_PlayerA_Reload_Key());
         }
     }
     private class SaveObject

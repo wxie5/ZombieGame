@@ -7,8 +7,13 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
 {
     [SerializeField] protected Transform[] m_SpawnPoint; // spawn points for zombies
     [SerializeField] protected GameObject[] m_PlayerPerfab;
+
     [SerializeField] protected Transform[] m_PlayerSpawnPoint;
     protected GameObject[] m_PlayerInstance;
+    public GameObject[] PlayerInstance
+    {
+        get { return m_PlayerInstance; }
+    }
 
     [SerializeField] protected float m_StartDelay = 1f;
     [SerializeField] protected float m_EndDelay = 1f;
@@ -128,11 +133,11 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
         yield return m_EndWait;
         SwitchToScene("GameStartUI");
     }
-    protected bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.
+    public bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.
     {
         return GameFactoryManager.Instance.EnemyFact.GetZombieCount() == 0;
     }
-    protected bool AllPlayerDead() //Check the isDead property of all players
+    public bool AllPlayerDead() //Check the isDead property of all players
     {
         for(int i=0; i < playerStats.Length; i++)
         {

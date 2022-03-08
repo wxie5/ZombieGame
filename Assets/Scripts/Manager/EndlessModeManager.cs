@@ -8,8 +8,8 @@ public class EndlessModeManager : ModeManagerBase
 {
     private int m_numberOfWaves = 0;
     private int m_score = 0;
-
     private EndlessModePlayerUI endlessModePlayerUI;
+
     protected override void Start()
     {
         base.Start();
@@ -22,6 +22,12 @@ public class EndlessModeManager : ModeManagerBase
         base.Update();
     }
 
+    private void UpdateUI()
+    {
+        UpdateScore();
+        UpdateBulletInfo();
+        UpdatePropsInfo();
+    }
     protected override void SpawnZombies() // Summon zombies one by one
     {
         int spawn_point_number;
@@ -140,25 +146,25 @@ public class EndlessModeManager : ModeManagerBase
     }
     private void UpdatePropsInfo()
     {
-        endlessModePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats[0].Props_info_AmmoCap());
-        endlessModePlayerUI.ChangePropsMessage_Damage(playerStats[0].Props_info_Damage());
-        endlessModePlayerUI.ChangePropsMessage_MoveSpeed(playerStats[0].Props_info_MoveSpeed());
-        endlessModePlayerUI.ChangePropsMessage_Offset(playerStats[0].Props_info_Offset());
-        endlessModePlayerUI.ChangePropsMessage_ShotRate(playerStats[0].Props_info_ShotRate());
+        for (int i = 0; i < playerStats.Length; i++)
+        {
+            endlessModePlayerUI.ChangePropsMessage_AmmoCapacity(playerStats[i].Props_info_AmmoCap(),i);
+            endlessModePlayerUI.ChangePropsMessage_Damage(playerStats[i].Props_info_Damage(), i);
+            endlessModePlayerUI.ChangePropsMessage_MoveSpeed(playerStats[i].Props_info_MoveSpeed(), i);
+            endlessModePlayerUI.ChangePropsMessage_Offset(playerStats[i].Props_info_Offset(), i);
+            endlessModePlayerUI.ChangePropsMessage_ShotRate(playerStats[i].Props_info_ShotRate(), i);
+        }
     }
     private void UpdateBulletInfo()
     {
-        endlessModePlayerUI.changeBulletMessage(playerStats[0].AmmoInfo());
+        for (int i = 0; i < playerStats.Length; i++)
+        {
+            endlessModePlayerUI.changeBulletMessage(playerStats[i].AmmoInfo(),i);
+        }
     }
     private void UpdateScore()
     {
         endlessModePlayerUI.ChangeScore(m_score);
-    }
-    private void UpdateUI()
-    {
-        UpdateScore();
-        UpdateBulletInfo();
-        UpdatePropsInfo();
     }
     public void onDeadAddScore(int score)
     {

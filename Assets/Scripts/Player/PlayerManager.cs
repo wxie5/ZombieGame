@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AI;
 using System;
 
 //This script is created and wrote by Wei Xie
@@ -9,7 +8,7 @@ public class PlayerManager : MonoBehaviour
     private PlayerStats stats;
     private PlayerBehaviour behaviour;
     private bool enable;
-    private AIMultiplayerEndlessModeManager gameManager;
+    private PlayerAI playerAI;
 
     public PlayerID playerID
     {
@@ -28,9 +27,9 @@ public class PlayerManager : MonoBehaviour
 
         stats.Initialize();
         behaviour.Initialize();
-        if (AIMultiplayerEndlessModeManager.Instance != null)
+        if (this.GetComponent<PlayerAI>())
         {
-            gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<AIMultiplayerEndlessModeManager>();
+            playerAI = this.GetComponent<PlayerAI>();
         }
     }
 
@@ -94,11 +93,11 @@ public class PlayerManager : MonoBehaviour
         }
         else //AI
         {
-            behaviour.PlayerPickUpSystem(gameManager.AI_WeaponNearBy());
-            behaviour.PlayerWeaponSwitchSystem(gameManager.AI_SwitchWeapon());
-            behaviour.PlayerMoveSystem(gameManager.AIMoveInput());
-            behaviour.PlayerReloadSystem(gameManager.AI_AmmoNotFull());
-            behaviour.PlayerShotSystem(gameManager.AI_EnemyInAttackRange());
+            behaviour.PlayerPickUpSystem(playerAI.AI_WeaponNearBy());
+            behaviour.PlayerWeaponSwitchSystem(playerAI.AI_SwitchWeapon());
+            behaviour.PlayerMoveSystem(playerAI.AIMoveInput());
+            behaviour.PlayerReloadSystem(playerAI.AI_AmmoNotFull());
+            behaviour.PlayerShotSystem(playerAI.AI_EnemyInAttackRange());
         }
     }
 
