@@ -66,91 +66,60 @@ namespace Factory
         private void InstantiateNormalZombie(Vector3 instantiatePos, int id, string prefabName)
         {
             // get model
-            EnemyStatsCSV stats = enemyStatsBuffer[id];
-            EnemyBaseModel model = new EnemyBaseModel(id, stats.enemyName, stats.baseHealth, stats.moveSpeed,
-                stats.baseDmg, stats.alertDistance, stats.attackRange, stats.stopDistance, stats.attackRate,
-                stats.attackRateDefault, stats.score, stats.baseHealthMulti, stats.baseDmgMulti, stats.defaultLevel,
-                stats.maxLevel);
+            EnemyBaseModel model = InitModel(id);
 
             // get view
             GameObject zombiePrefab = Resources.Load<GameObject>(filePath + prefabName);
             GameObject zombieGO = Instantiate(zombiePrefab, instantiatePos, Quaternion.identity);
             EnemyZombieView view = zombieGO.GetComponent<EnemyZombieView>();
 
-            // get controller
-            EnemyBaseController controller = new EnemyBaseController(model);
+            view.SetUp(model);
 
-            // set up view (this step is extremely important)
-            view.SetUp(controller);
-
-            // set up view events
             view.OnDead += InstantiateProps;
 
-            // set up model event (this is also important, for UI especially)
             model.OnCurHealthChange += view.HPBarChange;
             model.OnDead += view.HPBarHide;
-            if (endlessModeManager != null)
-            {
-                model.OnDead += endlessModeManager.onDeadAddScore;
-            }
-            if (multiplayerEndlessModeManager != null)
-            {
-                model.OnDead += multiplayerEndlessModeManager.onDeadAddScore;
-            }
-            if (aIMultiplayerEndlessMode != null)
-            {
-                model.OnDead += aIMultiplayerEndlessMode.onDeadAddScore;
-            }
-            model.OnDead += OndeadHandler;
-
-            zombieCount++;
         }
 
         private void InstantiateBoomerZombie(Vector3 instantiatePos, int id, string prefabName)
         {
             // get model
-            EnemyStatsCSV stats = enemyStatsBuffer[id];
-            EnemyBaseModel model = new EnemyBaseModel(id, stats.enemyName, stats.baseHealth, stats.moveSpeed,
-                stats.baseDmg, stats.alertDistance, stats.attackRange, stats.stopDistance, stats.attackRate,
-                stats.attackRateDefault, stats.score, stats.baseHealthMulti, stats.baseDmgMulti, stats.defaultLevel,
-                stats.maxLevel);
+            EnemyBaseModel model = InitModel(id);
 
             // get view
             GameObject zombiePrefab = Resources.Load<GameObject>(filePath + prefabName);
             GameObject zombieGO = Instantiate(zombiePrefab, instantiatePos, Quaternion.identity);
             EnemyBoomerView view = zombieGO.GetComponent<EnemyBoomerView>();
 
-            // get controller
-            EnemyBaseController controller = new EnemyBaseController(model);
+            view.SetUp(model);
 
-            // set up view (this step is extremely important)
-            view.SetUp(controller);
-
-            // set up model event (this is also important, for UI, audio effects, especially)
             model.OnCurHealthChange += view.HPBarChange;
             model.OnDead += view.HPBarHide;
-            if (endlessModeManager != null)
-            {
-                model.OnDead += endlessModeManager.onDeadAddScore;
-            }
-            if (multiplayerEndlessModeManager != null)
-            {
-                model.OnDead += multiplayerEndlessModeManager.onDeadAddScore;
-            }
-            if (aIMultiplayerEndlessMode != null)
-            {
-                model.OnDead += aIMultiplayerEndlessMode.onDeadAddScore;
-            }
-            model.OnDead += OndeadHandler;
 
-            // set up view event (this is important for VFX, audio effects, etc)
             view.OnBoomStart += GameFactoryManager.Instance.VFXFact.InstBloodExplosion;
             view.OnDead += InstantiateProps;
-
-            zombieCount++;
         }
 
         private void InstantiatePosionZombie(Vector3 instantiatePos, int id, string prefabName)
+        {
+            // get model
+            EnemyBaseModel model = InitModel(id);
+
+            // get view
+            GameObject zombiePrefab = Resources.Load<GameObject>(filePath + prefabName);
+            GameObject zombieGO = Instantiate(zombiePrefab, instantiatePos, Quaternion.identity);
+            EnemyPosionView view = zombieGO.GetComponent<EnemyPosionView>();
+
+            view.SetUp(model);
+
+            model.OnCurHealthChange += view.HPBarChange;
+            model.OnDead += view.HPBarHide;
+
+            view.OnShotProjectile += GameFactoryManager.Instance.ProjFact.InstPosionProj;
+            view.OnDead += InstantiateProps;
+        }
+        #endregion
+        private EnemyBaseModel InitModel(int id)
         {
             // get model
             EnemyStatsCSV stats = enemyStatsBuffer[id];
@@ -159,20 +128,6 @@ namespace Factory
                 stats.attackRateDefault, stats.score, stats.baseHealthMulti, stats.baseDmgMulti, stats.defaultLevel,
                 stats.maxLevel);
 
-            // get view
-            GameObject zombiePrefab = Resources.Load<GameObject>(filePath + prefabName);
-            GameObject zombieGO = Instantiate(zombiePrefab, instantiatePos, Quaternion.identity);
-            EnemyPosionView view = zombieGO.GetComponent<EnemyPosionView>();
-
-            // get controller
-            EnemyBaseController controller = new EnemyBaseController(model);
-
-            // set up view (this step is extremely important)
-            view.SetUp(controller);
-
-            // set up model event (this is also important, for UI, audio effects, especially)
-            model.OnCurHealthChange += view.HPBarChange;
-            model.OnDead += view.HPBarHide;
             if (endlessModeManager != null)
             {
                 model.OnDead += endlessModeManager.onDeadAddScore;
@@ -187,13 +142,11 @@ namespace Factory
             }
             model.OnDead += OndeadHandler;
 
-            // set up view event (this is important for VFX, audio effects, etc)
-            view.OnShotProjectile += GameFactoryManager.Instance.ProjFact.InstPosionProj;
-            view.OnDead += InstantiateProps;
-
             zombieCount++;
+
+            return model;
         }
-        #endregion
+
         public void OndeadHandler(int score)
         {
             zombieCount--;
