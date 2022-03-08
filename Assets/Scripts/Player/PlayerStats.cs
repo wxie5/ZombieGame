@@ -63,6 +63,10 @@ public class PlayerStats : MonoBehaviour
     {
         get { return id; }
     }
+    public int[] CartridgeCaps
+    {
+        get { return cartridgeCaps; }
+    }
     public float CurrentHealth
     {
         get { return currentHealth; }
@@ -402,27 +406,5 @@ public class PlayerStats : MonoBehaviour
     public string Props_info_MoveSpeed()
     {
         return currentPropsNumber_IncreaseMoveSpeed + "/" + maximumPropsNumber;
-    }
-    public bool AI_TimeToSwitchWeapon()
-    {
-        if(IsSingleWeapon())
-        {
-            return false;
-        }
-        if (currentGunIndex != 0) //Not HandGun
-        {
-            if(CurrentCartridgeCap + CurrentRestAmmo == 0)
-            {
-                return true;
-            }
-        }
-        else
-        {
-            if (cartridgeCaps[1] + ammoCaps[1] > 0)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

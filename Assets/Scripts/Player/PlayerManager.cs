@@ -94,7 +94,7 @@ public class PlayerManager : MonoBehaviour
         else //AI
         {
             behaviour.PlayerPickUpSystem(playerAI.AI_WeaponNearBy());
-            behaviour.PlayerWeaponSwitchSystem(playerAI.AI_SwitchWeapon());
+            behaviour.PlayerWeaponSwitchSystem(playerAI.AI_TimeToSwitchWeapon());
             behaviour.PlayerMoveSystem(playerAI.AIMoveInput());
             behaviour.PlayerReloadSystem(playerAI.AI_AmmoNotFull());
             behaviour.PlayerShotSystem(playerAI.AI_EnemyInAttackRange());
