@@ -8,8 +8,7 @@ namespace View.EnemyView
         // view events
         public event ProjectileEvent OnShotProjectile;
 
-        public override void AttackView()
-        {
+        public override void AttackView()        {
             transform.LookAt(target.position);
             animator.SetTrigger("Attack");
         }

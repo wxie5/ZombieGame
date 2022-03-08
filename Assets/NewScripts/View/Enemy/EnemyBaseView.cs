@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
-using Controller.EnemyController;
+using Model.EnemyModel;
+using System.Collections.Generic;
+using System;
 
 namespace View.EnemyView
 {
@@ -14,13 +16,20 @@ namespace View.EnemyView
         protected NavMeshAgent agent;
         protected Animator animator;
         protected Transform target;
-        protected EnemyBaseController controller;
+        protected Transform[] playerTrans;
+        protected EnemyBaseModel model;
 
         protected EndlessModeManager endlessModeManager;
 
         // AI state
-        protected EnemyState curState;
         protected bool isDead;
+
+        // finite state machine
+        protected Dictionary<Type, AbstractState> states;
+        protected AbstractState curState;
+
+        // timer
+        protected float attackTimer;
 
         // Local UI
         protected HPBar hpbar;
@@ -31,37 +40,56 @@ namespace View.EnemyView
         public delegate void PositionEvent(Vector3 vec);
 
         public event PositionEvent OnDead;
+
+        #region Attributes
         public bool IsDead
         {
             get { return isDead; }
         }
+        public Transform Target
+        {
+            get { return target; }
+        }
+        public NavMeshAgent Agent
+        {
+            get { return agent; }
+        }
+        public EnemyBaseModel Model
+        {
+            get { return model; }
+        }
+        public float AttackTimer
+        {
+            get { return attackTimer; }
+            set { attackTimer = value; }
+        }
+        public Animator Anim
+        {
+            get { return animator; }
+        }
+        #endregion
 
-        public void SetUp(EnemyBaseController cc)
+        public virtual void SetUp(EnemyBaseModel m)
         {
             if (GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>())
             {
                 endlessModeManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>();
             }
 
-            controller = cc;
+            model = m;
 
-            controller.OnAttack += AttackView;
-            controller.OnStateChangeToAttack += ChangeToAttack;
-            controller.OnStateChangeToChase += ChangeToChase;
-            controller.OnStateChangeToIdle += ChangeToIdle;
+            agent.speed = model.CurMoveSpeed;
+            agent.stoppingDistance = model.StopDistance;
+            playerTrans = GetAllPlayerTrans();
+            attackTimer = model.AttackRateDefault;
 
-            float agentSpeed = 0f;
-            float stopDis = 0f;
-            controller.ModelToViewInit(ref agentSpeed, ref stopDis);
-            agent.speed = agentSpeed;
-            agent.stoppingDistance = stopDis;
+            StateMachineInit();
         }
 
         protected void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
-            curState = EnemyState.Idle;
             curGetPlayerTimer = 0f;
             isDead = false;
             hpbar = GetComponent<HPBar>();
@@ -71,33 +99,19 @@ namespace View.EnemyView
         {
             if (!agent.enabled) { return; }
 
-            switch (curState)
-            {
-                case EnemyState.Attack:
-                    transform.LookAt(target, Vector3.up);
-                    controller.AttackLogic(transform.position, target, false);
-                    break;
-                case EnemyState.Chase:
-                    controller.ChaseLogic(transform.position, target, true);
-                    break;
-                case EnemyState.Idle:
-                    controller.IdleLogic(transform.position, target);
-                    break;
-            }
+            Type newStateType = curState.StateUpdate();
 
-            if (target != null)
+            if (newStateType != curState.GetType())
             {
-                agent.SetDestination(target.position);
-                animator.SetFloat("ChaseSpeed", agent.velocity.magnitude);
+                curState = states[newStateType];
             }
 
             if (curGetPlayerTimer < 0f)
             {
-                controller.GetNearestPlayer(transform.position, out target);
+                GetNearestPlayer();
                 curGetPlayerTimer = getPlayerFreq;
             }
             curGetPlayerTimer -= Time.deltaTime;
-
         }
 
         public void HPBarChange(float curHealth, float maxHealth)
@@ -110,33 +124,39 @@ namespace View.EnemyView
             hpbar.DisableHPBar();
         }
 
-        protected virtual void AttackView()
+        protected virtual void StateMachineInit()
+        {
+            states = new Dictionary<Type, AbstractState>();
+            states.Add(typeof(EnemyIdleState), new EnemyIdleState(this));
+            states.Add(typeof(EnemyChaseState), new EnemyChaseState(this));
+            states.Add(typeof(EnemyAttackState), new EnemyAttackState(this));
+
+            curState = states[typeof(EnemyIdleState)];
+        }
+
+        public virtual void AttackView()
         {
         }
 
-        protected virtual void ChangeToIdle()
+        public virtual void GetHitView(float damage)
         {
-            agent.isStopped = true;
-            curState = EnemyState.Idle;
+            float remainHealth = model.CurHealth - damage;
+            if (remainHealth > 0f)
+            {
+                model.CurHealth = remainHealth;
+                HitView();
+            }
+            else
+            {
+                model.CurHealth = 0f;
+                model.IsDead = true;
+                DieView();
+            }
         }
-
-        protected virtual void ChangeToAttack()
-        {
-            controller.ResetCoolDown();
-            agent.isStopped = false;
-            curState = EnemyState.Attack;
-        }
-
-        protected virtual void ChangeToChase()
-        {
-            agent.isStopped = false;
-            curState = EnemyState.Chase;
-        }
-
-        protected virtual void HitView()
+        private void HitView()
         {
             //choose a random hit animation
-            int randomIdx = Random.Range(0, 3);
+            int randomIdx = UnityEngine.Random.Range(0, 3);
             animator.SetFloat("HitIdx", randomIdx);
 
             //play hit animation
@@ -145,20 +165,6 @@ namespace View.EnemyView
 
             //reset velocity, change chase speed
             agent.velocity = Vector3.zero;
-        }
-
-        public virtual void GetHitView(float damage)
-        {
-            isDead = controller.GetHitLogic(damage);
-
-            if (isDead)
-            {
-                DieView();
-            }
-            else
-            {
-                HitView();
-            }
         }
 
         protected virtual void DieView()
@@ -183,26 +189,119 @@ namespace View.EnemyView
             Destroy(this.gameObject, 3f);
         }
 
+        // Deal damage to single target
+        public void DealDamageSingle()
+        {
+            if (target == null) { return; }
+
+            //recheck distance, if in range, deal damage to target player
+            if (InAttackRange())
+            {
+                target.GetComponent<PlayerManager>().GetHit(model.CurDmg);
+            }
+        }
+
+        // Deal damage to all players in range
+        public void DealDamageAll()
+        {
+            if (playerTrans.Length != 0)
+            {
+                foreach (Transform trans in playerTrans)
+                {
+                    if (trans == null) { continue; }
+                    if (Vector3.Distance(trans.position, transform.position) < model.AttackRange)
+                    {
+                        trans.GetComponent<PlayerManager>().GetHit(model.CurDmg);
+                    }
+                }
+            }
+        }
+
+        public bool InAttackRange()
+        {
+            if (target == null) { return false; }
+            return Vector3.Distance(target.position, transform.position) < model.AttackRange;
+        }
+
+        public bool InAlertRange()
+        {
+            if (target == null) { return false; }
+            return Vector3.Distance(target.position, transform.position) < model.AlertDistance;
+        }
+
+        public bool InStopDisRange()
+        {
+            if (target == null) { return false; }
+            // here I add a small offset, so it can change to attack state
+            return Vector3.Distance(target.position, transform.position) < (model.StopDistance + 0.5f);
+        }
+
+        private Transform[] GetAllPlayerTrans()
+        {
+            //get all the players' transform in the scene
+            GameObject[] playersGO = GameObject.FindGameObjectsWithTag("Player");
+            Transform[] playerTrans = new Transform[playersGO.Length];
+            for (int i = 0; i < playerTrans.Length; i++)
+            {
+                playerTrans[i] = playersGO[i].transform;
+            }
+
+            return playerTrans;
+        }
+
+        public void GetNearestPlayer()
+        {
+            int nearestIdx = -1;
+            float curMinSqrMag = Mathf.Infinity;
+
+            // if playeTrans is not set, get all players' transforms
+            if (this.playerTrans == null)
+            {
+                this.playerTrans = GetAllPlayerTrans();
+            }
+
+            // find nearest enemy by using loop (compare square mag instead of distance for optimization)
+            for (int i = 0; i < this.playerTrans.Length; i++)
+            {
+                // if player is dead or player is destroyed, skip this iteration
+                if (this.playerTrans[i].tag == "Dead" || this.playerTrans[i] == null)
+                {
+                    continue;
+                }
+
+                // otherwise, update the nearest target we found
+                float sqrMag = (this.playerTrans[i].position - transform.position).sqrMagnitude;
+                if (sqrMag < curMinSqrMag)
+                {
+                    curMinSqrMag = sqrMag;
+                    nearestIdx = i;
+                }
+            }
+
+            // if found nearest target, set to target, otherwise to null
+            if (nearestIdx != -1)
+            {
+                target = this.playerTrans[nearestIdx];
+            }
+            else
+            {
+                target = null;
+            }
+        }
+
         protected virtual void OnDestroy()
         {
             // unsubscribe model events
-            controller.Model.OnCurHealthChange -= HPBarChange;
-            controller.Model.OnDead -= HPBarHide;
+            model.OnCurHealthChange -= HPBarChange;
+            model.OnDead -= HPBarHide;
             if (endlessModeManager != null)
             {
-                controller.Model.OnDead -= endlessModeManager.onDeadAddScore;
+                model.OnDead -= endlessModeManager.onDeadAddScore;
             }
-            controller.Model.OnDead -= Factory.GameFactoryManager.Instance.EnemyFact.OndeadHandler;
-
-            // unsubscribe controller events
-            controller.OnAttack -= AttackView;
-            controller.OnStateChangeToAttack -= ChangeToAttack;
-            controller.OnStateChangeToChase -= ChangeToChase;
-            controller.OnStateChangeToIdle -= ChangeToIdle;
+            model.OnDead -= Factory.GameFactoryManager.Instance.EnemyFact.OndeadHandler;
 
             // let GC clean up all the things that are not monobehaviour
-            controller.Model = null;
-            controller = null;
+            model = null;
         }
     }
 }
