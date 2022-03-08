@@ -1,11 +1,14 @@
 using Controller.EnemyController;
 using UnityEngine;
+using System.Collections.Generic;
+using System;
+using Model.EnemyModel;
 
 namespace View.EnemyView
 {
     public class EnemyZombieView : EnemyBaseView
     {
-        protected override void AttackView()
+        public override void AttackView()
         {
             animator.SetTrigger("Attack");
         }
@@ -13,7 +16,7 @@ namespace View.EnemyView
         #region Animation Events
         public void OnAnimationAttackPoint()
         {
-            controller.DealDamageLogic(transform.position, target);
+            DealDamageSingle();
         }
         #endregion
     }

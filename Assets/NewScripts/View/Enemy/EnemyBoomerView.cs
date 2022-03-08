@@ -5,21 +5,13 @@ namespace View.EnemyView
 {
     public class EnemyBoomerView : EnemyBaseView
     {
-        // view events
         public event VFXEvent OnBoomStart;
 
-        protected override void AttackView()
+        public override void AttackView()
         {
-            controller.DealDamageLogic(transform.position);
             OnBoomStart?.Invoke(transform.position);
+            DealDamageAll();
             GetHitView(float.PositiveInfinity);
-        }
-
-        protected override void ChangeToAttack()
-        {
-            base.ChangeToAttack();
-
-            controller.ResetCoolDown();
         }
 
         protected override void OnDestroy()

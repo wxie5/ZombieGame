@@ -8,8 +8,9 @@ namespace View.EnemyView
         // view events
         public event ProjectileEvent OnShotProjectile;
 
-        protected override void AttackView()
+        public override void AttackView()
         {
+            transform.LookAt(target.position);
             animator.SetTrigger("Attack");
         }
 
@@ -18,7 +19,7 @@ namespace View.EnemyView
         {
             Vector3 offset = new Vector3(0f, 1.5f, 0f) + transform.forward * 0.5f;
             Quaternion dir = Quaternion.LookRotation(target.position - transform.position);
-            OnShotProjectile?.Invoke(transform.position + offset, dir, controller.DealProjectileLogic());
+            OnShotProjectile?.Invoke(transform.position + offset, dir, model.CurDmg);
         }
         #endregion
 
