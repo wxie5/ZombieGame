@@ -10,19 +10,7 @@ public class EndlessModeManager : ModeManagerBase
     private int m_score = 0;
     private EndlessModePlayerUI endlessModePlayerUI;
 
-    protected override void Start()
-    {
-        base.Start();
-        endlessModePlayerUI = gameObject.GetComponent<EndlessModePlayerUI>();
-        StartCoroutine(GameLoop());
-    }
-    protected override void Update()
-    {
-        UpdateUI();
-        base.Update();
-    }
-
-    private void UpdateUI()
+    protected override void UpdateUI()
     {
         UpdateScore();
         UpdateBulletInfo();
@@ -130,22 +118,23 @@ public class EndlessModeManager : ModeManagerBase
     }
     protected override IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
     {
-        if (!AllPlayerDead())
+        int counter = 5;
+        endlessModePlayerUI.ClearGmaeMessage();
+        while (counter > 0)
         {
-            int counter = 5;
-            endlessModePlayerUI.ClearGmaeMessage();
-            while (counter > 0)
-            {
-                endlessModePlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
-                counter -= 1;
-                yield return new WaitForSeconds(1f);
-            }
+            endlessModePlayerUI.ChangeGameMessage("The next wave of zombies will arrive in: " + "\n\n\n" + counter + " s!");
+            counter -= 1;
+            yield return new WaitForSeconds(1f);
         }
     }
     protected override IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
         endlessModePlayerUI.ChangeGameMessage("YOU DEAD!" + "\n\n\n" + "Your final score: " + m_score);
         return base.GameEnding();
+    }
+    protected override void GetUIComponent()
+    {
+        endlessModePlayerUI = gameObject.GetComponent<EndlessModePlayerUI>();
     }
     public void AddScore(int amount)
     {

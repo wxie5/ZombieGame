@@ -9,29 +9,31 @@ public class StoryMode1Manager : ModeManagerBase
     private StoryModePlayerUI storyModePlayerUI;
 
     //win condition
-    private int collectItem;
+    private int collectItem = 0;
     [SerializeField] private GameObject[] collect_Item;
     [SerializeField] private AudioClip pickItem;
-    private bool firstWin;
-    protected override void Start()
+    private bool firstWin = true;
+    protected override void GetUIComponent()
     {
-        base.Start();
-        collectItem = 0;
-        firstWin = true;
         storyModePlayerUI = this.GetComponent<StoryModePlayerUI>();
-        StartCoroutine(GameLoop());
+    }
+    protected override void UpdateUI()
+    {
+        UpdatePropsInfo();
+        UpdateBulletInfo();
     }
     protected override void Update()
     {
-        UpdateBulletInfo();
-        UpdatePropsInfo();
         CollectItem();
         base.Update();
-        if(AllItemCollected() && firstWin)
-        {
-            StartCoroutine(BeforeEnding());
-            firstWin = false;
-        }
+    }
+    protected override bool EndCondition()
+    {
+        return AllNonAIPlayerDead() || WinCondition();
+    }
+    protected override bool WinCondition()
+    {
+        return firstWin && AllItemCollected();
     }
     private void UpdateBulletInfo()
     {
@@ -85,40 +87,10 @@ public class StoryMode1Manager : ModeManagerBase
     {
         if (!AllItemCollected())
         {
-            int spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
-            if (Random.Range(0, 100) < 20)
-            {
-                GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
-            }
-            else if(Random.Range(0, 100) < 40)
-            {
-                GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint[spawn_point_number].position);
-            }
-            else if (Random.Range(0, 100) < 60)
-            {
-                GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint[spawn_point_number].position);
-            }
-            else if (Random.Range(0, 100) < 80)
-            {
-                GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
-            }
-            else
-            {
-                GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
-            }
-            m_currentSpawningzombieNumber++;
+            base.SpawnZombies();
         }
     }
-    protected override IEnumerator GameLoop()
-    {
-        yield return StartCoroutine(BeforeStarting());
-        yield return StartCoroutine(GameStarting());
-        yield return StartCoroutine(ZombieSpawning());
-        yield return StartCoroutine(GamePlaying());
-        yield return StartCoroutine(BeforeEnding());
-        yield return StartCoroutine(GameEnding());
-    }
-    private IEnumerator BeforeStarting() //The game starts, showing the UI prompt
+    protected override IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
         UnableAllPlayers();
         storyModePlayerUI.StartChat();
@@ -139,42 +111,18 @@ public class StoryMode1Manager : ModeManagerBase
         yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Nothing is more important than alcohol at a time like this!"));
         yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("No time to waste, zombies can come anytime!"));
         storyModePlayerUI.AfterChat();
-    }
-    protected override IEnumerator GameStarting() //The game starts, showing the UI prompt
-    {
+
         storyModePlayerUI.ChangeGameMessage("Try to find: " + "\n\n\n " + "Gun, Food and ALCOHOL!");
-        return base.GameStarting();
+        yield return base.GameStarting();
     }
     protected override IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
         storyModePlayerUI.ClearGmaeMessage();
         return base.ZombieSpawning();
     }
-    protected override IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
-    {
-        while (!AllItemCollected() && !AllPlayerDead())
-        {
-            yield return null;
-        }
-    }
-    protected override IEnumerator BeforeEnding() 
-    {
-        DestroyAllZombie();
-        if (!AllPlayerDead())
-        {
-            UnableAllPlayers();
-            storyModePlayerUI.StartChat();
-            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Finally!"));
-            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("I got all I need now!"));
-            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("These monsters are getting crazy!"));
-            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("I need to get out of here!"));
-            storyModePlayerUI.AfterChat();
-        }
-        yield return StartCoroutine(GameEnding());
-    }
     protected override IEnumerator GameEnding()
     {
-        if (AllPlayerDead())
+        if (AllNonAIPlayerDead())
         {
             storyModePlayerUI.ChangeGameMessage("YOU Dead!");
             yield return m_EndWait;
@@ -182,6 +130,16 @@ public class StoryMode1Manager : ModeManagerBase
         }
         else
         {
+            DestroyAllZombie();
+            firstWin = false;
+            UnableAllPlayers();
+            storyModePlayerUI.StartChat();
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Finally!"));
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("I got all I need now!"));
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("These monsters are getting crazy!"));
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("I need to get out of here!"));
+            storyModePlayerUI.AfterChat();
+
             storyModePlayerUI.ChangeGameMessage("Get ready for the next scene!");
             UnableAllPlayers();
             yield return m_EndWait;

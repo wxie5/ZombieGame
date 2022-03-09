@@ -24,9 +24,6 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     protected PlayerManager[] playermanager;
     protected PlayerStats[] playerStats;
 
-    //UI
-    protected InGameUIBase ingameUI;
-
     [SerializeField] protected int m_numberOfZombies = 5;
     protected int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
 
@@ -38,10 +35,13 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
         m_EndWait = new WaitForSeconds(m_EndDelay);
         SpawnPlayer();  //Set the player's starting position
         GameSetting.Instance.Load();
+        GetUIComponent();
+        StartCoroutine(GameLoop());
     }
     protected virtual void Update()
     {
-        if (AllPlayerDead())
+        UpdateUI();
+        if (EndCondition())
         {
             StartCoroutine(GameEnding());
         }
@@ -85,7 +85,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     }
     protected virtual IEnumerator GameLoop()
     {
-        while (!AllPlayerDead())
+        while (!EndCondition())
         {
             yield return StartCoroutine(GameStarting());
             yield return StartCoroutine(ZombieSpawning());
@@ -93,7 +93,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
             yield return StartCoroutine(BeforeEnding());
         }
     }
-    protected virtual IEnumerator GameStarting() //The game starts, showing the UI prompt
+    protected virtual IEnumerator GameStarting()
     {
         m_currentSpawningzombieNumber = 0;
         yield return m_StartWait;
@@ -101,31 +101,26 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     protected virtual IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
         EnableAllPlayers();
-        while (m_currentSpawningzombieNumber < m_numberOfZombies)
+        if (!EndCondition())
         {
-            SpawnZombies();
-            m_currentSpawningzombieNumber++;
-            yield return new WaitForSeconds(m_ZombieSpawnInterval);
+            while (m_currentSpawningzombieNumber < m_numberOfZombies)
+            {
+                SpawnZombies();
+                m_currentSpawningzombieNumber++;
+                yield return new WaitForSeconds(m_ZombieSpawnInterval);
+            }
         }
     }
-    protected virtual IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
+    protected virtual IEnumerator GamePlaying()
     {
-        while (!AllZombieDead() && !AllPlayerDead())
+        while (!WinCondition())
         {
             yield return null;
         }
     }
-    protected virtual IEnumerator BeforeEnding() //Give player 5 seconds to pick up props
+    protected virtual IEnumerator BeforeEnding()
     {
-        if (!AllPlayerDead())
-        {
-            int counter = 5;
-            while (counter > 0)
-            {
-                counter -= 1;
-                yield return new WaitForSeconds(1f);
-            }
-        }
+        return null;
     }
     protected virtual IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
@@ -137,11 +132,11 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     {
         return GameFactoryManager.Instance.EnemyFact.GetZombieCount() == 0;
     }
-    public bool AllPlayerDead() //Check the isDead property of all players
+    public bool AllNonAIPlayerDead() //Check the isDead property of all players
     {
         for(int i=0; i < playerStats.Length; i++)
         {
-            if(!playerStats[i].IsDead)
+            if(!playerStats[i].IsDead && playerStats[i].ID != PlayerID.AI)
             {
                 return false;
             }
@@ -176,4 +171,17 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
             GameObject.Destroy(allEnemy[i]);
         }
     }
+    protected virtual bool WinCondition()
+    {
+        return AllZombieDead();
+    }
+    protected virtual bool EndCondition()
+    {
+        return AllNonAIPlayerDead();
+    }
+    protected virtual void UpdateUI()
+    {
+    }
+    protected virtual void GetUIComponent()
+    { }
 }

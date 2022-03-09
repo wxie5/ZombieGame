@@ -12,30 +12,38 @@ public class StoryMode2Manager : ModeManagerBase
 
     //components
     private StoryModePlayerUI storyModePlayerUI;
+    private bool firstWin = true;
 
     //stage
-    private int stage;
-    private bool firstWin;
-    private bool arriveDoor;
-    protected override void Start()
+    private int stage = 0;
+    public int Stage
     {
-        stage = 0;
-        base.Start();
-        firstWin = true;
-        storyModePlayerUI = this.GetComponent<StoryModePlayerUI>();
-        StartCoroutine(GameLoop());
+        get { return stage; }
+        set { stage = value; }
+    }
+    private bool arriveDoor = false;
+    public bool ArriveDoor
+    {
+        get { return arriveDoor; }
+        set { arriveDoor = value; }
     }
 
-    protected override void Update()
+    protected override void GetUIComponent()
+    {
+        storyModePlayerUI = this.GetComponent<StoryModePlayerUI>();
+    }
+    protected override void UpdateUI()
     {
         UpdatePropsInfo();
         UpdateBulletInfo();
-        base.Update();
-        if (firstWin && arriveDoor)
-        {
-            StartCoroutine(BeforeEnding());
-            firstWin = false;
-        }
+    }
+    protected override bool EndCondition()
+    {
+        return AllNonAIPlayerDead() || WinCondition();
+    }
+    protected override bool WinCondition()
+    {
+        return firstWin && arriveDoor;
     }
     private void UpdateBulletInfo()
     {
@@ -55,7 +63,7 @@ public class StoryMode2Manager : ModeManagerBase
             storyModePlayerUI.ChangePropsMessage_ShotRate(playerStats[i].Props_info_ShotRate());
         }
     }
-    protected override void SpawnZombies() // Summon zombies one by one
+    protected override void SpawnZombies() // Summon zombies one by one, location will chanege base on the stage
     {
         if (!arriveDoor)
         {
@@ -159,16 +167,7 @@ public class StoryMode2Manager : ModeManagerBase
         }
         m_currentSpawningzombieNumber++;
     }
-    protected override IEnumerator GameLoop()
-    {
-        yield return StartCoroutine(BeforeStarting());
-        yield return StartCoroutine(GameStarting());
-        yield return StartCoroutine(ZombieSpawning());
-        yield return StartCoroutine(GamePlaying());
-        yield return StartCoroutine(BeforeEnding());
-        yield return StartCoroutine(GameEnding());
-    }
-    private IEnumerator BeforeStarting() //The game starts, showing the UI prompt
+    protected override IEnumerator GameStarting() //The game starts, showing the UI prompt
     {
         UnableAllPlayers();
         storyModePlayerUI.StartChat();
@@ -179,52 +178,17 @@ public class StoryMode2Manager : ModeManagerBase
         yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Hope there won't be more zombies!"));
 
         storyModePlayerUI.AfterChat();
-    }
-    protected override IEnumerator GameStarting() //The game starts, showing the UI prompt
-    {
         storyModePlayerUI.ChangeGameMessage("Go to the shelter on the far right!");
-        return base.GameStarting();
+        yield return base.GameStarting();
     }
-
     protected override IEnumerator ZombieSpawning() //Start spawning zombies, zombies will appear every corresponding time interval
     {
-        if(!arriveDoor)
-        {
-            storyModePlayerUI.ClearGmaeMessage();
-            EnableAllPlayers();
-            while (m_currentSpawningzombieNumber < m_numberOfZombies)
-            {
-                SpawnZombies();
-                yield return new WaitForSeconds(m_ZombieSpawnInterval);
-            }
-        }
+        storyModePlayerUI.ClearGmaeMessage();
+        return base.ZombieSpawning();
     }
-    protected override IEnumerator GamePlaying() //The player advances to the next stage after defeating all zombies
-    {
-        while (!arriveDoor && !AllPlayerDead())
-        {
-            yield return null;
-        }
-    }
-
-    protected override IEnumerator BeforeEnding() 
-    {
-        DestroyAllZombie();
-        if (!AllPlayerDead())
-        {
-            UnableAllPlayers();
-            storyModePlayerUI.StartChat();
-            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("There are more and more zombies..."));
-            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Not sure how many survivors there are."));
-            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Anyway, hurry to the shelter!"));
-            storyModePlayerUI.AfterChat();
-        }
-        yield return StartCoroutine(GameEnding());
-    }
-
     protected override IEnumerator GameEnding()
     {
-        if (AllPlayerDead())
+        if (AllNonAIPlayerDead())
         {
             storyModePlayerUI.ChangeGameMessage("YOU Dead!");
             yield return m_EndWait;
@@ -232,18 +196,22 @@ public class StoryMode2Manager : ModeManagerBase
         }
         else
         {
+            firstWin = false;
+            DestroyAllZombie();
+            if (!AllNonAIPlayerDead())
+            {
+                UnableAllPlayers();
+                storyModePlayerUI.StartChat();
+                yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("There are more and more zombies..."));
+                yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Not sure how many survivors there are."));
+                yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Anyway, hurry to the shelter!"));
+                storyModePlayerUI.AfterChat();
+            }
+
             storyModePlayerUI.ChangeGameMessage("TO BE CONTINUE");
             UnableAllPlayers();
             yield return m_EndWait;
             SwitchToScene("GameStartUI");
         }
-    }
-    public void changeStage(int s)
-    {
-        stage = s;
-    }
-    public void ArriveDoor(bool a)
-    {
-        arriveDoor = a;
     }
 }

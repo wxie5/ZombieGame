@@ -7,6 +7,7 @@ public class CameraControl: MonoBehaviour
     [SerializeField] private float cof_y;
     [SerializeField] private float cof_z;
     [SerializeField] private float cameraMovingSpeed;
+    [SerializeField] private Vector3 GlobalViewPosition;
     private Vector3 offset;
     private void Start()
     {
@@ -30,12 +31,15 @@ public class CameraControl: MonoBehaviour
             if (!playerInstance[i].GetComponent<PlayerStats>().IsDead)
             {
                 final_position += playerInstance[i].transform.position;
-                number_of_alive++;
+                if (playerInstance[i].GetComponent<PlayerStats>().ID != PlayerID.AI)
+                {
+                    number_of_alive++;
+                }
             }
         }
         if(number_of_alive == 0)
         {
-            return new Vector3(-0.5f, 26f, -14.5f);
+            return GlobalViewPosition;
         }
         final_position /= number_of_alive;
 
