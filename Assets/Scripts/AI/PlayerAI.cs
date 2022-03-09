@@ -16,6 +16,7 @@ public class PlayerAI : MonoBehaviour
     {
         gameManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<EndlessModeManager>();
     }
+
     public Vector3 BestPositonForAI() //priority from bottom to top
     {
         //keep escaping

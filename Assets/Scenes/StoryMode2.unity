@@ -5188,7 +5188,7 @@ MonoBehaviour:
   m_StartDelay: 3
   m_EndDelay: 3
   m_numberOfZombies: 30
-  m_ZombieSpawnInterval: 1.5
+  m_ZombieSpawnInterval: 4
   m_SpawnPoint0:
   - {fileID: 1656804043}
   - {fileID: 566223856}

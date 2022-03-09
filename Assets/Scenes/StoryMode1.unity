@@ -15370,7 +15370,7 @@ MonoBehaviour:
   m_StartDelay: 3
   m_EndDelay: 3
   m_numberOfZombies: 30
-  m_ZombieSpawnInterval: 5
+  m_ZombieSpawnInterval: 7
   collect_Item:
   - {fileID: 1486466135}
   - {fileID: 1839978100}
