@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Model.EnemyModel;
 using View.EnemyView;
-using Controller.EnemyController;
+
 //This script is created and wrote by Wei Xie
 //Modified by Jiacheng Sun
 namespace Factory
@@ -49,6 +49,11 @@ namespace Factory
         public void InstantiatePosion(Vector3 instantiatePos)
         {
             InstantiatePosionZombie(instantiatePos, 3, "Posion");
+        }
+
+        public void InstantiateCoward(Vector3 instantiatePos)
+        {
+            InstantiateCowardZombie(instantiatePos, 5, "Coward");
         }
         #endregion
 
@@ -106,6 +111,24 @@ namespace Factory
             model.OnDead += view.HPBarHide;
 
             view.OnShotProjectile += GameFactoryManager.Instance.ProjFact.InstPosionProj;
+            view.OnDead += InstantiateProps;
+        }
+
+        private void InstantiateCowardZombie(Vector3 instantiatePos, int id, string prefabName)
+        {
+            // get model
+            EnemyBaseModel model = InitModel(id);
+
+            // get view
+            GameObject zombiePrefab = Resources.Load<GameObject>(filePath + prefabName);
+            GameObject zombieGO = Instantiate(zombiePrefab, instantiatePos, Quaternion.identity);
+            EnemyCowardView view = zombieGO.GetComponent<EnemyCowardView>();
+
+            view.SetUp(model);
+
+            model.OnCurHealthChange += view.HPBarChange;
+            model.OnDead += view.HPBarHide;
+
             view.OnDead += InstantiateProps;
         }
         #endregion

@@ -1,4 +1,3 @@
-using Controller.EnemyController;
 using UnityEngine;
 
 namespace View.EnemyView

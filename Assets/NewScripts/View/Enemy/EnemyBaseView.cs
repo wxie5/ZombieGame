@@ -67,6 +67,10 @@ namespace View.EnemyView
         {
             get { return animator; }
         }
+        public Transform Trans
+        {
+            get { return this.transform; }
+        }
         #endregion
 
         public virtual void SetUp(EnemyBaseModel m)

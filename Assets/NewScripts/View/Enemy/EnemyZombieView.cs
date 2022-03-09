@@ -1,9 +1,3 @@
-using Controller.EnemyController;
-using UnityEngine;
-using System.Collections.Generic;
-using System;
-using Model.EnemyModel;
-
 namespace View.EnemyView
 {
     public class EnemyZombieView : EnemyBaseView

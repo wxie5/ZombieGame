@@ -34,7 +34,7 @@ public class EndlessModeManager : ModeManagerBase
         spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
         if(m_numberOfWaves < 3)
         {
-            GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+            GameFactoryManager.Instance.EnemyFact.InstantiateCoward(m_SpawnPoint[spawn_point_number].position);
         }
         else if(m_numberOfWaves < 5)
         {

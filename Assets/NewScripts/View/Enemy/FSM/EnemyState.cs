@@ -6,7 +6,7 @@ public abstract class AbstractState
     public abstract Type StateUpdate();
 }
 
-public abstract class BaseState :AbstractState
+public abstract class BaseState : AbstractState
 {
     protected EnemyBaseView view;
     public BaseState(EnemyBaseView view)
@@ -15,6 +15,7 @@ public abstract class BaseState :AbstractState
     }
 }
 
+/*
 public abstract class ZombieState : AbstractState
 {
     protected EnemyZombieView view;
@@ -41,3 +42,4 @@ public abstract class PosionState : AbstractState
         this.view = view;
     }
 }
+*/
