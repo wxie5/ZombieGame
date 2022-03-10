@@ -198,20 +198,15 @@ public class StoryMode2Manager : ModeManagerBase
         {
             firstWin = false;
             DestroyAllZombie();
-            if (!AllNonAIPlayerDead())
-            {
-                UnableAllPlayers();
-                storyModePlayerUI.StartChat();
-                yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("There are more and more zombies..."));
-                yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Not sure how many survivors there are."));
-                yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Anyway, hurry to the shelter!"));
-                storyModePlayerUI.AfterChat();
-            }
-
-            storyModePlayerUI.ChangeGameMessage("TO BE CONTINUE");
             UnableAllPlayers();
+            storyModePlayerUI.StartChat();
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("There are more and more zombies..."));
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Not sure how many survivors there are."));
+            yield return StartCoroutine(storyModePlayerUI.PlayerChatMessage("Anyway, hurry to the shelter!"));
+            storyModePlayerUI.AfterChat();
+            storyModePlayerUI.ChangeGameMessage("Get ready for the next scene!");
             yield return m_EndWait;
-            SwitchToScene("GameStartUI");
+            SwitchToScene("StoryMode3");
         }
     }
 }

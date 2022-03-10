@@ -19,83 +19,83 @@ public class EndlessModeManager : ModeManagerBase
     protected override void SpawnZombies() // Summon zombies one by one
     {
         int spawn_point_number;
-        spawn_point_number = Random.Range(0, m_SpawnPoint.Length - 1);
+        spawn_point_number = Random.Range(0, m_ZombieSpawnPoint.Length - 1);
         if (Random.Range(0, 100) < 15) //15% for bonus zombie
         {
-            GameFactoryManager.Instance.EnemyFact.InstantiateCoward(m_SpawnPoint[m_SpawnPoint.Length-1].position);
+            GameFactoryManager.Instance.EnemyFact.InstantiateCoward(m_ZombieSpawnPoint[m_ZombieSpawnPoint.Length-1].position);
         }
         else
         {
             if (m_numberOfWaves < 3)
             {
-                GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+                GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_ZombieSpawnPoint[spawn_point_number].position);
             }
             else if (m_numberOfWaves < 5)
             {
                 if (Random.Range(0, 100) < 50)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
             }
             else if (m_numberOfWaves < 7)
             {
                 if (Random.Range(0, 100) < 40)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else if (Random.Range(0, 100) < 70)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
             }
             else if (m_numberOfWaves < 10)
             {
                 if (Random.Range(0, 100) < 25)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else if (Random.Range(0, 100) < 50)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else if (Random.Range(0, 100) < 75)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
             }
             else
             {
                 if (Random.Range(0, 100) < 20)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else if (Random.Range(0, 100) < 40)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else if (Random.Range(0, 100) < 60)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else if (Random.Range(0, 100) < 80)
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
                 else
                 {
-                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+                    GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_ZombieSpawnPoint[spawn_point_number].position);
                 }
             }
         }

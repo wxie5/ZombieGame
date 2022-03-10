@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ModeManagerBase : Singleton<ModeManagerBase>
 {
-    [SerializeField] protected Transform[] m_SpawnPoint; // spawn points for zombies
+    [SerializeField] protected Transform[] m_ZombieSpawnPoint; // spawn points for zombies
     [SerializeField] protected GameObject[] m_PlayerPerfab;
 
     [SerializeField] protected Transform[] m_PlayerSpawnPoint;
@@ -61,26 +61,26 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     }
     protected virtual void SpawnZombies() // Summon zombies one by one
     {
-        int spawn_point_number = Random.Range(0, m_SpawnPoint.Length);
+        int spawn_point_number = Random.Range(0, m_ZombieSpawnPoint.Length);
         if (Random.Range(0, 100) < 20)
         {
-            GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_SpawnPoint[spawn_point_number].position);
+            GameFactoryManager.Instance.EnemyFact.InstantiateZombie(m_ZombieSpawnPoint[spawn_point_number].position);
         }
         else if (Random.Range(0, 100) < 40)
         {
-            GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_SpawnPoint[spawn_point_number].position);
+            GameFactoryManager.Instance.EnemyFact.InstantiateBoomer(m_ZombieSpawnPoint[spawn_point_number].position);
         }
         else if (Random.Range(0, 100) < 60)
         {
-            GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_SpawnPoint[spawn_point_number].position);
+            GameFactoryManager.Instance.EnemyFact.InstantiatePosion(m_ZombieSpawnPoint[spawn_point_number].position);
         }
         else if (Random.Range(0, 100) < 80)
         {
-            GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_SpawnPoint[spawn_point_number].position);
+            GameFactoryManager.Instance.EnemyFact.InstantiateRunner(m_ZombieSpawnPoint[spawn_point_number].position);
         }
         else
         {
-            GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_SpawnPoint[spawn_point_number].position);
+            GameFactoryManager.Instance.EnemyFact.InstantiateTank(m_ZombieSpawnPoint[spawn_point_number].position);
         }
     }
     protected virtual IEnumerator GameLoop()
@@ -120,7 +120,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     }
     protected virtual IEnumerator BeforeEnding()
     {
-        return null;
+        yield return GameEnding();
     }
     protected virtual IEnumerator GameEnding() //Defeat all zombies and the game is over
     {
