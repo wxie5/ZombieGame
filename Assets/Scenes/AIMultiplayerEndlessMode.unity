@@ -12958,11 +12958,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 335ff364fe006f742a02f947acb15466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SpawnPoint:
+  m_ZombieSpawnPoint:
   - {fileID: 1656804043}
   - {fileID: 566223856}
-  - {fileID: 1130693117}
   - {fileID: 107435279}
+  - {fileID: 1130693117}
   - {fileID: 23480728}
   m_PlayerPerfab:
   - {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}

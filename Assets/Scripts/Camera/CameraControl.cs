@@ -26,18 +26,20 @@ public class CameraControl: MonoBehaviour
     {
         Vector3 final_position = offset;
         int number_of_alive = 0;
-        for(int i=0;i< playerInstance.Length;i++)
+        int number_of_player_alive = 0;
+        for (int i=0;i< playerInstance.Length;i++)
         {
             if (!playerInstance[i].GetComponent<PlayerStats>().IsDead)
             {
                 final_position += playerInstance[i].transform.position;
+                number_of_alive++;
                 if (playerInstance[i].GetComponent<PlayerStats>().ID != PlayerID.AI)
                 {
-                    number_of_alive++;
+                    number_of_player_alive++;
                 }
             }
         }
-        if(number_of_alive == 0)
+        if(number_of_player_alive == 0)
         {
             return GlobalViewPosition;
         }
@@ -60,7 +62,14 @@ public class CameraControl: MonoBehaviour
             }
         }
         final_position += new Vector3(0, distance * cof_y, distance * cof_z);
-        return final_position;
+        if (Vector3.Magnitude(final_position) > Vector3.Magnitude(GlobalViewPosition))
+        {
+            return GlobalViewPosition;
+        }
+        else
+        {
+            return final_position;
+        }
     }
     private void MoveCamera(Vector3 position)
     {

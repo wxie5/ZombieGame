@@ -10881,7 +10881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 335ff364fe006f742a02f947acb15466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SpawnPoint:
+  m_ZombieSpawnPoint:
   - {fileID: 1715065148}
   - {fileID: 1384430588}
   - {fileID: 1185049789}

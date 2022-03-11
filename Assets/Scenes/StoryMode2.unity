@@ -2568,6 +2568,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5610781423562545124, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: GlobalViewPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5610781423562545124, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: GlobalViewPosition.y
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 5610781423562545124, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
+      propertyPath: GlobalViewPosition.z
+      value: -16
+      objectReference: {fileID: 0}
     - target: {fileID: 8896123735029309364, guid: d5f7a604699fa4240aff5bd0615ddf15, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -5180,7 +5192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e4b9453514ef5498260778f6f30c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SpawnPoint: []
+  m_ZombieSpawnPoint: []
   m_PlayerPerfab:
   - {fileID: 7981481663472377377, guid: 01b1c33795589c54d8797e18bf3251dd, type: 3}
   m_PlayerSpawnPoint:

@@ -227,4 +227,4 @@ MonoBehaviour:
   cof_y: 1
   cof_z: -0.9
   cameraMovingSpeed: 3
-  GlobalViewPosition: {x: -0.5, y: 26, z: 14.5}
+  GlobalViewPosition: {x: 0, y: 22, z: -16}
