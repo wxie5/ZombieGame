@@ -191,8 +191,7 @@ public class StoryMode2Manager : ModeManagerBase
         if (AllNonAIPlayerDead())
         {
             storyModePlayerUI.ChangeGameMessage("YOU Dead!");
-            yield return m_EndWait;
-            SwitchToScene("GameStartUI");
+            yield return base.GameEnding();
         }
         else
         {

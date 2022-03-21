@@ -60,7 +60,7 @@ public class StoryMode3Manager : ModeManagerBase
         {
             storyModePlayerUI.ChangeGameMessage("YOU Dead!");
             yield return m_EndWait;
-            SwitchToScene("GameStartUI");
+            yield return base.GameEnding();
         }
         else
         {

@@ -28,7 +28,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     protected int m_currentSpawningzombieNumber; // The Zombie Number when Spawn the Zombie
 
     [SerializeField] protected float m_ZombieSpawnInterval = 0.5f;
-
+    [SerializeField] protected GameObject tryAgainUI;
     protected virtual void Start()
     {
         m_StartWait = new WaitForSeconds(m_StartDelay);
@@ -126,7 +126,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
     {
         UnableAllPlayers();
         yield return m_EndWait;
-        SwitchToScene("GameStartUI");
+        tryAgainUI.SetActive(true);
     }
     public bool AllZombieDead() //Check the isDead property of all zombies, if all are dead then the player wins and add score as well.
     {
@@ -157,7 +157,7 @@ public class ModeManagerBase : Singleton<ModeManagerBase>
             playermanager[i].Enable(true);
         }
     }
-    protected void SwitchToScene(string scene)
+    public void SwitchToScene(string scene)
     {
         GameSetting.Instance.Save();
         SceneManager.LoadScene(scene);
