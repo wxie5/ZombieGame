@@ -61,7 +61,7 @@ public class StoryMode1Manager : ModeManagerBase
             {
                 if (Vector3.Distance(m_PlayerInstance[i].transform.position, collect_Item[0].transform.position) < 2f)
                 {
-                    if (Input.GetKeyDown(KeyCode.U))
+                    if (Input.GetKeyDown(InputManager.Instance.get_PlayerA_Pick_Key()))
                     {
                         collect_Item[0].SetActive(false);
                         collectItem++;
@@ -73,7 +73,7 @@ public class StoryMode1Manager : ModeManagerBase
             {
                 if (Vector3.Distance(m_PlayerInstance[i].transform.position, collect_Item[1].transform.position) < 2f)
                 {
-                    if (Input.GetKeyDown(KeyCode.U))
+                    if (Input.GetKeyDown(InputManager.Instance.get_PlayerA_Pick_Key()))
                     {
                         collect_Item[1].SetActive(false);
                         collectItem++;
